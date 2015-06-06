@@ -47,6 +47,7 @@
 
 \bibpunct{(}{)}{;}{a}{,}{,}
 
+\newcommand{\E}{\operatorname{E}}
 
 \begin{document}
 \title{Estimating the number of clusters using Cross Validation}
@@ -740,6 +741,39 @@ In this paper, we proposed a novel approach to estimate the number of clusters. 
 	\item For each CV folder, repeat above procedure and obtain the $Error_k$ for each $k$
 	\item Average $Error_k$ across all folders for each $k$, and then select the $k$ corresponding to the minimum average $Error_k$ 
 \end{itemize}
+
+
+\section{Counterexample with correlated variables}
+
+Suppose that $(X, Y)$ are jointly mean-zero multivariate normal with unit
+marginal variances and correlation $\rho$.  In this case, the data are drawn
+from a single cluster; the true number of clusters is~$1$.  We will show that
+Gabriel cross-validation is inconsistent if $\rho > 0.5$, in the sense that
+$k = 2$ will be preferred to $k = 1$ almost surely for large enough $n$.
+
+Given a sample $(X_1, Y_1), \dotsc, (X_n, Y_n)$, we first apply $k$-means to
+$\{ Y_i \}_{i=1}^{n}$.  If $k = 1$ and $n$ is large enough, then the centroid
+will be close to $\E(Y) = 0$, in the sense that the centroid converges almost
+surely to this value as $n$ tends to infinity \citep{pollard1981strong}.
+Similarly, if $k = 2$ and $n$ is large enough, then the centroids will tend to
+$\E(Y \mid Y > 0) = \sqrt{2/\pi}$ and $\E(Y \mid Y < 0) = -\sqrt{2/\pi}$.  In
+$k = 2$ case, then if $n$ is large enough, the cluster assignment will be
+determined according to whether $Y > 0$.
+
+In the $k = 1$ case, if $n$ is large enough, the average Gabriel
+cross-validation error converges to $\E(Y^2) = 1$. In the $k = 2$ case, if $n$
+is large enough, then the linear decision rule for the $X$ variables will be
+determined according to whether $X > 0$.  In this case, the error converges to
+$\E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]$, where $a =
+\sqrt{2/\pi}$.  From the joint normality of $X$ and $Y$, it follows that $Y
+\mid X$ is normal with mean $\rho X$ and variance $(1 - \rho^2)$.   Thus, in
+the $k = 2$ case, the Gabriel cross-validation error converges to $1 + a^2 (1
+- 2 \rho)$.  In particular, if $\rho > 0.5$, then the asymptotic
+cross-validation error for $k = 2$ will be smaller than for $k = 1$.
+
+We confirm this with a simulation.  [TODO: add simulation]
+
+
 
 \bibliography{references}
 \bibliographystyle{apalike}
