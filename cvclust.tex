@@ -743,6 +743,57 @@ In this paper, we proposed a novel approach to estimate the number of clusters. 
 \end{itemize}
 
 
+\section{Technical Lemmas}
+
+\begin{lemma}\label{lem:truncated-normal-moments}
+
+If $Z$ is a standard normal random variable, then
+\[
+  \E(Z \mid a < Z < b)
+    = - \frac{\varphi(b) - \varphi(a)}
+             {\Phi(b) - \Phi(a)}
+\]
+and
+\[
+  \E\{(Z - \delta)^2 \mid a < Z < b\}
+    = \delta^2 + 1
+    - \frac{  (b - 2 \delta) \varphi(b)
+            - (a - 2 \delta) \varphi(a)}
+           {\Phi(b) - \Phi(a)}
+\]
+for all constants $a$, $b$, and $\delta$, where
+$\phi(z)$ and $\Phi(z)$ are the standard normal probability density and
+cumulative distribution functions.  These expressions are valid
+for $a = -\infty$ or $b = \infty$ by taking limits.
+
+\end{lemma}
+\begin{proof}
+We will derive the expression for the second moment.
+Integrate by parts to get
+\begin{align*}
+  \E[ (Z - \delta)^2 1\{Z < b\}]
+    &= \int_{-\infty}^b (z - \delta)^2 \varphi(z) \, dz \\
+    &= (\delta^2 + 1) \Phi(b) - (b - 2 \delta) \varphi(b).
+\end{align*}
+Now,
+\[
+  \E\{(Z - \delta)^2 \mid a < Z < b\}
+    =
+    \frac{  \E[ (Z - \delta)^2 1\{Z < b\}]
+          - \E[ (Z - \delta)^2 1\{Z < a\}]}
+         { \Phi(b) - \Phi(a) }.
+\]
+\end{proof}
+
+Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
+\begin{align*}
+  \E\{Z \mid Z > 0\} &= 2 \varphi(0) = \sqrt{2 / \pi}, \\
+  \E\{(Z - \delta)^2 \mid Z > 0 \}
+    &= \delta^2 + 1 - 4 \delta \varphi(0), \\
+  \E\{(Z - \delta)^2 \mid Z < 0 \}
+    &= \delta^2 + 1 + 4 \delta \varphi(0).
+\end{align*}
+
 \section{Counterexample with correlated variables}
 
 Suppose that $(X, Y)$ are jointly mean-zero multivariate normal with unit
@@ -756,16 +807,17 @@ $\{ Y_i \}_{i=1}^{n}$.  If $k = 1$ and $n$ is large enough, then the centroid
 will be close to $\E(Y) = 0$, in the sense that the centroid converges almost
 surely to this value as $n$ tends to infinity \citep{pollard1981strong}.
 Similarly, if $k = 2$ and $n$ is large enough, then the centroids will tend to
-$\E(Y \mid Y > 0) = \sqrt{2/\pi}$ and $\E(Y \mid Y < 0) = -\sqrt{2/\pi}$.  In
-$k = 2$ case, then if $n$ is large enough, the cluster assignment will be
-determined according to whether $Y > 0$.
+$\E(Y \mid Y > 0) = \sqrt{2/\pi}$ and $\E(Y \mid Y < 0) = -\sqrt{2/\pi}$.  We
+have used Lemma~\ref{lem:truncated-normal-moments} to compute the
+expectations.  In $k = 2$ case, then if $n$ is large enough, the cluster
+assignment will be determined according to whether $Y > 0$.
 
 In the $k = 1$ case, if $n$ is large enough, the average Gabriel
 cross-validation error converges to $\E(Y^2) = 1$. In the $k = 2$ case, if $n$
 is large enough, then the linear decision rule for the $X$ variables will be
 determined according to whether $X > 0$.  In this case, the error converges to
-$\E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]$, where $a =
-\sqrt{2/\pi}$.  From the joint normality of $X$ and $Y$, it follows that $Y
+$\E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]$, where
+$a = \sqrt{2/\pi}$.  From the joint normality of $X$ and $Y$, it follows that $Y
 \mid X$ is normal with mean $\rho X$ and variance $(1 - \rho^2)$.   Thus, in
 the $k = 2$ case, the Gabriel cross-validation error converges to $1 + a^2 (1
 - 2 \rho)$.  In particular, if $\rho > 0.5$, then the asymptotic
