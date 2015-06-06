@@ -64,10 +64,10 @@ Perry, P.~O. (2009).
 \newblock Cross-validation for unsupervised learning.
 \newblock {\em arXiv preprint arXiv:0909.3052}.
 
-\bibitem[Pollard et~al., 1981]{pollard1981strong}
-Pollard, D. et~al. (1981).
-\newblock Strong consistency of $ k $-means clustering.
-\newblock {\em The Annals of Statistics}, 9(1):135--140.
+\bibitem[Pollard, 1981]{pollard1981strong}
+Pollard, D. (1981).
+\newblock Strong consistency of $k$-means clustering.
+\newblock {\em Ann. Statist.}, 9(1):135--140.
 
 \bibitem[Sugar and James, 2003]{sugar2003finding}
 Sugar, C.~A. and James, G.~M. (2003).
