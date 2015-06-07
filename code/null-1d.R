@@ -1,7 +1,6 @@
 # code/null-1d.R
 # experiments for the null case (1 cluster) in one dimesion
 
-library("grid")
 library("MASS") # lda
 library("RColorBrewer") # brewer.pal
 
@@ -37,7 +36,7 @@ cluster <- function(x, centers, seed = 2651513, nstart = 100, ...)
 
 set.seed(0)
 
-ntrain <- 1000
+ntrain <- 100000
 ntest <- ntrain
 n <- ntest + ntrain
 train <- seq_len(ntrain)
@@ -84,86 +83,37 @@ data <- data.frame(correlation = rep(correlation, 6),
                    centers = factor(rep(c(1, 2, 3, 4, 8, 15),
                                     each=length(correlation))))
 
-h.in <- 4
-w.in <- 4
-vplay <- grid.layout(1, 2,
-                     widths=unit(w.in * c(1, 0.5), "in"),
-                     heights=unit(h.in, "in"))
 
 
+mar <- c(3.25,3.25,0.75, 4.50 + 0.75)
+mai <- mar * par("csi")
+w <- h <- 3
+
+pdf("fig.pdf", width=sum(w, mai[c(2,4)]), height=sum(h, mai[c(1,3)]))
+
+par(las=1, mai=mai, mgp=c(2.25,0.75,0), ps=11, tcl=-0.4)
+plot(data$correlation, data$mse, type="n",
+     xlab="Correlation", ylab="CV Error")
+axis(3, label=FALSE)
+axis(4, label=FALSE)
+
+for (i in seq_len(nlevels(data$centers))) {
+    k <- levels(data$centers)[i]
+    dk <- subset(data, centers == k)
+    points(dk$correlation, dk$mse, pch=i, col=i)
+}
 
 
-gp <- gpar(fontsize=11)
+centers <- levels(data$centers)
+ncenters <- nlevels(data$centers)
 
-gplot <- local({
-    g <- gTree(x = NULL, y = NULL,
-        gp = gp,
-        childrenvp = vpTree(
-            plotViewport(c(3.25, 3.25, 0.75, 0.75), name="plotRegion"),
-            vpList(dataViewport(data$correlation, data$mse,
-                                width=unit(3, "in"),
-                                height=unit(3, "in"),
-                                name="dataRegion"))),
-        children = gList(
-            xaxisGrob(vp="plotRegion::dataRegion"),
-            xaxisGrob(vp="plotRegion::dataRegion", main=FALSE, label=FALSE),
-            yaxisGrob(vp="plotRegion::dataRegion"),
-            yaxisGrob(vp="plotRegion::dataRegion", main=FALSE, label=FALSE),
-            textGrob(vp="plotRegion::dataRegion",
-                     "Correlation", y=unit(-2.75, "lines")),
-            textGrob(vp="plotRegion::dataRegion",
-                     "CV Error", x=unit(-2.75, "lines"), rot=90),
-            rectGrob(vp="plotRegion::dataRegion")))
+usr <- par("usr")
+cxy <- par("cxy")
+legend.x <- usr[2] + 3 * cxy[1]
+legend.y <- usr[3]
 
+legend(legend.x, legend.y, xjust=0, yjust=0, xpd=TRUE, bty="n",
+       title="Clusters", title.adj=0,
+       legend=centers, pch=1:ncenters, col=1:ncenters)
 
-    for (i in seq_len(nlevels(data$centers))) {
-        k <- levels(data$centers)[i]
-        dk <- subset(data, centers == k)
-        g <- addGrob(g, pointsGrob(vp="plotRegion::dataRegion",
-                                    dk$correlation, dk$mse,
-                                    size=unit(6, "points"),
-                                    pch=i, gp=gpar(col=i)))
-    }
-
-    g
-})
-
-
-
-glegend <- local({
-    centers <- levels(data$centers)
-    ncenters <- nlevels(data$centers)
-
-    title <- textGrob("Clusters")
-    entries <- legendGrob(centers, ncol=1, pch=seq_len(ncenters),
-                          hgap = unit(0.50, "lines"),
-                          vgap = unit(0.25, "lines"),
-                          gp=gpar(col=seq_len(ncenters)))
-    entries <- editGrob(entries, gPath("points"), size=unit(6, "points"),
-                        grep=TRUE, global=TRUE)
-    gf <- frameGrob()
-    gf <- packGrob(gf, title, side="bottom",
-                   border=unit(c(0.25, 0.25, 0.25, 0.25), "lines"))
-    gf <- packGrob(gf, entries, side="bottom",
-                   border=unit(c(0.25, 0.25, 0.25, 0.25), "lines"))
-    #gf <- packGrob(gf, rectGrob())
-    gTree(gp=gp, children=gList(gf))
-})
-
-
-
-gf <- frameGrob()
-gf <- packGrob(gf, gplot, row=1, col=1)
-gf <- packGrob(gf, glegend, row=1, col=2,
-               width=unit(strwidth("Clusters", "in"), "in")
-                     + unit(1, "lines"))
-
-
-pdf("fig.pdf",
-    width=sum(as.numeric(convertUnit(vplay$widths, "in"))),
-    height=sum(as.numeric(convertUnit(vplay$heights, "in"))))
-grid.newpage()
-grid.draw(gf)
-
-#abline(h=1, col=3)
-#lines(correlation, 1 + (2/pi) * (1 - 2 * abs(correlation)), col=2)
+dev.off()
