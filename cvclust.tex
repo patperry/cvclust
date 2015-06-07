@@ -814,16 +814,18 @@ assignment will be determined according to whether $Y > 0$.
 
 In the $k = 1$ case, if $n$ is large enough, the average Gabriel
 cross-validation error converges to $\E(Y^2) = 1$. In the $k = 2$ case, if $n$
-is large enough, then the linear decision rule for the $X$ variables will be
-determined according to whether $X > 0$.  In this case, the error converges to
-$\E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]$, where
-$a = \sqrt{2/\pi}$.  From the joint normality of $X$ and $Y$, it follows that $Y
-\mid X$ is normal with mean $\rho X$ and variance $(1 - \rho^2)$, so that
-$\E[(Y - a)^2 \mid X] = (\rho X - a)^2 + (1 - \rho^2)$.  Applying
-Lemma~\ref{lem:truncated-normal-moments}, in the $k = 2$ case we get that
-the Gabriel cross-validation error converges to $1 + a^2 (1 - 2 \rho)$.
-In particular, if $\rho > 0.5$, then the asymptotic
-cross-validation error for $k = 2$ will be smaller than for $k = 1$.
+is large enough and $\rho > 0$, then the linear decision rule for the $X$
+variables will be determined according to whether $X > 0$; if $\rho < 0$ then
+the decision is according to whether $X < 0$  In the $\rho > 0$ case, the
+error converges to $\E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]$,
+where $a = \sqrt{2/\pi}$.  From the joint normality of $X$ and $Y$, it follows
+that $Y \mid X$ is normal with mean $\rho X$ and variance $(1 - \rho^2)$, so
+that $\E[(Y - a)^2 \mid X] = (\rho X - a)^2 + (1 - \rho^2)$.  Applying
+Lemma~\ref{lem:truncated-normal-moments}, in the $k = 2$ case we get that the
+Gabriel cross-validation error converges to $1 + a^2 (1 - 2 \rho)$.  In the
+$\rho < 0$ case, it converges to $1 + a^2 (1 + 2 \rho)$.  In
+particular, if $|\rho| > 0.5$, then the asymptotic cross-validation error for $k
+= 2$ will be smaller than for $k = 1$.
 
 We confirm this with a simulation.  [TODO: add simulation]
 
