@@ -827,8 +827,27 @@ $\rho < 0$ case, it converges to $1 + a^2 (1 + 2 \rho)$.  In
 particular, if $|\rho| > 0.5$, then the asymptotic cross-validation error for $k
 = 2$ will be smaller than for $k = 1$.
 
-We confirm this with a simulation.  [TODO: add simulation]
+We confirm this with a simulation.  We perform $10$ replicates.  In each
+replicate, we generate $20000$ observations from a mean-zero bivariate normal
+distribution with unit marginal variances and correlation $\rho$.  We perform
+a single $2 \times 2$ fold of Gabriel cross-validation and report the
+cross-validation mean squared error for the number of clusters $k$ ranging
+from $1$ to $5$.  Figure~\ref{fig:null-2d-corr-equal} shows the
+cross-validation errors for all $10$ replicates.  The simulation demonstrates
+that in the Gabriel cross-validation criterion chooses the correct answer $k =
+1$ whenever $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever
+$|\rho| > 0.5$.
 
+\begin{figure}
+\centering
+\includegraphics[width=25pc]{figure/null-2d-corr-equal.pdf}
+\caption{Cross-validation error on $10$ replicates, with the number of
+clusters $k$ ranging from $1$ to $5$.  Data is generated from two-dimensional
+multivariate normal distribution with correlation $\rho$.  The Gabriel
+cross-validation criterion chooses the correct answer $k = 1$ whenever
+$\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
+\label{fig:null-2d-corr-equal}
+\end{figure}
 
 
 \bibliography{references}
