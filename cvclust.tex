@@ -47,7 +47,18 @@
 
 \bibpunct{(}{)}{;}{a}{,}{,}
 
+\newcommand{\CV}{\operatorname{CV}}
 \newcommand{\E}{\operatorname{E}}
+\newcommand{\dataX}{\mathfrak{X}}
+\newcommand{\Xtrain}{X_{\text{train}}}
+\newcommand{\Ytrain}{Y_{\text{train}}}
+\newcommand{\Xtest}{X_{\text{test}}}
+\newcommand{\Ytest}{Y_{\text{test}}}
+\newcommand{\hGX}{\hat G^{X}}
+\newcommand{\hGY}{\hat G^{Y}}
+\newcommand{\bpi}{\bar \pi}
+\newcommand{\bmuX}{\bar \mu^{X}}
+\newcommand{\bmuY}{\bar \mu^{Y}}
 
 \begin{document}
 \title{Estimating the number of clusters using Cross Validation}
@@ -97,59 +108,154 @@ Most existing methods are either model based method requires strong parameter as
 
 Our proposed method is a complete data-driven approach which doesn't rely on any parametric assumptions. Trough novel form of partitioning data set, we are able to employing the cross-validation procedure in clustering exactly the same way as in supervised learning problem. Hence, it's easy for reader to understand the intuition behind our proposed method. Simulation and real data application shows the superior performance of our proposed method compare with existing methods in high-dimension settings and heavy-tailed data. Since the embedded cross-validation procedure is well understood, it also makes our method potentially easily to be extended in future study. 
  
-\section{Cross-Validation in finding the number of clusters}
-Cross-Validation technique, one of the most commonly used and popular model selecting method in supervised learning, can not be used naively in unsupervised learning context. Since prediction error of new observation is calculated by its distance to the nearest cluster center, more cluster centers means much tighter fit to the feature space, and hence smaller distance (prediction error) of observation to its nearest cluster center. This holds even when the prediction is evaluated on an independent test set \citep{hastie2009elements}. Therefore, CV prefers larger $k$ if we do the CV naively.\\
 
-We propose a new strategy to locate the optimal $k$ via Cross Validation. Recall that in supervised leaning, for any CV replicate, we have data in four parts
- $\begin{pmatrix}
-  \mathbf{X}_{train} & \mathbf{Y}_{train}\\
-  \mathbf{X}_{test}  & \mathbf{Y}_{test}\\
-  \end{pmatrix}$.
-One builds learner using $\left(\mathbf{X}_{train}, \mathbf{Y}_{train}\right)$ and apply it to $ \mathbf{X}_{test}$ in order to get $\hat{\mathbf{Y}}_{test}$. Difference between $\hat{\mathbf{Y}}_{test}$ and $\mathbf{Y}_{test}$ is measured as prediction error. In unsupervised leaning context, there is no $\mathbf{Y}$, so we only get $\begin{pmatrix}
-  \mathbf{X}_{train}\\
-  \mathbf{X}_{test}\\
-  \end{pmatrix}$. \cite{perry2009cross} considered more general hold-outs in order for cross-validation to work in unsupervised learning. Specifically, two types of hold-outs are considered. The first one is Wold hold-out, which is ``speckled": we leave out random elements of the matrix $\mathbf{X}$ and use missing data algorithm like EM for prediction. The second one is Gabriel hold-out: we randomly partition the columns of $\mathbf{X}$ into ``predictors" and ``response" sets and then perform the CV as in supervised learning. This paper is focused on the Gabriel hold-out, we also developed the Wold hold-out version and included it in the comparison in simulation.  \\\\
-We now give the details of how to implement the Gabriel cross-validation to locate the optimal cluster number $k$. The Wold cross-validation algorithm is described in Appendix $A$.
+\section{Cross-validation for selecting the number of clusters}
+
+Cross-validation is commonly used for model selection in supervised learning
+problems.  In these settings, the data comes in the form of $N$
+predictor-response pairs, $(X_1, Y_1), \dotsc, (X_N, Y_N)$, with $X_i \in
+\mathbb{R}^{p}$ and $Y_i \in \mathbb{R}^{q}$.  The data can be represented as
+a matrix with $N$ rows and $p + q$ columns.  We partition the data into $K$
+hold-out ``test'' subsets, with $K$ typically chosen to be $5$ or $10$.  For each
+``fold'' $r$ in the range $1, \dotsc, K$, we permute the rows of the data
+matrix to get $\dataX$, a matrix with the $r$th test subset as its trailing
+rows.  We partition $\dataX$ as
+\[
+  \dataX =
+  \begin{bmatrix}
+    \Xtrain & \Ytrain \\
+    \Xtest  & \Ytest
+  \end{bmatrix}.
+\]
+We use the training rows $[ \Xtrain\ \Ytrain ]$ to fit a regression model
+$\hat Y = \hat Y(X)$, and then evaluate the performance of this model on the
+test set, computing the cross-validation error $\|\Ytest - \hat Y(\Xtest)\|^2$
+or some variant thereof.  We choose the model with the smallest
+cross-validation error, averaged over all $K$ folds.
+
+
+In unsupervised learning problems like factor analysis and clustering, the
+features of the observations are not naturally partitioned into ``predictors''
+and ``responses'', so we cannot directly apply the cross-validation procedure
+described above.  For factor analysis, there are at least two versions of
+cross-validation.  \citet{wold78cross} proposed a ``speckled'' holdout, where
+in each fold we leave out a subset of the elements of the data matrix.  Wold's
+procedure works well empirically, but does not have any theoretical support,
+and it requires a factor analysis procedure that can handle missing data.
+\citet{owen2009bi} proposed a scheme called ``bi-cross-validation'' wherein
+each fold designates a subset of the data matrix columns to be response and a
+subset of the rows to be test data.  This generalized a procedure due to
+\citet{gabriel2002biblot}, who proposed holding out a single column and a
+single row at each fold.  Owen and Perry proved that this procedure is
+self-consistent, in the sense that it performs the correct model selection in
+the absence of noise, and \citet{perry2009cross} provided more theoretical
+support.
+
+
+In this report, we extend the Wold and Gabriel methods to the clustering
+problem, specifically to choose an appropriate number of clusters for a
+dataset.  We prove that the Gabriel method is self-consistent, and we analyze
+some of its properties in the presence of noise.  We compare these methods to
+state-of-the-art algorithms, and show that both are competitive.
+
+
+
+%% [POP] This paragraph doesn't fit into the section.  Maybe put it in the introduction?
+%% 
+%% Cross-Validation technique, one of the most commonly used and popular model
+%% selecting method in supervised learning, can not be used naively in
+%% unsupervised learning context. Since prediction error of new observation is
+%% calculated by its distance to the nearest cluster center, more cluster centers
+%% means much tighter fit to the feature space, and hence smaller distance
+%% (prediction error) of observation to its nearest cluster center. This holds
+%% even when the prediction is evaluated on an independent test set
+%% \citep{hastie2009elements}. Therefore, CV prefers larger $k$ if we do the CV
+%% naively.
+
+
+
+
+We now give the details of how to implement
+the Gabriel cross-validation to locate the optimal cluster number $k$. The
+Wold cross-validation algorithm is described in Appendix $A$.
+
 
 \subsection*{Gabriel CV algorithm}
-The basic idea of Gabriel hold-out is to ``create" the label $(Y)$ for data without it, and then perform the cross-validation as in supervised learning. Specifically, given data set 
-$\mathbf{X} \in \mathbb{R}^{n \times p}$, we partition it into four parts
+
+We are given a data matrix with $N$ rows and $P$ columns.  In each fold of
+cross-validation, we permute the rows and columns of the data matrix and then
+partition the rows and columns as $N = n + m$ and $P = p + q$ for 
+non-negative integers $n$, $m$, $p$, and $q$.  We treat the first $p$
+columns as ``predictors'' and the last $q$ columns as ``responses'';
+similarly, we treat the first $n$ rows as ``training'' and the last $m$ rows
+as ``test''.  In block form, the permuted data matrix is
 \[
-\begin{pmatrix}
-  \mathbf{X}_{train} & \mathbf{Y}_{train}\\
-  \mathbf{X}_{test}  & \mathbf{Y}_{test}\\
-  \end{pmatrix} \equiv 
-  \begin{pmatrix}
-  \mathbf{X}^{m \times q } & \mathbf{X}^{m \times (p-q)}\\
-  \mathbf{X}^{(n-m) \times q}  & \mathbf{X}^{(n-m) \times (p-q)}\\
-  \end{pmatrix}
- \]
-  where $ 1 < m < n$ and $1<q<p$. That is, we leave out $n-m$ rows of data as test set, and make $p-q$ features as ``response". Note that the data set looks like the one in supervised learning now.\\\\
-To keep it consistent with the notation used in section $3$, we also denote above partition of data $\mathbf{X}$ as 
-\[
-\begin{pmatrix}
-  \mathbf{X}_{train} & \mathbf{Y}_{train}\\
-  \mathbf{X}_{test}  & \mathbf{Y}_{test}\\
-  \end{pmatrix} \equiv 
-  \begin{pmatrix}
-\mathbf{X}^L_{train} & \mathbf{X}^R_{train}\\
-  \mathbf{X}^L_{test}  & \mathbf{X}^R_{test}\\
-  \end{pmatrix}
- \]
-That is, data set $\mathbf{X} \in \mathbb{R}^{n \times p}$ been partitioned in column as $\mathbf{X}^L \in \mathbb{R}^{n \times L}$ and $\mathbf{X}^R \in \mathbb{R}^{n \times R}$, where $\mathbf{X}^L$ is treated as features ($L=q$) and $\mathbf{X}^R$ is treated as response ($R=p-q$).\\
-\begin{itemize}
-	\item For each $k = 1,2,...,k_{max}$, the Gabriel algorithm works as following
-	\begin{enumerate}
- 	\item A set of $k$ clusters (labels) $ \mathcal{G}= \{g_1,...,g_k\} $ are returned by applying K-means on $\mathbf{X}^R_{train}$ with parameter $k$, $\hat{\mu}^R \left(g_j\right)$ is the corresponding estimated cluster center for $g_j$, $1 \leq j \leq k$.  
- 	\item Train a classifier $\mathcal{C}$ using $\left(\mathbf{X}^L_{train}, \mathcal{G} \right)$. We implement LDA in our algorithm.
- 	\item Applying the classifier $\mathcal{C}$ on $\mathbf{X}^L_{test}$, we got a set of predicted clusters $\hat{\mathcal{G}} = \{\hat{g} \left(x^L_i\right) \in \mathcal{G}, i = m+1,...,n \}$, where $\hat{g} \left(x^L_i\right)$ is the predicted (assigned) cluster for observation $x_i$ in the testing data set   
- 	\item Calculate the difference between $\hat{\mathcal{G}}$ and  $\mathbf{X}^R_{test}$ as
- 	\[Error_k = \sum^n_{i = m+1} ||\hat{g} \left(x^L_i\right) - x^R_i||^2 = \sum^k_{j=1} \sum_{g_j = \hat{g} \left(x^L_i\right)} ||\hat{\mu}^R \left(g_j\right) - x^R_i||^2\]
- 	\end{enumerate}
-	Note that one can use classification technique other than LDA in step $2.$
+  \dataX
+  =
+  \begin{bmatrix}
+    \Xtrain & \Ytrain \\
+    \Xtest  & \Ytest
+  \end{bmatrix},
+\]
+where
+$\Xtrain \in \mathbb{R}^{n \times p}$,
+$\Ytrain \in \mathbb{R}^{n \times q}$,
+$\Xtest \in \mathbb{R}^{m \times p}$,
+and
+$\Ytest \in \mathbb{R}^{m \times q}$.
+
+
+Given such a partition of $\dataX$, we perform four steps for each value of
+$k$, the number of clusters:
+\begin{enumerate}
+  \item \label{step:gabriel-cluster}
+    \textbf{Cluster:}
+    Cluster $Y_{1}, \dotsc, Y_n$, the rows of $\Ytrain$, yielding the
+    assignment rule $\hGY : \mathbb{R}^q \to \{ 1, \dotsc, k \}$ and the
+    clusters means $\bmuY_1, \dotsc, \bmuY_k$.  Set $\hGY_i = \hGY(Y_i)$ to
+    be the assigned cluster for row $i$.
+
+  \item \label{step:gabriel-classify}
+    \textbf{Classify:}
+    Take $X_{1}, \dotsc, X_n$, the rows of $\Xtrain$ to be predictors,
+    and take $\hGY_1, \dotsc, \hGY_n$ to be corresponding class labels.  Use
+    the pairs $\{ (X_i, \hGY_i) \}_{i=1}^{n}$ to train a classifier
+    $\hGX : \mathbb{R}^p \to \{ 1, \dotsc, k \}$.
+
+  \item \label{step:gabriel-predict}
+    \textbf{Predict:}
+    Apply the classifier to $X_{n+1}, \dotsc, X_{n+m}$, the rows of
+    $\Xtest$, yielding predicted classes $\hGX_i = \hGX(X_i)$ for
+    $i = n+1, \dotsc, n+m$.  For each value of $i$ in this range, compute
+    predicted response $\hat Y_i = \bmuY(\hGX_i)$, where
+    $\bmuY(g) = \bmuY_g$.
+
+  \item \label{step:gabriel-evaluate}
+    \textbf{Evaluate:}
+    Compute the cross-validation error
+    \[
+      \CV(k) = \frac{1}{m} \sum_{i=n+1}^{n+m} \|Y_i - \hat Y_i\|^2,
+    \]
+    where $Y_{n+1}, \dotsc, Y_{n+m}$ are the rows of $\Ytest$.
+\end{enumerate}
 \noindent
-	\item The algorithm selects $k$ with minimum average $Error_k$ across all CV folds, that is $$\underset{k}{\operatorname{argmin}} \hspace{0.05 in} E\left(Error_k\right) $$
-\end{itemize}
+In principle, we could use any clustering and classification methods in
+steps~\ref{step:gabriel-cluster} and~\ref{step:gabriel-classify}.  In this
+report, we use $k$-means as the clustering algorithm and linear discriminant
+analysis (LDA) as the classification procedure.
+
+
+To choose the folds, we randomly partition the rows and columns into $K$ and
+$L$ subsets, respectively.  Each fold is indexed by a pair $(r,s)$ of
+integers, with $r \in \{1, \dotsc, K\}$ and $s \in \{1, \dotsc, L\}$.  Fold
+$(r,s)$ treats the $r$th row subset as ``test'', and the $s$th column subset
+as ``response''.  Following \citet{owen2009bi}, we take $K = L = 2$.  For the
+number of clusters, we select the value of $k$ that minimizes the average of
+$\CV(k)$ over all $K \times L$ folds.
+
+
+
+
 \section{Theoretical justification of Gabriel CV method}
 This section gives the self-consistency proof of the proposed Gabriel method. What's more, its asymptotic property under suitable condition will be shown in this section in order to give the idea of why the Gabriel CV method works.\\
 

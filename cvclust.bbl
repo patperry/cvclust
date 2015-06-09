@@ -33,6 +33,12 @@ Fujita, A., Takahashi, D.~Y., and Patriota, A.~G. (2014).
 \newblock A non-parametric method to estimate the number of clusters.
 \newblock {\em Computational Statistics \& Data Analysis}, 73:27--39.
 
+\bibitem[Gabriel, 2002]{gabriel2002biblot}
+Gabriel, K.~R. (2002).
+\newblock Le biplot--outil d'exploration de donn\'{e}es multidimensionelles.
+\newblock {\em Journal de la Soci\'{e}t\'{e} Francaise de Statistique},
+  143:5--55.
+
 \bibitem[Gorman and Sejnowski, 1988]{gorman1988analysis}
 Gorman, R.~P. and Sejnowski, T.~J. (1988).
 \newblock Analysis of hidden units in a layered network trained to classify
@@ -41,12 +47,8 @@ Gorman, R.~P. and Sejnowski, T.~J. (1988).
 
 \bibitem[Hartigan, 1975]{hartigan1975clustering}
 Hartigan, J.~A. (1975).
-\newblock Clustering algorithms.
-
-\bibitem[Hastie et~al., 2009]{hastie2009elements}
-Hastie, T., Tibshirani, R., and Friedman, J. (2009).
-\newblock {\em The elements of statistical learning}, volume~2.
-\newblock Springer.
+\newblock {\em Clustering Algorithms}.
+\newblock Wiley.
 
 \bibitem[Jain, 2010]{jain2010data}
 Jain, A.~K. (2010).
@@ -59,10 +61,16 @@ Mangasarian, O.~L., Setiono, R., and Wolberg, W. (1990).
   medical diagnosis.
 \newblock {\em Large-scale numerical optimization}, pages 22--31.
 
+\bibitem[Owen and Perry, 2009]{owen2009bi}
+Owen, A.~B. and Perry, P.~O. (2009).
+\newblock Bi-cross-validation of the svd and the nonnegative matrix
+  factorization.
+\newblock {\em Ann. Appl. Stat.}, 3(2):564--594.
+
 \bibitem[Perry, 2009]{perry2009cross}
 Perry, P.~O. (2009).
-\newblock Cross-validation for unsupervised learning.
-\newblock {\em arXiv preprint arXiv:0909.3052}.
+\newblock {\em Cross-Validation for Unsupervised Learning}.
+\newblock PhD thesis, Stanford University.
 
 \bibitem[Pollard, 1981]{pollard1981strong}
 Pollard, D. (1981).
@@ -91,5 +99,11 @@ Tibshirani, R., Walther, G., and Hastie, T. (2001).
 Wang, J. (2010).
 \newblock Consistent selection of the number of clusters via crossvalidation.
 \newblock {\em Biometrika}, 97(4):893--904.
+
+\bibitem[Wold, 1978]{wold78cross}
+Wold, S. (1978).
+\newblock Cross-validatory estimation of the number of components in factor and
+  principal components models.
+\newblock {\em Technometrics}, 20:397--405.
 
 \end{thebibliography}
