@@ -72,35 +72,50 @@ Many clustering methods, including K-means, require the user to specify the numb
 \section{Introduction}
 As a main task of exploratory data analysis, clustering organizes unlabeled observations into groups such that observations in same group are more similar compare to those in different group. Clustering is an important topic in unsupervised learning because it can reveal the internal structure of data through grouping, segment the data through partitioning and summarize data for other purposes such as dimension reduction. It has being widely used in various fields such as psychology, biology, statistics and machine learning including pattern recognition, image segmentation etc.\\
 
-After being proposed more than $50$ years, $K$-mean remains one of the most popular and widely used clustering algorithms \citep{jain2010data}. Like many other clustering methods, $K$-mean requires an input parameter $k$, the number of clusters, to be specified by the user. Automatically and quantitatively deciding such parameter is important and yet unsolved problem \citep{fujita2014non}. Various methods have been proposed to tackle this difficulty. One ad hoc approach is to explore the relationship between $W_k$ (within-cluster dispersion) and the number of cluster $k$ for a certain clustering method such as $K$-mean. Since $W_k$ decreases as $k$ increases, one usually find the ``elbow" of curve $W_k$ \textsl{VS} $k$ as the appropriate number of clusters. The example on the top row of Figure \ref{fig1} demonstrates such approach for data with $k=4$, where the ``elbow" point indeed reveals the true number of clusters. This is based on the idea that under partitioning data set has more impact than over partitioning data set in terms of $W_k$. However, locating the ``elbow" point is somewhat subjective and sometimes is not appropriate to select the optimal $k$. The second example on the bottom row of Figure \ref{fig1} shows a  situation where there is no clear choice of the ``elbow" point -- both $k=2$ and $k=3$ can be viewed as the ``elbow" point. What's more, the true $k=4$ can never be selected as the optimal $k$ using such approach in this case since it can hardly be viewed as the ``elbow" of the curve.
-\begin{figure}
-\begin{minipage}{\linewidth}
-\centering
-\begin{minipage}{0.45\linewidth}
-\includegraphics[width=\linewidth]{figure/Data_example.pdf}
-\end{minipage}
-\hspace{0.05in}
-\begin{minipage}{0.45\linewidth}
-\includegraphics[width=\linewidth]{figure/W_k.pdf}
-\end{minipage}
-\end{minipage}
-%\center{\caption{\label{fig1} Left plot shows the actual data, and the right plot shows the $W_k$ \textsl{VS} $k$ curve. }}
-%\end{figure}
+After being proposed more than $50$ years, $K$-mean remains one of the most
+popular and widely used clustering algorithms \citep{jain2010data}. Like many
+other clustering methods, $K$-mean requires an input parameter $k$, the number
+of clusters, to be specified by the user. Automatically and quantitatively
+deciding such parameter is important and yet unsolved problem
+\citep{fujita2014non}. Various methods have been proposed to tackle this
+difficulty. One ad hoc approach is to explore the relationship between $W_k$
+(within-cluster dispersion) and the number of cluster $k$ for a certain
+clustering method such as $K$-mean. Since $W_k$ decreases as $k$ increases,
+one usually find the ``elbow" of curve $W_k$ \textsl{VS} $k$ as the
+appropriate number of clusters. The example on the top row of Figure
+\ref{fig:elbow} demonstrates such approach for data with $k=4$, where the
+``elbow" point indeed reveals the true number of clusters. This is based on
+the idea that under partitioning data set has more impact than over
+partitioning data set in terms of $W_k$. However, locating the ``elbow" point
+is somewhat subjective and sometimes is not appropriate to select the optimal
+$k$. The second example on the bottom row of Figure \ref{fig:elbow} shows a  situation where there is no clear choice of the ``elbow" point -- both $k=2$ and $k=3$ can be viewed as the ``elbow" point. What's more, the true $k=4$ can never be selected as the optimal $k$ using such approach in this case since it can hardly be viewed as the ``elbow" of the curve.
 
-%\begin{figure}
-\begin{minipage}{\linewidth}
+\begin{figure}
 \centering
-\begin{minipage}{0.45\linewidth}
-\includegraphics[width=\linewidth]{figure/Data_elbow.pdf}
+\begin{minipage}{\linewidth}
+  \begin{minipage}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{figure/elbow-correct-data.pdf}
+  \end{minipage}
+  \hspace{0.05in}
+  \begin{minipage}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{figure/elbow-correct-withinss.pdf}
+  \end{minipage}
 \end{minipage}
-\hspace{0.05in}
-\begin{minipage}{0.45\linewidth}
-\includegraphics[width=\linewidth]{figure/elbow.pdf}
+\begin{minipage}{\linewidth}
+  \begin{minipage}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{figure/elbow-incorrect-data.pdf}
+  \end{minipage}
+  \hspace{0.05in}
+  \begin{minipage}{0.45\linewidth}
+    \includegraphics[width=\linewidth]{figure/elbow-incorrect-withinss.pdf}
+  \end{minipage}
 \end{minipage}
-\end{minipage}
-\center{\caption{\label{fig1} Left plots show the actual data, right plots show the corresponding $W_k$ \textsl{VS} $k$ curve. }}
+\caption{Left panels show the $(X,Y)$ data points; right panels
+  show the corresponding values of the within-cluster sum of squares $W_k$
+plotted against the number of clusters, $k$.}
+\label{fig:elbow}
 \end{figure}
-\\
+
 
 Recently, there are several new proposals to find the $k$ automatically. Gap statistics \citep{tibshirani2001estimating} estimates $k$ by comparing the change in within-cluster dispersion with that expected under an appropriate reference null distribution. Specifically, the graph of $log(W_k)$ is compared with its expectation under an appropriate null reference distribution of the data. The value of $k$ associated with the largest gap between $log(W_k)$ and the reference curve is selected as optimal $k$. \cite{sugar2003finding} proposed an approach which finds the number of clusters based on distortion, a quantity that measures the average distance, per dimension. It's backed by a rigorous theoretical justification based on information-theoretic ideas.   \cite{fraley2002model}'s Model-based method employs the EM algorithm to estimate the parameters in Gaussian mixture model, and select the best model ($k$) using BIC criterion. Stability-based criterion is also proposed to locate the best $k$ by some authors such as \cite{ben2001stability}, \cite{wang2010consistent} and \cite{fang2012selection}. \cite{chiang2010intelligent} provides a nice review of existing methods for finding the right $k$ in published literature. \\
 
