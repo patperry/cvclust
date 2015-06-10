@@ -1,12 +1,11 @@
-# figure/elbow.R
+#!/usr/bin/Rscript --vanilla
 
 library("MASS") 	# mvrnorm
 library("RColorBrewer") # brewer.pal
 
-source("../code/cluster.R") # cluster_kmeans
+source("../../code/cluster.R") # cluster_kmeans
 
 
-palette(brewer.pal(6, "Set1"))
 
 ##---------------------Top plot of figure 1-----------------------------------
 
@@ -25,7 +24,8 @@ data <- rbind(data.frame(x=x1[,1], y=x1[,2], group="1"),
 
 
 mar <- c(3.25, 3.25, 1.75, 1.75)
-mai <- mar * par("csi")
+csi <- 0.2 # default value of par("csi")
+mai <- mar * csi
 w <- h <- 3
 mypar <- list(las=1, mai=mai, mgp=c(2.25, 0.75, 0), ps=11, tcl=-0.4)
 
@@ -34,7 +34,8 @@ height <- h + sum(mai[c(2,4)])
 
 
 
-pdf("elbow-correct-data.pdf", width=width, height=height)
+pdf("correct-data.pdf", width=width, height=height)
+palette(brewer.pal(6, "Set1"))
 par(mypar)
 
 plot(data$x, data$y, type="n", xlab="X", ylab="Y")
@@ -53,7 +54,7 @@ for (i in seq_along(centers)) {
 }
 
 
-pdf("elbow-correct-withinss.pdf", width=width, height=height)
+pdf("correct-withinss.pdf", width=width, height=height)
 par(mypar)
 
 plot(centers, tot.withinss, type="b",
@@ -79,7 +80,7 @@ data <- rbind(data.frame(x=x1[,1], y=x1[,2], group="1"),
 	      data.frame(x=x3[,1], y=x3[,2], group="3"),
 	      data.frame(x=x4[,1], y=x4[,2], group="4"))
 
-pdf("elbow-incorrect-data.pdf", width=width, height=height)
+pdf("incorrect-data.pdf", width=width, height=height)
 par(mypar)
 
 plot(data$x, data$y, type="n", xlab="X", ylab="Y")
@@ -99,7 +100,7 @@ for (i in seq_along(centers)) {
 }
 
 
-pdf("elbow-incorrect-withinss.pdf", width=width, height=height)
+pdf("incorrect-withinss.pdf", width=width, height=height)
 par(mypar)
 
 plot(centers, tot.withinss, type="b",

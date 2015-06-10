@@ -1,8 +1,9 @@
-# code/null-2d-corr.R
+#!/usr/bin/Rscript --vanilla
+
 
 library("MASS")
-source("../code/classify.R")
-source("../code/cluster.R")
+source("../../code/classify.R")
+source("../../code/cluster.R")
 
 
 set.seed(7627579) # from random.org
@@ -64,5 +65,5 @@ for (r in seq_len(nrep)) {
 sim$replicate <- as.factor(sim$replicate)
 sim$centers <- as.factor(sim$centers)
 
-write.csv(sim, "null-2d-corr.csv", row.names=FALSE)
+write.csv(sim, "nullcorr.csv", row.names=FALSE)
 

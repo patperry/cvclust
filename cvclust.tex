@@ -94,20 +94,20 @@ $k$. The second example on the bottom row of Figure \ref{fig:elbow} shows a  sit
 \centering
 \begin{minipage}{\linewidth}
   \begin{minipage}{0.45\linewidth}
-    \includegraphics[width=\linewidth]{figure/elbow-correct-data.pdf}
+    \includegraphics[width=\linewidth]{demo/elbow/correct-data.pdf}
   \end{minipage}
   \hspace{0.05in}
   \begin{minipage}{0.45\linewidth}
-    \includegraphics[width=\linewidth]{figure/elbow-correct-withinss.pdf}
+    \includegraphics[width=\linewidth]{demo/elbow/correct-withinss.pdf}
   \end{minipage}
 \end{minipage}
 \begin{minipage}{\linewidth}
   \begin{minipage}{0.45\linewidth}
-    \includegraphics[width=\linewidth]{figure/elbow-incorrect-data.pdf}
+    \includegraphics[width=\linewidth]{demo/elbow/incorrect-data.pdf}
   \end{minipage}
   \hspace{0.05in}
   \begin{minipage}{0.45\linewidth}
-    \includegraphics[width=\linewidth]{figure/elbow-incorrect-withinss.pdf}
+    \includegraphics[width=\linewidth]{demo/elbow/incorrect-withinss.pdf}
   \end{minipage}
 \end{minipage}
 \caption{Left panels show the $(X,Y)$ data points; right panels
@@ -953,7 +953,7 @@ replicate, we generate $20000$ observations from a mean-zero bivariate normal
 distribution with unit marginal variances and correlation $\rho$.  We perform
 a single $2 \times 2$ fold of Gabriel cross-validation and report the
 cross-validation mean squared error for the number of clusters $k$ ranging
-from $1$ to $5$.  Figure~\ref{fig:null-2d-corr-equal} shows the
+from $1$ to $5$.  Figure~\ref{fig:nullcorr-equal} shows the
 cross-validation errors for all $10$ replicates.  The simulation demonstrates
 that in the Gabriel cross-validation criterion chooses the correct answer $k =
 1$ whenever $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever
@@ -961,13 +961,13 @@ $|\rho| > 0.5$.
 
 \begin{figure}
 \centering
-\includegraphics[width=25pc]{figure/null-2d-corr-equal.pdf}
+\includegraphics[width=25pc]{demo/nullcorr/equal.pdf}
 \caption{Cross-validation error on $10$ replicates, with the number of
 clusters $k$ ranging from $1$ to $5$.  Data is generated from two-dimensional
 multivariate normal distribution with correlation $\rho$.  The Gabriel
 cross-validation criterion chooses the correct answer $k = 1$ whenever
 $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
-\label{fig:null-2d-corr-equal}
+\label{fig:nullcorr-equal}
 \end{figure}
 
 

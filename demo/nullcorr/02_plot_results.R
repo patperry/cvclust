@@ -1,21 +1,21 @@
-# figure/null-2d-corr.R
-#
+#!/usr/bin/Rscript --vanilla
 
 
 library("RColorBrewer") # brewer.pal
-palette(brewer.pal(6, "Set1"))
 
-data <- read.csv("../sim/null-2d-corr.csv")
+data <- read.csv("nullcorr.csv")
 data$replicate <- as.factor(data$replicate)
 data$centers <- as.factor(data$centers)
 
 mar <- c(3.25,3.25,0.75, 4.50 + 0.75)
-mai <- mar * par("csi")
+csi <- 0.2 # default value of par("csi")
+mai <- mar * csi
 w <- h <- 3
 
 for (prior in levels(data$prior)) {
-    filename <- paste0("null-2d-corr-", prior, ".pdf")
+    filename <- paste0(prior, ".pdf")
     pdf(filename, width=sum(w, mai[c(2,4)]), height=sum(h, mai[c(1,3)]))
+    palette(brewer.pal(6, "Set1"))
 
     d <- data[data$prior == prior,]
 
