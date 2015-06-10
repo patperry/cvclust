@@ -1,6 +1,6 @@
-# figure/elbow
+# figure/elbow.R
 
-library("MASS")         # mvrnorm
+library("MASS") 	# mvrnorm
 library("RColorBrewer") # brewer.pal
 
 source("../code/cluster.R") # cluster_kmeans
@@ -18,9 +18,9 @@ x3 <- mvrnorm(20, c(3.0, 1.5), 0.15 * diag(2))
 x4 <- mvrnorm(20, c(3.7, 3.7), 0.10 * diag(2))
 
 data <- rbind(data.frame(x=x1[,1], y=x1[,2], group="1"),
-              data.frame(x=x2[,1], y=x2[,2], group="2"),
-              data.frame(x=x3[,1], y=x3[,2], group="3"),
-              data.frame(x=x4[,1], y=x4[,2], group="4"))
+	      data.frame(x=x2[,1], y=x2[,2], group="2"),
+	      data.frame(x=x3[,1], y=x3[,2], group="3"),
+	      data.frame(x=x4[,1], y=x4[,2], group="4"))
 
 
 
@@ -48,7 +48,7 @@ dev.off()
 centers <- 1:10
 tot.withinss <- rep(NA, length(centers))
 for (i in seq_along(centers)) {
- 	cl <- cluster_kmeans(cbind(data$x, data$y), centers[i])
+	cl <- cluster_kmeans(cbind(data$x, data$y), centers[i])
     tot.withinss[i] <- cl$tot.withinss
 }
 
@@ -69,15 +69,15 @@ dev.off()
 
 set.seed(1) # seed chosen to make well-separated clusters
 
-x1 <- 0.3 * mvrnorm(100, c( 5,  5), 3.0 * diag(2))
-x2 <- 0.3 * mvrnorm( 20, c( 5, 12),       diag(2))
-x3 <- 0.3 * mvrnorm( 10, c( 9,  9), 0.5 * diag(2))
-x4 <- 0.3 * mvrnorm(100, c(12, 12),       diag(2))
+x1 <- 0.3 * mvrnorm(100, c( 5,	5), 3.0 * diag(2))
+x2 <- 0.3 * mvrnorm( 20, c( 5, 12),	  diag(2))
+x3 <- 0.3 * mvrnorm( 10, c( 9,	9), 0.5 * diag(2))
+x4 <- 0.3 * mvrnorm(100, c(12, 12),	  diag(2))
 
 data <- rbind(data.frame(x=x1[,1], y=x1[,2], group="1"),
-              data.frame(x=x2[,1], y=x2[,2], group="2"),
-              data.frame(x=x3[,1], y=x3[,2], group="3"),
-              data.frame(x=x4[,1], y=x4[,2], group="4"))
+	      data.frame(x=x2[,1], y=x2[,2], group="2"),
+	      data.frame(x=x3[,1], y=x3[,2], group="3"),
+	      data.frame(x=x4[,1], y=x4[,2], group="4"))
 
 pdf("elbow-incorrect-data.pdf", width=width, height=height)
 par(mypar)
@@ -94,7 +94,7 @@ dev.off()
 centers <- 1:10
 tot.withinss <- rep(NA, length(centers))
 for (i in seq_along(centers)) {
- 	cl <- cluster_kmeans(cbind(data$x, data$y), centers[i])
+	cl <- cluster_kmeans(cbind(data$x, data$y), centers[i])
     tot.withinss[i] <- cl$tot.withinss
 }
 
