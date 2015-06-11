@@ -6,8 +6,9 @@ library("devtools")
 library("e1071")
 library("mclust")
 library("MASS")
-load_all("../../lib/fpc")
-load_all("../../lib/NbClust")
+library("parallel")
+load_all("../../lib/fpc", export_all=FALSE)
+load_all("../../lib/NbClust", export_all=FALSE)
 source("../../code/classify.R")
 source("../../code/cluster.R")
 source("../../code/gabriel.R")
@@ -15,6 +16,8 @@ source("../../code/jump.R")
 source("../../code/wold.R")
 source("methods.R")
 
+
+options(cl.cores=2)
 
 kmax <- 10
 
@@ -36,15 +39,25 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
             cat("applying method '", m, "' to '", s, "'\n", sep="")
 
             set.seed(5453546) # from random.org
+            method <- methods[[m]]
             nclusters <- integer(nrep)
 
-            pb <- txtProgressBar(0, nrep, style=3)
-            for (r in seq_along(replicates)) {
-                x <- replicates[[r]]$x
-                nclusters[r] <- methods[[m]](x, kmax)
-                setTxtProgressBar(pb, r)
-            }
-            close(pb)
+            cl <- makeCluster(getOption("cl.cores", 2))
+            clusterExport(cl=cl, varlist=c("replicates", "method", "kmax",
+                                           "classify_lda",
+                                           "cluster_kmeans",
+                                           "compute.jump",
+                                           "cv.kmeans.gabriel",
+                                           "Impute",
+                                           "jump",
+                                           "kmeans.rndstart",
+                                           "mclustBIC",
+                                           "WoldIter",
+                                           "Wold_holdout"))
+            nclusters <- parSapply(cl, seq_len(nrep), function(r) {
+                    x <- replicates[[r]]$x
+                    method(x, kmax)
+                })
 
             nclusters <- as.integer(nclusters)
             saveRDS(nclusters, f.method)
