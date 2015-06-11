@@ -2,7 +2,8 @@
 
 
 # default seed chosen by random.org
-cluster_kmeans <- function(x, centers, seed = 2651513, nstart = 100, ...)
+cluster_kmeans <- function(x, centers, seed = 2651513, iter.max = 100,
+                           nstart = 100, ...)
 {
     if (!is.na(seed)) {
         if ((exists0 <- exists(".Random.seed", envir=globalenv()))) {
@@ -11,7 +12,7 @@ cluster_kmeans <- function(x, centers, seed = 2651513, nstart = 100, ...)
         set.seed(seed)
     }
 
-    cl <- stats::kmeans(x, centers, nstart=nstart, ...)
+    cl <- stats::kmeans(x, centers, iter.max=iter.max, nstart=nstart, ...)
 
     if (!is.na(seed)) {
         if (exists0) {
