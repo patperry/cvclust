@@ -2,7 +2,7 @@
 
 source("../../code/cluster.R") # cluster_kmeans
 
-kmax <- 10
+kmax <- 15
 
 
 for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
