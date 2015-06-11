@@ -73,49 +73,6 @@ setting2 <- function()
 }
 
 
-
-Data3center <- function(number = 40)
-{
-     Centers <- mvrnorm(3, rep(0,20), 19*diag(20))
-     u1 <- Centers[1,]
-     u2 <- Centers[2,]
-     u3 <- Centers[3,]
-
-     condition <- TRUE
-     while(condition){
-	      obs1 <- (matrix(u1,nrow=number,ncol=20,byrow=T)
-                   + matrix(rexp(number*20, rate = 1),ncol=20)-1)
-		U1 <- matrix(u1,nrow=number,ncol=20,byrow=T)
-		obs2 <- (matrix(u2,nrow=number,ncol=20,byrow=T)
-                 + matrix(rexp(number*20, rate = 1/2),ncol=20)-2)
-		U2 <- matrix(u2,nrow=number,ncol=20,byrow=T)
-		obs3 <- (matrix(u3,nrow=number,ncol=20,byrow=T)
-                 + matrix(rexp(number*20, rate = 1/5),ncol=20)-5)
-		U3 <-  matrix(u3,nrow=number,ncol=20,byrow=T)
-
-		if(sum(location(obs1,Centers)==1)==number
-           & sum(location(obs2,Centers)==2)==number
-           & sum(location(obs3,Centers)==3)==number){
-			condition <- FALSE
-		}
-	}
-	Data <- rbind(obs1,obs2,obs3)
-	Mu <- rbind(U1,U2,U3)
-	ID <- sample(1:nrow(Data),nrow(Data),replace = FALSE)
-	Data <- Data[ID,]
-
-	Mean <- Mu[ID,]
-	list(x = Data, mean = Mean)
-}
-
-
-setting3 <- function()
-{
-    Data3center(40)
-}
-
-
-
 Data4center <- function(di = 10, dd = 1.9){ #Another pair is di=4 and dd=5
 	condition <- TRUE
 	while(condition){
@@ -168,7 +125,7 @@ Data4center <- function(di = 10, dd = 1.9){ #Another pair is di=4 and dd=5
 }
 
 
-setting4 <- function()
+setting3 <- function()
 {
     Data4center(di = 100, dd = 0.65)
 }
@@ -239,12 +196,10 @@ Data10center <- function(di = 100, dd = 0.72){
 }
 
 
-setting5 <- function()
+setting4 <- function()
 {
     Data10center(di = 100, dd = 0.72)
 }
-
-
 
 
 Data4lognormal <- function(di = 16, dd = 1.2){
@@ -290,9 +245,50 @@ Data4lognormal <- function(di = 16, dd = 1.2){
 }
 
 
+setting5 <- function()
+{
+    Data4lognormal(16,1.2)
+}
+
+
+Data3center <- function(number = 40)
+{
+     Centers <- mvrnorm(3, rep(0,20), 19*diag(20))
+     u1 <- Centers[1,]
+     u2 <- Centers[2,]
+     u3 <- Centers[3,]
+
+     condition <- TRUE
+     while(condition){
+	      obs1 <- (matrix(u1,nrow=number,ncol=20,byrow=T)
+                   + matrix(rexp(number*20, rate = 1),ncol=20)-1)
+		U1 <- matrix(u1,nrow=number,ncol=20,byrow=T)
+		obs2 <- (matrix(u2,nrow=number,ncol=20,byrow=T)
+                 + matrix(rexp(number*20, rate = 1/2),ncol=20)-2)
+		U2 <- matrix(u2,nrow=number,ncol=20,byrow=T)
+		obs3 <- (matrix(u3,nrow=number,ncol=20,byrow=T)
+                 + matrix(rexp(number*20, rate = 1/5),ncol=20)-5)
+		U3 <-  matrix(u3,nrow=number,ncol=20,byrow=T)
+
+		if(sum(location(obs1,Centers)==1)==number
+           & sum(location(obs2,Centers)==2)==number
+           & sum(location(obs3,Centers)==3)==number){
+			condition <- FALSE
+		}
+	}
+	Data <- rbind(obs1,obs2,obs3)
+	Mu <- rbind(U1,U2,U3)
+	ID <- sample(1:nrow(Data),nrow(Data),replace = FALSE)
+	Data <- Data[ID,]
+
+	Mean <- Mu[ID,]
+	list(x = Data, mean = Mean)
+}
+
+
 setting6 <- function()
 {
-    Data10center(di = 100, dd = 0.72)
+    Data3center(40)
 }
 
 
