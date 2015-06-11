@@ -84,7 +84,7 @@ dudahart2 <- function(x,clustering,alpha=0.001){
 
 
 kmeansruns <- function(data,krange=2:10,criterion="ch",
-                       iter.max=100,runs=100,
+                       runs=100,
                        scaledata=FALSE,alpha=0.001,
                        critout=FALSE,plot=FALSE,...){
   data <- as.matrix(data)
@@ -101,7 +101,7 @@ kmeansruns <- function(data,krange=2:10,criterion="ch",
         options(show.error.messages = FALSE)
         repeat{
 #          cat(k," ",i,"before \n")
-          kmm <- try(kmeans(data,k,iter.max=iter.max,...))
+          kmm <- try(cluster_kmeans(data,k,...))
 #          str(kmm)
           if (class(kmm) != "try-error") break
 #         cat(k," ",i,"\n")
