@@ -2,6 +2,7 @@
 #
 # Depends:
 #   library("MASS")
+#
 
 
 classify_lda <- function(x, grouping, prior=c("proportions", "equal"))
@@ -21,4 +22,3 @@ classify_lda <- function(x, grouping, prior=c("proportions", "equal"))
 
     MASS::lda(x, g, prior)
 }
-
