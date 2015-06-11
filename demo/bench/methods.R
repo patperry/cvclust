@@ -50,11 +50,11 @@ methods <- list(
     },
     "PS" = function(x, maxcenters) {
         PS <- fpc::prediction.strength(x, Gmin=2, Gmax=maxcenters,
-                                       clustermethod=kmeansCBI)
+                                       clustermethod=fpc::kmeansCBI)
         PS$optimalk
     },
     "Stab" = function(x, maxcenters) {
-        SB <- fpc::nselectboot(x, clustermethod=kmeansCBI,
+        SB <- fpc::nselectboot(x, clustermethod=fpc::kmeansCBI,
                                classification="centroid",
                                krange=2:maxcenters)
         SB$kopt
