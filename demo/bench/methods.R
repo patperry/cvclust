@@ -53,7 +53,7 @@ methods <- list(
                                        clustermethod=kmeansCBI)
         PS$optimalk
     },
-    "SB" = function(x, maxcenters) {
+    "Stab" = function(x, maxcenters) {
         SB <- fpc::nselectboot(x, clustermethod=kmeansCBI,
                                classification="centroid",
                                krange=2:maxcenters)
