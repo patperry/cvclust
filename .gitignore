@@ -2,5 +2,6 @@
 *.blg
 *.log
 *.out
+.Rapp.history
 .Rhistory
 cvclust.pdf
