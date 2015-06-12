@@ -11,10 +11,10 @@ setting.names <- list(
 nclust <- list(
     "setting1" = 1L,
     "setting2" = 2L,
-    "setting3" = 3L,
-    "setting4" = 4L,
-    "setting5" = 10L,
-    "setting6" = 4L)
+    "setting3" = 4L,
+    "setting4" = 10L,
+    "setting5" = 4L,
+    "setting6" = 3L)
 
 method.names <- list(
     "oracle" = "Oracle",
