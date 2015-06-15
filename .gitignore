@@ -5,3 +5,5 @@
 .Rapp.history
 .Rhistory
 cvclust.pdf
+/demo/bench/*/kmeans.rds
+/demo/bench/*/replicates.rds
