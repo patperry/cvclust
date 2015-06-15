@@ -56,7 +56,8 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
                                            "Wold_holdout"))
             nclusters <- parSapply(cl, seq_len(nrep), function(r) {
                     x <- replicates[[r]]$x
-                    method(x, kmax)
+                    tryCatch(method(x, kmax),
+                             error=function(e) NA_integer_)
                 })
 
             nclusters <- as.integer(nclusters)
