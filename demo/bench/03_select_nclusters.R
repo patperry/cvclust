@@ -17,7 +17,7 @@ source("../../code/wold.R")
 source("methods.R")
 
 
-options(cl.cores=2)
+options(cl.cores=max(1, detectCores() - 1))
 cl <- makeCluster(getOption("cl.cores", 2))
 
 kmax <- 15
