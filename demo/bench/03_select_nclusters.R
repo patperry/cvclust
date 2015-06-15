@@ -18,8 +18,9 @@ source("methods.R")
 
 
 options(cl.cores=2)
+cl <- makeCluster(getOption("cl.cores", 2))
 
-kmax <- 10
+kmax <- 15
 
 for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
     f.replicates <- file.path(s, "replicates.rds")
@@ -42,7 +43,6 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
             method <- methods[[m]]
             nclusters <- integer(nrep)
 
-            cl <- makeCluster(getOption("cl.cores", 2))
             clusterExport(cl=cl, varlist=c("replicates", "method", "kmax",
                                            "classify_lda",
                                            "cluster_kmeans",
@@ -64,3 +64,6 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
         }
     }
 }
+
+stopCluster(cl)
+
