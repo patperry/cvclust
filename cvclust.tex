@@ -709,9 +709,35 @@ where \[PE_{oracle} = \min_k ||\hat{\mathbf{X}}_k- \boldsymbol{\mu} ||_F\]
 Matrix $\boldsymbol{\mu}$ consists of true centers of observations in data matrix $\mathbf{X}$, while $\hat{\mathbf{X}}_k$ is obtained by replacing each observation in $\mathbf{X}$ by its closest cluster center result from applying K-means on $\mathbf{X}$ with parameter $k$. Here $k$ is the optimal number of clusters selected by each algorithm on data $\mathbf{X}$. This is only possible on simulated data because otherwise one would never know the true center matrix $\boldsymbol{\mu}$.\\\\
 The oracle selected number for each data $\mathbf{X}$ is also given on the table, which is defined by 
 \[ K_{oracle} =  \underset{k}{\operatorname{argmin}}\hspace{0.05in} ||\hat{\mathbf{X}}_k- \boldsymbol{\mu} ||_F \]
-\begin{table}[H]
+
+\begin{table}
 \centering
 \caption{ \label{table1}Simulation results} 
+{\scriptsize
+\begin{tabular}{lcccccccccccccccccc}
+\hline
+Number of Clusters & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & NA & PE \\ \hline
+\input{demo/bench/setting1/results.tex}
+\hline
+\input{demo/bench/setting2/results.tex}
+\hline
+\input{demo/bench/setting3/results.tex}
+\hline
+\input{demo/bench/setting4/results.tex}
+\hline
+\input{demo/bench/setting5/results.tex}
+\hline
+\input{demo/bench/setting6/results.tex}
+\hline
+\end{tabular}
+}\\
+\hspace{-2.0in} \footnotesize {In Setting~1, ``\textendash'' means the method can not be used with parameter $k=1$}.
+\end{table}
+
+
+\begin{table}[H]
+\centering
+\caption{ \label{table1}Old Simulation results}
 \scalebox{0.97}{
 \begin{tabular}{ lccccccccccccc}
 \hline
