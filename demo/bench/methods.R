@@ -46,7 +46,7 @@ methods <- list(
         Hartigan$Best.nc[[1]]
     },
     "Jump" = function(x, maxcenters) {
-        Jump <- jump(x, plotjumps=FALSE, trace=FALSE)
+        Jump <- jump(x, maxcenters, plotjumps=FALSE, trace=FALSE)
         Jump$maxjump
     },
     "PS" = function(x, maxcenters) {
