@@ -79,12 +79,9 @@ print_table <- function(setting, summary)
 }
 
 for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
-    replicates <- readRDS(file.path(s, "replicates.rds"))
-    nrep <- length(replicates)
-
-    kmeans <- readRDS(file.path(s, "kmeans.rds"))
-    kmax <- length(kmeans[[1]])
     prederr <- readRDS(file.path(s, "prederr.rds"))
+    nrep <- length(prederr)
+    kmax <- length(prederr[[1]])
 
     nclusters <- list()
     for (filename in list.files(file.path(s, "method"), "[.]rds$")) {
