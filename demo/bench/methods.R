@@ -31,7 +31,8 @@ methods <- list(
         which.max(Gap[[1]][,3])
     },
     "BIC" = function(x, maxcenters) {
-        mcluster <- mclust::Mclust(x, G = 1:maxcenters)
+        mcluster <- mclust::Mclust(x, G = 1:maxcenters,
+                                   control=mclust::emControl(itmax=c(10000L, 10000L)))
         mcluster$G
     },
     "CH" = function(x, maxcenters) {
