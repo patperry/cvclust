@@ -80,27 +80,16 @@ print_table <- function(setting, summary)
 
 for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
     replicates <- readRDS(file.path(s, "replicates.rds"))
+    nrep <- length(replicates)
+
     kmeans <- readRDS(file.path(s, "kmeans.rds"))
+    kmax <- length(kmeans[[1]])
+    prederr <- readRDS(file.path(s, "prederr.rds"))
 
     nclusters <- list()
     for (filename in list.files(file.path(s, "method"), "[.]rds$")) {
         m <- substr(filename, 1, nchar(filename) - 4)
         nclusters[[m]] <- readRDS(file.path(s, "method", filename))
-    }
-
-    # compute prediction error
-    nrep <- length(replicates)
-    prederr <- vector("list", nrep)
-
-    for (r in seq_len(nrep)) {
-        truth <- replicates[[r]]$mean
-        kmax <- length(kmeans[[r]])
-        prederr[[r]] <- rep(NA, kmax)
-        for(k in seq_len(kmax)) {
-            km <- kmeans[[r]][[k]]
-            pred <- km$centers[km$cluster,]
-            prederr[[r]][[k]] <- mean((truth - pred)^2)
-        }
     }
 
     # compute oracle, relative prediction error
