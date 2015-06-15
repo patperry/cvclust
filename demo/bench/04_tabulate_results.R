@@ -59,6 +59,12 @@ print_table <- function(setting, summary)
                 cat(s$counts[k])
             }
         }
+        if (exclude(setting, m)) {
+            cat("& \\textendash")
+        } else {
+            cat(" & ", s$count_na, sep="")
+        }
+
         if (m == "oracle") {
             cat(" & 1")
         } else if (exclude(setting, m)) {
@@ -111,15 +117,26 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
     {
         x <- numeric(nrep)
         for (r in seq_len(nrep)) {
-            x[r] <- prederr[[r]][nc[r]]
+            if (is.na(nc[r])) {
+                x[r] <- NA
+            } else {
+                x[r] <- prederr[[r]][nc[r]]
+            }
         }
-        list(mean = mean(x), sd = sd(x), se_mean = sd(x) / sqrt(nrep))
+        n <- sum(!is.na(x))
+        list(mean = mean(x, na.rm=TRUE),
+             sd = sd(x, na.rm=TRUE),
+             se_mean = sd(x, na.rm=TRUE) / sqrt(n))
     }
 
     summary <- list()
     for (m in names(nclusters)) {
+        count_na <- sum(is.na(nclusters[[m]]))
+        counts <- tabulate(nclusters[[m]], kmax)
         summary[[m]] <- list(
-            counts = tabulate(nclusters[[m]], kmax),
+            count_na = count_na,
+            counts = counts,
+            proportions = counts / (length(nclusters[[m]]) - count_na),
             prederr = summarize(prederr, nclusters[[m]]),
             prederr_rel = summarize(prederr_rel, nclusters[[m]]))
     }
