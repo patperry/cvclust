@@ -59,6 +59,8 @@
 \newcommand{\bpi}{\bar \pi}
 \newcommand{\bmuX}{\bar \mu^{X}}
 \newcommand{\bmuY}{\bar \mu^{Y}}
+\newcommand{\sE}{\mathcal{E}}
+\newcommand{\sX}{\mathcal{X}}
 
 \begin{document}
 \title{Estimating the number of clusters using Cross Validation}
@@ -270,8 +272,8 @@ $\CV(k)$ over all $K \times L$ folds.
 
 
 
-
 \section{Theoretical justification of Gabriel CV method}
+
 This section gives the self-consistency proof of the proposed Gabriel method. What's more, its asymptotic property under suitable condition will be shown in this section in order to give the idea of why the Gabriel CV method works.\\
 
 Because K-means algorithm is a key part in the proof below, it's convenient to have a review of K-means here:\\
@@ -371,8 +373,100 @@ The last equation holds because $\hat{\Sigma}$ is assumed to be positive-definit
 Because the RHS of equation $(4)$ coincide with RHS of equation $(3)$, the proof is complete.
 \end{proof}
 \end{itemize}
+
+\subsection{Single Cluster With Noise}
+
+Here, we show that Gabriel Cross-Validation is consistent when the data come
+from a single cluster; the algorithm picks $k = 1$ with probability tending to
+$1$ as the number of rows in the data matrix $\dataX$ increase.
+
+
+Our proof
+relies on results from \citet{pollard1981strong}, who analyzed $k$-means and
+showed that the within-cluster sum of squares converges to a population
+quantity.  Specifically, for any finite set $A \subset \mathbb{R}^d$ and
+probability measure $P$ supported on $\mathbb{R}^d$, define the population
+within-cluster sum of squares as
+\[
+  W(A, P) = \int \min_{a \in A} \|x - a\|^2 P(dx).
+\]
+Set
+\[
+  m_k(P) = \inf\{ W(A, P) : \text{$A$ contains $k$ or fewer points} \}.
+\]
+Suppose that $X_1, \dotsc, X_n$ are independent draws from $P$, and
+if $P_n$ is the empirical measure formed by placing mass $1/n$ on each $X_i$.
+Let $A_n$ be a set minimizing $W(A_n, P_n)$.  Pollard gave conditions for
+$A_n$ to converge to the minimizer of $W(\cdot, P)$.  His main theorem assumes that
+the minimizer of $W(\cdot, P)$ is unique, which is too strong for our purposes
+(this fails, for example, with a bivariate normal distribution when $k \geq 2$).
+It is straightforward to generalize his result to cases with multiple
+maximizers.  To do so, we will need the following three lemmas.  The proofs of
+these lemmas are given in Sections~3 and~4 of Pollard's article.
+
+
+
+\begin{lemma}\label{lem:pollard-compact}\label{lem:pollard-first}
+Suppose that $\int \|x\|^2 P(dx) < \infty$ and that
+$m_j(P) > m_{j+1}(P)$ for $j = 1, \dotsc, k-1$.  If $A_n$ minimizes
+$W(\cdot, P_n)$, then, there exists a finite
+$M$ such that as if $n$ is large enough, then, almost surely, $A_n$ is in
+the class of sets $\sE_k = \{ A \subset B(5M) : \text{$A$ contains $k$ or fewer
+points} \}$, where $B(5M)$ denotes the Euclidean ball of radius $5M$ centered
+at the origin.
+\end{lemma}
+\begin{proof}
+Follows from Pollard's argument in Section 3 of his paper.
+\end{proof}
+
+
+\begin{lemma}\label{lem:polalrd-uniform}
+If $\int \|x\|^2 P(x) < \infty$, then
+\(
+  \sup_{A \in \sE_k} |W(A, P) - W(A,P_n)| \to 0\text{ a.s.}
+\)
+\end{lemma}
+\begin{proof}
+Given at the beginning of Pollard's Section~4.
+\end{proof}
+
+
+\begin{lemma}\label{lem:pollard-continuous}\label{lem:pollard-last}
+If $\int \|x\|^2 P(x) < \infty$, then
+the map $A \mapsto W(A, P)$ is continuous on $\sE_k$ with respect to the
+topology induced by the Hausdoff metric $H(\cdot, \cdot)$, defined for compact
+subsets $A, B$ of $\mathbb{R}^d$ by $H(A,B) < \delta$ if and only if every
+point of $A$ is within Euclidean distance $\delta$ of at least one point of
+$B$, and vice versa.
+\end{lemma}
+\begin{proof}
+Given at the end of Pollard's Section~4.
+\end{proof}
+
+
+
+Now, define $\mathcal{\bar A} = \mathcal{\bar A}(k)$ to be the class of sets
+$\bar A$ with $k$ or fewer points such that $W(\bar A,P) = m_k(P)$.
+Lemmas~\ref{lem:pollard-compact} and~\ref{lem:pollard-continuous} together
+with the extreme value theorem imply that this class is nonempty.
+
+
+To prove
+this, it suffices to analyze a single fold of the cross-validation procedure.
+We will assume the following setup:
+
+Observations $\{ (X_i, Y_i) \}_{i=1}^{n+N}$ are independent and identically
+distributed.  The distribution for each $(X_i, Y_i)$ pair is such that $X_i$
+and $Y_i$ have marginal distribution $P^X$ and $P^Y$, and the vectors
+$X_i$ and $Y_i$ are independent.
+
+
 \subsection{Well-separated clusters with noise}
-Same with previous, the data set $\mathbf{X} \in \mathbb{R}^{n \times p}$ been partitioned as $\mathbf{X}^L \in \mathbb{R}^{n \times L}$ and $\mathbf{X}^R \in \mathbb{R}^{n \times R}$, with following set of assumptions:
+
+Same with previous, the data set $\mathbf{X} \in \mathbb{R}^{n \times p}$ been
+partitioned as $\mathbf{X}^L \in \mathbb{R}^{n \times L}$ and $\mathbf{X}^R
+\in \mathbb{R}^{n \times R}$, with following set of assumptions:
+
 \begin{enumerate}[label={Assumption},leftmargin=*]
 	\item $1.$ There are $K$ true centers $(\mu_1,...,\mu_K)$ where $\mathbf{X}$ generated from
 	\item $2.$ The $K$ partitioned centers $(\mu^L_1,...,\mu^L_K)$ are all distinct in $L$ dimensions: $||\mu^L_i-\mu^L_j|| \neq 0$ for any $i \neq j$; $(\mu^R_1,...,\mu^R_K)$ are all distinct in $R$ dimensions
