@@ -23,6 +23,21 @@ methods <- list(
                                 classify.method="lda-equal")
         cv$centers
     },
+    "gabriel-lda-equal-5X2" = function(x, maxcenters) {
+        cv <- cv.kmeans.gabriel(x, 5, 2, maxcenters,
+                              classify.method="lda-equal")
+        cv$centers
+    },
+    "gabriel-lda-proportion" = function(x, maxcenters) {
+        cv <- cv.kmeans.gabriel(x, 2, 2, maxcenters,
+                                classify.method="lda-proportions")
+        cv$centers
+    },
+    "gabriel-lda-proportion-5X2" = function(x, maxcenters) {
+        cv <- cv.kmeans.gabriel(x, 5, 2, maxcenters,
+                              classify.method="lda-proportions")
+        cv$centers
+    },
     "wold" = function(x, maxcenters) {
         Wold_holdout(x, 5, max.k=maxcenters, Errortol=0.01)
     },
