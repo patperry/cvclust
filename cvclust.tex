@@ -59,6 +59,7 @@
 \newcommand{\bpi}{\bar \pi}
 \newcommand{\bmuX}{\bar \mu^{X}}
 \newcommand{\bmuY}{\bar \mu^{Y}}
+\newcommand{\sA}{\mathcal{A}}
 \newcommand{\sE}{\mathcal{E}}
 \newcommand{\sX}{\mathcal{X}}
 
@@ -381,42 +382,108 @@ from a single cluster; the algorithm picks $k = 1$ with probability tending to
 $1$ as the number of rows in the data matrix $\dataX$ increase.
 
 
-Our proof
-relies on results from \citet{pollard1981strong}, who analyzed $k$-means and
-showed that the within-cluster sum of squares converges to a population
-quantity.  Specifically, for any finite set $A \subset \mathbb{R}^d$ and
-probability measure $P$ supported on $\mathbb{R}^d$, define the population
-within-cluster sum of squares as
+Our proof relies on results from \citet{pollard1981strong}, who analyzed
+$k$-means and showed that the within-cluster sum of squares converges to a
+population quantity.  Specifically, for any finite set $A \subset
+\mathbb{R}^d$ and probability measure $P$ supported on $\mathbb{R}^d$, define
+the population within-cluster sum of squares as
 \[
   W(A, P) = \int \min_{a \in A} \|x - a\|^2 P(dx).
 \]
-Set
-\[
-  m_k(P) = \inf\{ W(A, P) : \text{$A$ contains $k$ or fewer points} \}.
-\]
-Suppose that $X_1, \dotsc, X_n$ are independent draws from $P$, and
-if $P_n$ is the empirical measure formed by placing mass $1/n$ on each $X_i$.
-Let $A_n$ be a set minimizing $W(A_n, P_n)$.  Pollard gave conditions for
-$A_n$ to converge to the minimizer of $W(\cdot, P)$.  His main theorem assumes that
-the minimizer of $W(\cdot, P)$ is unique, which is too strong for our purposes
-(this fails, for example, with a bivariate normal distribution when $k \geq 2$).
-It is straightforward to generalize his result to cases with multiple
-maximizers.  To do so, we will need the following three lemmas.  The proofs of
-these lemmas are given in Sections~3 and~4 of Pollard's article.
+Define
+\(
+  \sA_k
+    =
+    \{ A \subset \mathbb{R}^d : \text{$A$ contains $k$ or fewer points} \}
+\)
+and set
+\(
+  m_k(P) = \inf_{A \in \sA_k}  W(A, P). % : \text{$A$ contains $k$ or fewer points} \}.
+\)
+Suppose that $X_1, \dotsc, X_n$ are independent draws from $P$, and if $P_n$
+is the empirical measure formed by placing mass $1/n$ on each $X_i$.  Let
+$A_n$ be a set minimizing $W(A_n, P_n)$.  Pollard gave conditions for $A_n$ to
+converge to the minimizer of $W(\cdot, P)$.  His main theorem assumes that the
+minimizer of $W(\cdot, P)$ is unique, which is too strong for our purposes
+(this fails, for example, with a bivariate normal distribution with identity
+covariance whenever $k \geq 2$).  It is straightforward to generalize his
+result to cases with multiple maximizers.  To do so, we will need the
+following three lemmas.  The proofs of these lemmas are modifications of
+arguments given in Sections~3 and~4 of Pollard's article.
 
 
 
-\begin{lemma}\label{lem:pollard-compact}\label{lem:pollard-first}
-Suppose that $\int \|x\|^2 P(dx) < \infty$ and that
-$m_j(P) > m_{j+1}(P)$ for $j = 1, \dotsc, k-1$.  If $A_n$ minimizes
-$W(\cdot, P_n)$, then, there exists a finite
-$M$ such that as if $n$ is large enough, then, almost surely, $A_n$ is in
-the class of sets $\sE_k = \{ A \subset B(5M) : \text{$A$ contains $k$ or fewer
-points} \}$, where $B(5M)$ denotes the Euclidean ball of radius $5M$ centered
-at the origin.
+
+\begin{lemma}\label{lem:pollard-continuous}\label{lem:pollard-last}
+If $\int \|x\|^2 P(x) < \infty$, then the map $A \mapsto W(A, P)$ is
+continuous on $\sA_k$ with respect to the topology induced by the Hausdoff
+metric $H(\cdot, \cdot)$, defined for compact subsets $A, B$ of $\mathbb{R}^d$
+by $H(A,B) < \delta$ if and only if every point of $A$ is within Euclidean
+distance $\delta$ of at least one point of $B$, and vice versa.
 \end{lemma}
 \begin{proof}
-Follows from Pollard's argument in Section 3 of his paper.
+This is a slight extension of the argument given at the end of Pollard's
+Section~4.  If $A, B \in \sA_k$ and $H(A, B) < \delta$, then for each $b \in
+B$ there exists an $a(b) \in A$ such that $\|b - a(b)\| < \delta$.  Then
+\begin{align*}
+  W(A, P) - W(B, P)
+    &= \int \min_{a \in A} \|x - a\|^2 - \min_{b \in B} \|x - b\|^2 P(dx) \\
+    &\leq \int \max_{b \in B} \{ \|x - a(b)\|^2 - \|x - b\|^2 \} P(dx) \\
+    &\leq \int \sum_{b \in B} \{ (\|x - b\| + \delta)^2 - \|x - b\|^2 \} P(dx) \\
+    &\leq \int \sum_{b \in B}  ( 2 \delta \|x - b\| + \delta^2) P(dx) \\
+    &\leq 2 \delta \{M^{1/2} + k \max_{b \in B} \|b\|\} + k \delta^2,
+\end{align*}
+where $M = \int \|x\|^2 P(dx)$.  Thus,
+\[
+  |W(A, P) - W(B, P)|
+    \leq 2 \delta \{M^{1/2} + k \max_{a \in A} \|a\|\} + 3 k \delta^2.
+\]
+Hence if $A \in \sA_k$ is any fixed set, then for every $\varepsilon > 0$, we
+can find a $\delta$ small enough so that if $B \in \sA_k$ and $H(A, B) <
+\delta$, then $|W(A,P) - W(B,P)| < \epsilon$.  Thus, $W(\cdot, P)$ is
+continuous at $A$.
+\end{proof}
+
+
+
+
+
+\begin{lemma}
+\label{lem:pollard-compact}
+\label{lem:pollard-first}
+Suppose that $\int \|x\|^2 P(dx) < \infty$.  If $A_n$ minimizes $W(\cdot,
+P_n)$, then, there exists a finite $M$ such that as if $n$ is large enough,
+then, almost surely, $A_n$ is in the class of sets
+\(
+  \sE_k = \{ A \subset B(5M) : \text{$A$ contains $k$ or fewer points} \},
+\)
+where $B(5M)$ denotes the Euclidean ball of radius $5M$ centered at the
+origin.
+\end{lemma}
+
+
+\begin{proof}
+If $P$ has finite support, then the result follows immediately.  For the
+remainder of the proof, then, we will assume that $P$ has infinite support.
+
+In Section~3 of his paper, Pollard proves the result, assuming that there
+is a unique set of $j$ points minimizing $W(\cdot, P)$ for each value of
+$j = 1, \dotsc, k$.  His proof does not use this assumption directly, only
+its implication that for each $j$ in the range $2, \dotsc, k$, there exists
+a set with $j$ points satisfying $W(A,P) < m_{j-1}(P)$.  If we can establish the
+implication, then the rest of his proof will apply.
+
+We will prove the implication by construction.  Take $j$ to be in the range
+$2, \dotsc, k$.  For any $\varepsilon > 0$, there exists a set
+$B_{\varepsilon}$ containing at most $j-1$ points such that
+$W(B_{\varepsilon}, P) < m_{j-1}(P) + \varepsilon$.  We will add a single
+point to $B_{\varepsilon}$ to get a set $A_{\varepsilon}$ with $j$ or fewer
+points satisfying $W(A, P) < m_{j-1}(P)$.
+
+If we can show that $m_{j+1}(P) > m_{j}(P)$ for $j = 1, \dotsc, k-1$, then
+we will have established the conditions required for Pollard's proof of the
+analogous result in Section 3 of his paper.
+
 \end{proof}
 
 
@@ -431,17 +498,6 @@ Given at the beginning of Pollard's Section~4.
 \end{proof}
 
 
-\begin{lemma}\label{lem:pollard-continuous}\label{lem:pollard-last}
-If $\int \|x\|^2 P(x) < \infty$, then
-the map $A \mapsto W(A, P)$ is continuous on $\sE_k$ with respect to the
-topology induced by the Hausdoff metric $H(\cdot, \cdot)$, defined for compact
-subsets $A, B$ of $\mathbb{R}^d$ by $H(A,B) < \delta$ if and only if every
-point of $A$ is within Euclidean distance $\delta$ of at least one point of
-$B$, and vice versa.
-\end{lemma}
-\begin{proof}
-Given at the end of Pollard's Section~4.
-\end{proof}
 
 
 
