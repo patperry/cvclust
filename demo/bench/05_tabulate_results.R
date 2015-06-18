@@ -26,6 +26,9 @@ method.names <- list(
     "PS" = "Prediction Strength",
     "Stab" = "Stability",
     "gabriel-lda-equal" = "Gabriel CV",
+    "gabriel-lda-equal-5X2" = "Gabriel-5X2 CV",
+    "gabriel-lda-proportion" = "Gabriel-proportion CV",
+    "gabriel-lda-proportion-5X2" = "Gabriel-proportion-5X2 CV",
     "wold" = "Wold CV")
 
 exclude <- function(setting, method)
