@@ -60,7 +60,9 @@
 \newcommand{\bmuX}{\bar \mu^{X}}
 \newcommand{\bmuY}{\bar \mu^{Y}}
 \newcommand{\sA}{\mathcal{A}}
+\newcommand{\sC}{\mathcal{C}}
 \newcommand{\sE}{\mathcal{E}}
+\newcommand{\sN}{\mathcal{N}}
 \newcommand{\sX}{\mathcal{X}}
 
 \begin{document}
@@ -444,6 +446,88 @@ can find a $\delta$ small enough so that if $B \in \sA_k$ and $H(A, B) <
 continuous at $A$.
 \end{proof}
 
+
+\begin{lemma}
+
+If $\int \|x\|^2 P(dx) < \infty$ and the support of $P$ contains at least $k$
+points, then $m_1(P) > m_2(P) > \dotsb > m_k(P)$.  Further, there exists a
+finite $M$ such that $W(\cdot, P)$ attains its infimum over $\sA_k$ and each
+minimizer $\bar A$ is contained in the set
+\(
+  \sE_k = \{ A \in \sA_k : A \subset B(5M) \},
+\)
+where $B(5M)$ denotes the closed ball of radius~$5M$.
+\end{lemma}
+\begin{proof}
+This argument is adapted from the proof in Section~3 of Pollard's paper.  We
+first find an $M$ large enough to ensure that every minimizer of $W(\cdot, P)$
+must have at least one point in $B(M)$.  Next, we impose additional
+constraints on $M$ to ensure that all minimizers of $W(\cdot, P)$ are
+contained in $B(5M)$.
+
+
+Pick~$r$ so that the ball~$K$ of radius~$r$ centered at the origin has
+positive $P$~measure.  Take $M$ to be large enough such that
+\(
+  (M - r)^2 P(K) > \int \|x\|^2 P(dx).
+\)
+Let $\sC_1$ denote the class of sets $A$ with at most $k$ points and at least
+one point in in $B(M)$.  Let $A_0$ be the singleton set containing the origin.
+If no point of $A$ is in $B(M)$, then
+\(
+  W(A, P) \geq (M - r)^2 P(K) > W(A_0, P).
+\)
+Put concisely, if $A \in \sA_k \setminus \sC_1$, then
+\(
+  W(A, P) > W(A_0, P) \geq m_k(P).
+\)
+
+
+Next, we proceed by induction on $k$.  If $k = 1$, then there is a unique
+minimizer of $W(\cdot, P)$ over $\sA_k$, the set containing the mean $\int x
+P(dx)$.  For $k > 1$, take as given that $m_{k-1}(P) = W(\bar A_{k-1}, P)$ for
+some set $\bar A_{k-1} \in \sE_{k-1}$.  We will show that there is an $M$
+large enough so that $W(\cdot, P)$ attains its infimum over $\sA_k$ and all
+minimizers lie in $\sE_k$.
+
+
+We first show that if $M$ is large enough, then there exists a set $A \in \sE_k$
+and a positive $\varepsilon$ with $\varepsilon + W(A,P) < m_{k-1}(P)$.
+Since the support of $P$ contains least $k$ points, there exists an $x_0$ not
+in $\bar A_{k-1}$ that lies in the support of $P$.  Ensure that $M$ is large
+enough so that $x_0 \in B(5M)$.  Take $A \in \sE_k$ to be the set of $k$
+points gotten by adjoining $x_0$ to $\bar A_{k-1}$.  Let
+\(
+  \delta = \min_{a \in \bar A_{k-1}} \| x_0 - a \|
+\)
+and set $R = \{ x \in \mathbb{R}^d : \|x - x_0\| < \delta/3 \}$; since $x_0$
+is in the support of $P$, the neighborhood $R$ has positive $P$~measure.
+Further,
+\[
+  \int_{R} \min_{a \in \bar A_{k-1}} \|x - a\|^2 P(dx)
+  \geq
+  \int_{R} \min_{a \in \bar A_{k-1}} (\|x_0 - a\| - \delta/3)^2 P(dx)
+  = (4/9) \delta^2 P(R),
+\]
+and
+\[
+  \int_{R} \min_{a \in A} \|x - a\|^2 P(dx)
+  =
+  \int_{R} \|x - x_0\|^2 P(dx)
+  \leq
+  (1/9) \delta^2 P(R).
+\]
+Thus, if
+\(
+  \varepsilon < (3/9) \delta^2 P(R)
+\)
+then
+\(
+  m_{k-1}(P) - W(A, P) = 
+  W(\bar A_{k-1}, P) - W(A, P) > \varepsilon.
+\)
+
+\end{proof}
 
 
 
