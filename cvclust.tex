@@ -447,7 +447,7 @@ continuous at $A$.
 \end{proof}
 
 
-\begin{lemma}
+\begin{lemma}\label{lem:kmeans-existence}
 
 If $\int \|x\|^2 P(dx) < \infty$ and the support of $P$ contains at least $k$
 points, then $m_1(P) > m_2(P) > \dotsb > m_k(P)$.  Further, there exists a
@@ -471,16 +471,17 @@ positive $P$~measure.  Take $M$ to be large enough such that
 \(
   (M - r)^2 P(K) > \int \|x\|^2 P(dx).
 \)
-Let $\sC_1$ denote the class of sets $A$ with at most $k$ points and at least
+Let $\sC_k$ denote the class of sets $A$ with at most $k$ points and at least
 one point in in $B(M)$.  Let $A_0$ be the singleton set containing the origin.
 If no point of $A$ is in $B(M)$, then
 \(
   W(A, P) \geq (M - r)^2 P(K) > W(A_0, P).
 \)
-Put concisely, if $A \in \sA_k \setminus \sC_1$, then
+Put concisely, if $A \in \sA_k \setminus \sC_k$, then
 \(
   W(A, P) > W(A_0, P) \geq m_k(P).
 \)
+
 
 
 Next, we proceed by induction on $k$.  If $k = 1$, then there is a unique
@@ -491,29 +492,33 @@ large enough so that $W(\cdot, P)$ attains its infimum over $\sA_k$ and all
 minimizers lie in $\sE_k$.
 
 
-We first show that if $M$ is large enough, then there exists a set $A \in \sE_k$
-and a positive $\varepsilon$ with $\varepsilon + W(A,P) < m_{k-1}(P)$.
-Since the support of $P$ contains least $k$ points, there exists an $x_0$ not
+We first show that if $M$ is large enough, then there exists a set $B \in \sE_k$
+and a positive $\varepsilon$ with $W(B,P) < m_{k-1}(P) - \varepsilon$.  This
+will establish that $m_{k}(P) < m_{k-1}(P)$, and the set $B$ will have further
+utility later in the proof.
+Take $\bar A_{k-1} \in \sE_{k-1}$ to be a set with at most $k-1$ points satisfying
+$m_{k-1}(P) = W(\bar A_{k-1},P)$.
+Since the support of $P$ contains least $k$ points, there exists a point~$b_1$ not
 in $\bar A_{k-1}$ that lies in the support of $P$.  Ensure that $M$ is large
-enough so that $x_0 \in B(5M)$.  Take $A \in \sE_k$ to be the set of $k$
-points gotten by adjoining $x_0$ to $\bar A_{k-1}$.  Let
+enough so that $b_1 \in B(5M)$.  Take $B \in \sE_k$ to be the set of $k$
+points gotten by adjoining $b_1$ to $\bar A_{k-1}$.  Let
 \(
-  \delta = \min_{a \in \bar A_{k-1}} \| x_0 - a \|
+  \delta = \min_{a \in \bar A_{k-1}} \| b_1 - a \|
 \)
-and set $R = \{ x \in \mathbb{R}^d : \|x - x_0\| < \delta/3 \}$; since $x_0$
+and set $R = \{ x \in \mathbb{R}^d : \|x - b_1\| < \delta/3 \}$; since $b_1$
 is in the support of $P$, the neighborhood $R$ has positive $P$~measure.
 Further,
 \[
   \int_{R} \min_{a \in \bar A_{k-1}} \|x - a\|^2 P(dx)
   \geq
-  \int_{R} \min_{a \in \bar A_{k-1}} (\|x_0 - a\| - \delta/3)^2 P(dx)
+  \int_{R} \min_{a \in \bar A_{k-1}} (\|b_1 - a\| - \delta/3)^2 P(dx)
   = (4/9) \delta^2 P(R),
 \]
 and
 \[
-  \int_{R} \min_{a \in A} \|x - a\|^2 P(dx)
+  \int_{R} \min_{b \in B} \|x - b\|^2 P(dx)
   =
-  \int_{R} \|x - x_0\|^2 P(dx)
+  \int_{R} \|x - b_1\|^2 P(dx)
   \leq
   (1/9) \delta^2 P(R).
 \]
@@ -523,9 +528,42 @@ Thus, if
 \)
 then
 \(
-  m_{k-1}(P) - W(A, P) = 
-  W(\bar A_{k-1}, P) - W(A, P) > \varepsilon.
+  W(B,P) \leq W(\bar A_{k-1},P) - (3/9) \delta^2 P(R)
+         < m_{k-1}(P) - \varepsilon.
 \)
+
+
+Now, ensure that $M$ large enough so that
+\[
+  4 \int_{\|x\| \geq 2M} \|x\|^2 P(dx) < \varepsilon.
+\]
+We will now show that if $A \in \sC_k \setminus \sE_k$, then
+$W(A,P) > W(B,P) \geq m_{k}(P)$, which ensures that $W(\cdot, P)$ does not
+attain its infimum over $\sA_k$ outside of $\sE_k$.  To see that this holds,
+suppose that $A$ is any set $\sC_k \setminus \sE_k$.  This set has at least
+one point, $a_1$, in $B(M)$, and at least one point outside $B(5M)$.  Consider
+thet set $A^\ast$ formed by removing all points of $A$ outside $B(5M)$.  Any
+point $x$ closer to a cluster center outisde $B(5M)$ than to $a_1$ must
+satisfy $\|x\| \geq 2M$.  Thus,
+\begin{align*}
+  W(A^\ast, P)
+    &\leq W(A,P) + \int_{\|x\| \geq 2M} \|x - a_1\|^2 P(dx) \\
+    &\leq W(A,P) + \int_{\|x\| \geq 2M} (\|x\| + \|a_1\|)^2 P(dx) \\
+    &\leq W(A,P) + 4 \int_{\|x\| \geq 2M} \|x\|^2 P(dx) \\
+    &< W(A,P) + \varepsilon.
+\end{align*}
+Since $A^\ast$ has $k-1$ or fewer points, it must satisfy
+$W(A^\ast, P) \geq m_{k-1}(P)$, so that
+$W(A, P) > m_{k-1}(P) - \varepsilon > W(B, P)$.
+
+
+We have now established that $m_k(P) = \inf \{ W(A,P) : A \in \sE_k \}$,
+and that $W(\cdot, P)$ does not obtain its infimum over $\sA_k$ outside of
+$\sE_k$.  The final step of the proof is to show $W(\cdot, P)$ obtains its
+infimum over $\sE_k$.  This follows from the extreme value theorem, since
+$\sE_k$ is compact and, by Lemma~\ref{lem:pollard-continuous}, the map $A
+\mapsto W(A,P)$ is continuous over $\sA_k$.
+
 
 \end{proof}
 
