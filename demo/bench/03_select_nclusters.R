@@ -39,7 +39,6 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
         if (!file.exists(f.method)) {
             cat("applying method '", m, "' to '", s, "'\n", sep="")
 
-            set.seed(5453546) # from random.org
             method <- methods[[m]]
             nclusters <- integer(nrep)
 
@@ -54,9 +53,10 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
                                            "mclustBIC",
                                            "WoldIter",
                                            "Wold_holdout"))
-            nclusters <- parSapply(cl, seq_len(nrep), function(r) {
-                    x <- replicates[[r]]$x
-                    tryCatch(method(x, kmax),
+            nclusters <- parSapply(cl, replicates, function(r) {
+                    rng <- r$rng
+                    set.seed(rng$seed, rng$kind, rng$normal_kind)
+                    tryCatch(method(r$x, kmax),
                              error=function(e) NA_integer_)
                 })
 
