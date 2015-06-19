@@ -49,6 +49,7 @@
 
 \newcommand{\CV}{\operatorname{CV}}
 \newcommand{\E}{\operatorname{E}}
+\newcommand{\R}{\mathbb{R}}
 \newcommand{\dataX}{\mathfrak{X}}
 \newcommand{\Xtrain}{X_{\text{train}}}
 \newcommand{\Ytrain}{Y_{\text{train}}}
@@ -135,9 +136,9 @@ Our proposed method is a complete data-driven approach which doesn't rely on any
 Cross-validation is commonly used for model selection in supervised learning
 problems.  In these settings, the data comes in the form of $N$
 predictor-response pairs, $(X_1, Y_1), \dotsc, (X_N, Y_N)$, with $X_i \in
-\mathbb{R}^{p}$ and $Y_i \in \mathbb{R}^{q}$.  The data can be represented as
-a matrix with $N$ rows and $p + q$ columns.  We partition the data into $K$
-hold-out ``test'' subsets, with $K$ typically chosen to be $5$ or $10$.  For each
+\R^{p}$ and $Y_i \in \R^{q}$.  The data can be represented as a matrix with
+$N$ rows and $p + q$ columns.  We partition the data into $K$ hold-out
+``test'' subsets, with $K$ typically chosen to be $5$ or $10$.  For each
 ``fold'' $r$ in the range $1, \dotsc, K$, we permute the rows of the data
 matrix to get $\dataX$, a matrix with the $r$th test subset as its trailing
 rows.  We partition $\dataX$ as
@@ -219,11 +220,11 @@ as ``test''.  In block form, the permuted data matrix is
   \end{bmatrix},
 \]
 where
-$\Xtrain \in \mathbb{R}^{n \times p}$,
-$\Ytrain \in \mathbb{R}^{n \times q}$,
-$\Xtest \in \mathbb{R}^{m \times p}$,
+$\Xtrain \in \R^{n \times p}$,
+$\Ytrain \in \R^{n \times q}$,
+$\Xtest \in  \R^{m \times p}$,
 and
-$\Ytest \in \mathbb{R}^{m \times q}$.
+$\Ytest \in  \R^{m \times q}$.
 
 
 Given such a partition of $\dataX$, we perform four steps for each value of
@@ -232,7 +233,7 @@ $k$, the number of clusters:
   \item \label{step:gabriel-cluster}
     \textbf{Cluster:}
     Cluster $Y_{1}, \dotsc, Y_n$, the rows of $\Ytrain$, yielding the
-    assignment rule $\hGY : \mathbb{R}^q \to \{ 1, \dotsc, k \}$ and the
+    assignment rule $\hGY : \R^q \to \{ 1, \dotsc, k \}$ and the
     clusters means $\bmuY_1, \dotsc, \bmuY_k$.  Set $\hGY_i = \hGY(Y_i)$ to
     be the assigned cluster for row $i$.
 
@@ -241,7 +242,7 @@ $k$, the number of clusters:
     Take $X_{1}, \dotsc, X_n$, the rows of $\Xtrain$ to be predictors,
     and take $\hGY_1, \dotsc, \hGY_n$ to be corresponding class labels.  Use
     the pairs $\{ (X_i, \hGY_i) \}_{i=1}^{n}$ to train a classifier
-    $\hGX : \mathbb{R}^p \to \{ 1, \dotsc, k \}$.
+    $\hGX : \R^p \to \{ 1, \dotsc, k \}$.
 
   \item \label{step:gabriel-predict}
     \textbf{Predict:}
@@ -285,7 +286,7 @@ Given a set of observations $\mathbf{X} = (x_1,...,x_n)$, and the number of clus
 \[	\underset{\mathbb{P}_K}{\operatorname{argmin}} \sum^K_{i=1}\sum_{x \in p_i } ||x-\hat{\mu}_i||^2\]
 where $\hat{\mu}_i$ is the sample mean of $p_i$.
 \subsection{Self-Consistency}
-Same as in section $2$, let the data set $\mathbf{X} \in \mathbb{R}^{n \times p}$ been partitioned as 
+Same as in section $2$, let the data set $\mathbf{X} \in \R^{n \times p}$ been partitioned as
  \[ 
  \begin{pmatrix}
 \mathbf{X}^L_{train} & \mathbf{X}^R_{train}\\
@@ -378,18 +379,18 @@ Because the RHS of equation $(4)$ coincide with RHS of equation $(3)$, the proof
 \end{proof}
 \end{itemize}
 
-\subsection{Single Cluster With Noise}
 
-Here, we show that Gabriel Cross-Validation is consistent when the data come
-from a single cluster; the algorithm picks $k = 1$ with probability tending to
-$1$ as the number of rows in the data matrix $\dataX$ increase.
+\clearpage
 
+\section{Asymptotic Analysis of $k$-Means}
 
-Our proof relies on results from \citet{pollard1981strong}, who analyzed
-$k$-means and showed that the within-cluster sum of squares converges to a
-population quantity.  Specifically, for any finite set $A \subset
-\mathbb{R}^d$ and probability measure $P$ supported on $\mathbb{R}^d$, define
-the population within-cluster sum of squares as
+To analyze the asymptotic properties of of Gabriel cross validation, we first
+need to understand the properties of the $k$-means procedure.  We will use
+results from \citet{pollard1981strong}, who analyzed $k$-means and showed that
+the within-cluster sum of squares converges to a population quantity.  To
+introduce Pollard's result, for any finite set $A \subseteq \R^d$ and
+probability measure $P$ supported on $\R^d$, define the population
+within-cluster sum of squares as
 \[
   W(A, P) = \int \min_{a \in A} \|x - a\|^2 P(dx).
 \]
@@ -397,13 +398,13 @@ Define
 \(
   \sA_k
     =
-    \{ A \subset \mathbb{R}^d : \text{$A$ contains $k$ or fewer points} \}
+    \{ A \subseteq \R^d : \text{$A$ contains $k$ or fewer points} \}
 \)
 and set
 \(
-  m_k(P) = \inf_{A \in \sA_k}  W(A, P). % : \text{$A$ contains $k$ or fewer points} \}.
+  m_k(P) = \inf_{A \in \sA_k}  W(A, P).
 \)
-Suppose that $X_1, \dotsc, X_n$ are independent draws from $P$, and if $P_n$
+Suppose that $X_1, \dotsc, X_n$ are independent draws from $P$, and that $P_n$
 is the empirical measure formed by placing mass $1/n$ on each $X_i$.  Let
 $A_n$ be a set minimizing $W(A_n, P_n)$.  Pollard gave conditions for $A_n$ to
 converge to a minimizer of $W(\cdot, P)$.  His main theorem assumes that the
@@ -412,27 +413,26 @@ minimizer of $W(\cdot, P)$ is unique, which is too strong for our purposes
 covariance whenever $k \geq 2$).  It is straightforward to generalize his
 result to cases with multiple maximizers.
 
-To state the consistency theorem define
+
+To state the generalized version of Pollard's consistency theorem, define
 \[
-  \sbA_k = \{ \bar A \subseteq \mathbb{R}^d
+  \sbA_k = \{ \bar A \subseteq \R^d
             : W(\bar A, P) = m_k(P)
               \text{ and $\bar A$ contains $k$ or fewer points} \}.
 \]
-We will later show that $\sbA_k$ is nonempty and compact whenever
-$\int \|x\|^2 P(dx) < \infty$.
-Let $H(\cdot, \cdot)$ denote the Hausdorff metric, defined for compact subsets
-$A, B$ of $\mathbb{R}^d$ by $H(A,B) < \delta$ if and only if every point of
-$A$ is within Euclidean distance $\delta$ of at least one point of $B$, and
-vice versa.  We can now state the generalized version of Pollard's $k$-means
-consistency theorem.
+We will later show that $\sbA_k$ is nonempty and compact whenever $\int
+\|x\|^2 P(dx) < \infty$.  Let $H(\cdot, \cdot)$ denote the Hausdorff metric,
+defined for compact subsets $A, B$ of $\R^d$ by $H(A,B) < \delta$ if
+and only if every point of $A$ is within Euclidean distance $\delta$ of at
+least one point of $B$, and vice versa.  We can now state the generalized
+$k$-means consistency theorem.
 
 
 \begin{theorem}[$k$-Means Consistency]\label{lem:kmeans-consistency}
-Suppose that $\int \|x\|^2 P(dx) < \infty$ and that $A_n$ minimizes
-$W(\cdot, P_n)$ over $\sA_k$.  Then for all $n$ there exists an
-$\bar A_n \in \sbA_k$ such that $H(A_n, \bar A_n) \to 0\text{ a.s.}$,
-and $W(A_n, P_n) \to m_k(P)\text{ a.s.}$
-\end{theorem}
+Suppose that $\int \|x\|^2 P(dx) < \infty$ and that $A_n$ minimizes $W(\cdot,
+P_n)$ over $\sA_k$.  Then for all $n$ there exists an $\bar A_n \in \sbA_k$
+such that $H(A_n, \bar A_n) \to 0\text{ a.s.}$, and $W(A_n, P_n) \to
+m_k(P)\text{ a.s.}$ \end{theorem}
 
 
 The proof of this theorem relies on a series of lemmas, which are extensions
@@ -481,7 +481,8 @@ points, then
   \item $W(\cdot, P)$ achieves its infimum over $\sA_j$ for $j = 1, \dotsc,
     k$;
   \item the class of sets $\sbA_j = \{ A \in \sA_j : W(A,P) = m_{j}(P) \}$
-    is compact (with respect to the Hausdorff metric on $\sA_j$) for $j = 1, \dotsc, k$.
+    is compact (with respect to the Hausdorff metric on $\sA_j$) for $j = 1,
+    \dotsc, k$.
 \end{enumerate}
 \end{lemma}
 \begin{proof}
@@ -498,9 +499,9 @@ positive $P$~measure.  Take $M$ to be large enough such that
   (M - r)^2 P(K) > \int \|x\|^2 P(dx).
 \)
 Let $\sC_k$ denote the class of sets $A$ with at most $k$ points and at least
-one point in in $B(M)$, the closed ball with radius $M$ centered at the origin.  Let
-$A_0$ be the singleton set containing the origin.
-If no point of $A$ is in $B(M)$, then
+one point in in $B(M)$, the closed ball with radius $M$ centered at the
+origin.  Let $A_0$ be the singleton set containing the origin.  If no point of
+$A$ is in $B(M)$, then
 \(
   W(A, P) \geq (M - r)^2 P(K) > W(A_0, P).
 \)
@@ -510,46 +511,45 @@ Put concisely, if $A \in \sA_k \setminus \sC_k$, then
 \)
 
 
-
 Next, we proceed by induction on $k$.  If $k = 1$, then there is a unique
 minimizer of $W(\cdot, P)$ over $\sA_k$, the set containing the mean $\int x
 P(dx)$.  For $k > 1$, take as given that $m_{k-1}(P) = W(\bar A_{k-1}, P)$ for
 some set $\bar A_{k-1} \in \sE_{k-1}$.  We will show that there is an $M$
 large enough so that $W(\cdot, P)$ attains its infimum over $\sA_k$ and all
 minimizers lie in $\sE_k$.  Since $A \mapsto W(\cdot, P)$ is continuous and
-$\sE_k$ is compact, the class $\sbA_k$, the preimage of $\{ m_k(P) \}$ under this
-map, is compact.
+$\sE_k$ is compact, the class $\sbA_k$, the preimage of $\{ m_k(P) \}$ under
+this map, is compact.
 
 
-We first show that if $M$ is large enough, then there exists a set $B \in \sE_k$
-and a positive $\varepsilon$ with $W(B,P) < m_{k-1}(P) - \varepsilon$.  This
-will establish that $m_{k}(P) < m_{k-1}(P)$, and the set $B$ will have further
-utility later in the proof.
-Take $\bar A_{k-1} \in \sE_{k-1}$ to be a set with at most $k-1$ points satisfying
-$m_{k-1}(P) = W(\bar A_{k-1},P)$.
-Since the support of $P$ contains least $k$ points, there exists a point~$b_1$ not
-in $\bar A_{k-1}$ that lies in the support of $P$.  Ensure that $M$ is large
-enough so that $b_1 \in B(5M)$.  Take $B \in \sE_k$ to be the set of $k$
+We first show that if $M$ is large enough, then there exists a set $B \in
+\sE_k$ and a positive $\varepsilon$ with $W(B,P) < m_{k-1}(P) - \varepsilon$.
+This will establish that $m_{k}(P) < m_{k-1}(P)$, and the set $B$ will have
+further utility later in the proof.  Take $\bar A_{k-1} \in \sE_{k-1}$ to be a
+set with at most $k-1$ points satisfying $m_{k-1}(P) = W(\bar A_{k-1},P)$.
+Since the support of $P$ contains least $k$ points, there exists a point~$b_1$
+not in $\bar A_{k-1}$ that lies in the support of $P$.  Ensure that $M$ is
+large enough so that $b_1 \in B(5M)$.  Take $B \in \sE_k$ to be the set of $k$
 points gotten by adjoining $b_1$ to $\bar A_{k-1}$.  Let
 \(
   \delta = \min_{a \in \bar A_{k-1}} \| b_1 - a \|
 \)
-and set $R = \{ x \in \mathbb{R}^d : \|x - b_1\| < \delta/3 \}$; since $b_1$
+and set $R = \{ x \in \R^d : \|x - b_1\| < \delta/3 \}$; since $b_1$
 is in the support of $P$, the neighborhood $R$ has positive $P$~measure.
 Further,
 \[
   \int_{R} \min_{a \in \bar A_{k-1}} \|x - a\|^2 P(dx)
-  \geq
-  \int_{R} \min_{a \in \bar A_{k-1}} (\|b_1 - a\| - \delta/3)^2 P(dx)
-  = (4/9) \delta^2 P(R),
+    \geq
+      \int_{R} \min_{a \in \bar A_{k-1}} (\|b_1 - a\| - \delta/3)^2 P(dx)
+    =
+      (4/9) \delta^2 P(R),
 \]
 and
 \[
   \int_{R} \min_{b \in B} \|x - b\|^2 P(dx)
-  =
-  \int_{R} \|x - b_1\|^2 P(dx)
-  \leq
-  (1/9) \delta^2 P(R).
+    =
+      \int_{R} \|x - b_1\|^2 P(dx)
+    \leq
+      (1/9) \delta^2 P(R).
 \]
 Thus, if
 \(
@@ -557,8 +557,11 @@ Thus, if
 \)
 then
 \(
-  W(B,P) \leq W(\bar A_{k-1},P) - (3/9) \delta^2 P(R)
-         < m_{k-1}(P) - \varepsilon.
+  W(B,P)
+    \leq
+      W(\bar A_{k-1},P) - (3/9) \delta^2 P(R)
+    <
+      m_{k-1}(P) - \varepsilon.
 \)
 
 
@@ -566,14 +569,14 @@ Now, ensure that $M$ large enough so that
 \[
   4 \int_{\|x\| \geq 2M} \|x\|^2 P(dx) < \varepsilon.
 \]
-We will now show that if $A \in \sC_k \setminus \sE_k$, then
-$W(A,P) > W(B,P) \geq m_{k}(P)$, which ensures that $W(\cdot, P)$ does not
-attain its infimum over $\sA_k$ outside of $\sE_k$.  To see that this holds,
-suppose that $A$ is any set $\sC_k \setminus \sE_k$.  This set has at least
-one point, $a_1$, in $B(M)$, and at least one point outside $B(5M)$.  Consider
-thet set $A^\ast$ formed by removing all points of $A$ outside $B(5M)$.  Any
-point $x$ closer to a cluster center outisde $B(5M)$ than to $a_1$ must
-satisfy $\|x\| \geq 2M$.  Thus,
+We will now show that if $A \in \sC_k \setminus \sE_k$, then $W(A,P) > W(B,P)
+\geq m_{k}(P)$, which ensures that $W(\cdot, P)$ does not attain its infimum
+over $\sA_k$ outside of $\sE_k$.  To see that this holds, suppose that $A$ is
+any set $\sC_k \setminus \sE_k$.  This set has at least one point, $a_1$, in
+$B(M)$, and at least one point outside $B(5M)$.  Consider thet set $A^\ast$
+formed by removing all points of $A$ outside $B(5M)$.  Any point $x$ closer to
+a cluster center outisde $B(5M)$ than to $a_1$ must satisfy $\|x\| \geq 2M$.
+Thus,
 \begin{align*}
   W(A^\ast, P)
     &\leq W(A,P) + \int_{\|x\| \geq 2M} \|x - a_1\|^2 P(dx) \\
@@ -581,13 +584,12 @@ satisfy $\|x\| \geq 2M$.  Thus,
     &\leq W(A,P) + 4 \int_{\|x\| \geq 2M} \|x\|^2 P(dx) \\
     &< W(A,P) + \varepsilon.
 \end{align*}
-Since $A^\ast$ has $k-1$ or fewer points, it must satisfy
-$W(A^\ast, P) \geq m_{k-1}(P)$, so that
-$W(A, P) > m_{k-1}(P) - \varepsilon > W(B, P)$.
+Since $A^\ast$ has $k-1$ or fewer points, it must satisfy $W(A^\ast, P) \geq
+m_{k-1}(P)$, so that $W(A, P) > m_{k-1}(P) - \varepsilon > W(B, P)$.
 
 
-We have now established that $m_k(P) = \inf \{ W(A,P) : A \in \sE_k \}$,
-and that $W(\cdot, P)$ does not obtain its infimum over $\sA_k$ outside of
+We have now established that $m_k(P) = \inf \{ W(A,P) : A \in \sE_k \}$, and
+that $W(\cdot, P)$ does not obtain its infimum over $\sA_k$ outside of
 $\sE_k$.  The final step of the proof is to show $W(\cdot, P)$ obtains its
 infimum over $\sE_k$.  This follows from the extreme value theorem, since
 $\sE_k$ is compact and, by Lemma~\ref{lem:kmeans-continuous}, the map $A
@@ -601,21 +603,21 @@ $\sE_k$ is compact and, by Lemma~\ref{lem:kmeans-continuous}, the map $A
 \label{lem:pollard-compact}
 Suppose that $\int \|x\|^2 P(dx) < \infty$, that the support of $P$ has at
 least $k$ points, and that $k > 1$.  Let $A_n$ minimize $W(\cdot, P_n)$ over
-$\sA_k$, and that $B_n$ minimize $W(\cdot P_n)$ over $\sA_{k-1}$.  If
-$W(B_n, P) \to m_{k-1}(P)$ almost surely as $n \to \infty$, then
-there exists a finite $M$ such that as if $n$ is large enough,
-then, almost surely, $A_n$ is in the class of sets
+$\sA_k$, and that $B_n$ minimize $W(\cdot P_n)$ over $\sA_{k-1}$.  If $W(B_n,
+P) \to m_{k-1}(P)$ almost surely as $n \to \infty$, then there exists a finite
+$M$ such that as if $n$ is large enough, then, almost surely, $A_n$ is in the
+class of sets
 \(
-  \sE_k = \{ A \subset B(5M) : \text{$A$ contains $k$ or fewer points} \},
+  \sE_k = \{ A \subseteq B(5M) : \text{$A$ contains $k$ or fewer points} \},
 \)
 where $B(5M)$ denotes the Euclidean ball of radius $5M$ centered at the
 origin.
 \end{lemma}
 
 \begin{proof}
-Pollard proves this result, in Section~3 of his paper,  assuming that there
-is a unique set of $j$ points minimizing $W(\cdot, P)$ for each value of
-$j = 1, \dotsc, k$.  His proof, which is very similar to the proof of
+Pollard proves this result, in Section~3 of his paper,  assuming that there is
+a unique set of $j$ points minimizing $W(\cdot, P)$ for each value of $j = 1,
+\dotsc, k$.  His proof, which is very similar to the proof of
 Lemma~\ref{lem:kmeans-existence}, does not use this assumption directly, only
 its implication that $m_{k}(P) < m_{k-1}(P)$.  Since we have established his
 result in Lemma~\ref{lem:kmeans-existence}, the remainder of his proof applies
@@ -637,7 +639,6 @@ With Lemmas~\ref{lem:kmeans-continuous}--\ref{lem:kmeans-uniform-slln}, we can
 proceed to the proof of Theorem~\ref{lem:kmeans-consistency}.
 
 \begin{proof}[Proof of Theorem~\ref{lem:kmeans-consistency}]
-
 The proof proceeds inductively over $k$.  For $k=1$, the result follows from
 the strong law of large numbers.  For $k > 1$, assume that the result holds
 for smaller values of $k$.  If the support of $P$ has fewer than $k$ points,
@@ -648,46 +649,32 @@ there is a finite $M$ such that $A_n \in \sE_k$ almost surely for large
 enough~$n$.  Take $M$ to be large enough so that $\sE_k$ also contains
 $\sbA_k$.
 
-The set $\sE_k$ is compact and the map $f: \sE_k \to \mathbb{R}$ with $f(A) =
+
+The set $\sE_k$ is compact and the map $f: \sE_k \to \R$ with $f(A) =
 W(A, P)$ is continuous.  Thus, for every $\varepsilon > 0$ there exists an
 $\eta > 0$ depending on $\varepsilon$ such that if $A \in \sE_k$ and $H(A,
 \bar A) \geq \varepsilon$ for every $\bar A \in \sbA_k$, then $W(A,P) \geq
 m_{k}(P) + \eta$.  Let $\bar A_0$ be any member of $\sbA_k$.  By construction,
-$W(A_n, P_n) \leq W(\bar A, P_n)$.  Lemma~\ref{lem:kmeans-uniform-slln} ensures
-that $W(\bar A_0, P_n) \to m_k(P)\text{ a.s.}$  Thus, for $n$ large enough,
-$W(A_n, P_n) < m_{k}(P) + \eta$, which implies that there exists an $\bar A_n
-\in \sbA_k$ with $H(A_n, \bar A_n) < \varepsilon$.
+$W(A_n, P_n) \leq W(\bar A_0, P_n)$.  Lemma~\ref{lem:kmeans-uniform-slln}
+ensures that $W(\bar A_0, P_n) \to m_k(P)\text{ a.s.}$  Thus, for $n$ large
+enough, $W(A_n, P_n) < m_{k}(P) + \eta$, which implies that there exists an
+$\bar A_n \in \sbA_k$ with $H(A_n, \bar A_n) < \varepsilon$.
 \end{proof}
 
 
-
-
-Now, define $\mathcal{\bar A} = \mathcal{\bar A}(k)$ to be the class of sets
-$\bar A$ with $k$ or fewer points such that $W(\bar A,P) = m_k(P)$.
-Lemmas~\ref{lem:pollard-compact} and~\ref{lem:kmeans-continuous} together
-with the extreme value theorem imply that this class is nonempty.
-
-
-To prove
-this, it suffices to analyze a single fold of the cross-validation procedure.
-We will assume the following setup:
-
-Observations $\{ (X_i, Y_i) \}_{i=1}^{n+N}$ are independent and identically
-distributed.  The distribution for each $(X_i, Y_i)$ pair is such that $X_i$
-and $Y_i$ have marginal distribution $P^X$ and $P^Y$, and the vectors
-$X_i$ and $Y_i$ are independent.
-
+The following lemma is not required for the $k$-means consistency theorem, but
+it will prove necessary for analyzing the asymptotic behavior of Gabriel
+cross-validation.
 
 \begin{lemma}
-Set $\mu = \int x P(dx)$.
-If $\int \|x\|^2 P(dx) < \infty$, then there exists an $r > 0$ such that
-for every $A \in \sbA_k$, there is at most one center $a \in A$ with
-$\|a - \mu\| \leq r$.
+Set $\mu = \int x P(dx)$.  If $\int \|x\|^2 P(dx) < \infty$, then there exists
+an $r > 0$ such that for every $A \in \sbA_k$, there is at most one center $a
+\in A$ with $\|a - \mu\| \leq r$.
 \end{lemma}
 \begin{proof}
 If the support of $P$ has fewer than $k$ points, then the result is trivial.
-Otherwise, Lemma~\ref{lem:kmeans-existence} implies that
-$m_k(P) < m_{k-1}(P)$.  Define
+Otherwise, Lemma~\ref{lem:kmeans-existence} implies that $m_k(P) <
+m_{k-1}(P)$.  Define
 \[
   d =
     \inf_{A \in \sA_k}
@@ -698,19 +685,19 @@ If $d = 0$, then there exists a sequence $A_n$ in $\sbA_k$ with
   \min_{\substack{a,a' \in A_n \\ a \neq a'}} \|a - a'\| \to 0.
 \]
 Since $\sbA_k$ is compact, there exists a subsequence $n(m)$ and a set $A_0
-\in \sbA_k$ with $A_{n(m)} \to A_0$.
-Take $B_n \in \sA_{k-1}$ to be the set formed by removing one of the centers
-$a'$ minimizing $\min_{\substack{a \in A_n \\ a \neq a'}} \|a - a'\|$.
-By construction, $H(A_n, B_n) \to 0$, so that $B_{n(m)} \to A_0$.
-Since the map $A \mapsto W(A, P)$ is continuous on $\sA_k$, we must have
-$W(B_{n(m)}, P) \to W(A_0, P) = m_k(P)$.  However, this is impossible since
-$W(B_n,P) \geq m_{k-1}(P) > m_k(P)$.  It must be the case, then, that $d > 0$.
+\in \sbA_k$ with $A_{n(m)} \to A_0$.  Take $B_n \in \sA_{k-1}$ to be the set
+formed by removing one of the centers $a'$ minimizing $\min_{\substack{a \in
+A_n \\ a \neq a'}} \|a - a'\|$.  By construction, $H(A_n, B_n) \to 0$, so that
+$B_{n(m)} \to A_0$.  Since the map $A \mapsto W(A, P)$ is continuous on
+$\sA_k$, we must have $W(B_{n(m)}, P) \to W(A_0, P) = m_k(P)$.  However, this
+is impossible since $W(B_n,P) \geq m_{k-1}(P) > m_k(P)$.  It must be the case,
+then, that $d > 0$.
 
 
 Set $r < d/2$, and let $A \in \sbA_k$ be arbitrary.  Take $a_1$ to be the
-cluster center in $A$ closest to $\mu$ (breaking ties arbitrarily).  If
-$\|a_1 - \mu\| > r$, then $\|a - \mu\| > r$ for all centers $a \in A$.
-Otherwise, if $\|a_1 - \mu\| \leq r$ and $a \in A$ is any other cluster center, then
+cluster center in $A$ closest to $\mu$ (breaking ties arbitrarily).  If $\|a_1
+- \mu\| > r$, then $\|a - \mu\| > r$ for all centers $a \in A$.  Otherwise, if
+$\|a_1 - \mu\| \leq r$ and $a \in A$ is any other cluster center, then
 \(
   2r < \|a - a_1\| \leq \|a - \mu\| + \|a_1 - \mu\|
 \)
@@ -722,11 +709,32 @@ so that
 
 
 
+\section{Asymptotic Analysis of Gabriel Cross-Validation}
+
+Here, we show that Gabriel Cross-Validation is consistent when the data come
+from a single cluster; the algorithm picks $k = 1$ with probability tending to
+$1$ as the number of rows in the data matrix $\dataX$ increase.
+
+
+To prove consistency of Gabriel cross-validation, it suffices to analyze a
+single fold of the cross-validation procedure.  We will assume the following
+setup:
+
+Observations $\{ (X_i, Y_i) \}_{i=1}^{n+N}$ are independent and identically
+distributed.  The distribution for each $(X_i, Y_i)$ pair is such that $X_i$
+and $Y_i$ have marginal distribution $P^X$ and $P^Y$, and the vectors $X_i$
+and $Y_i$ are independent.
+
+
+
+\clearpage
+
+
 \subsection{Well-separated clusters with noise}
 
-Same with previous, the data set $\mathbf{X} \in \mathbb{R}^{n \times p}$ been
-partitioned as $\mathbf{X}^L \in \mathbb{R}^{n \times L}$ and $\mathbf{X}^R
-\in \mathbb{R}^{n \times R}$, with following set of assumptions:
+Same with previous, the data set $\mathbf{X} \in \R^{n \times p}$ been
+partitioned as $\mathbf{X}^L \in \R^{n \times L}$ and $\mathbf{X}^R
+\in \R^{n \times R}$, with following set of assumptions:
 
 \begin{enumerate}[label={Assumption},leftmargin=*]
 	\item $1.$ There are $K$ true centers $(\mu_1,...,\mu_K)$ where $\mathbf{X}$ generated from
@@ -1263,15 +1271,14 @@ and
             - (a - 2 \delta) \varphi(a)}
            {\Phi(b) - \Phi(a)}
 \]
-for all constants $a$, $b$, and $\delta$, where
-$\varphi(z)$ and $\Phi(z)$ are the standard normal probability density and
-cumulative distribution functions.  These expressions are valid
-for $a = -\infty$ or $b = \infty$ by taking limits.
+for all constants $a$, $b$, and $\delta$, where $\varphi(z)$ and $\Phi(z)$ are
+the standard normal probability density and cumulative distribution functions.
+These expressions are valid for $a = -\infty$ or $b = \infty$ by taking
+limits.
 
 \end{lemma}
 \begin{proof}
-We will derive the expression for the second moment.
-Integrate to get
+We will derive the expression for the second moment.  Integrate to get
 \begin{align*}
   \E[ (Z - \delta)^2 1\{Z < b\}]
     &= \int_{-\infty}^b (z - \delta)^2 \varphi(z) \, dz \\
@@ -1296,13 +1303,15 @@ Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
     &= \delta^2 + 1 + 4 \delta \varphi(0).
 \end{align*}
 
+
 \section{Counterexample with correlated noise}
 
 Suppose that $(X, Y)$ are jointly mean-zero multivariate normal with unit
 marginal variances and correlation $\rho$.  In this case, the data are drawn
 from a single cluster; the true number of clusters is~$1$.  We will show that
-Gabriel cross-validation is inconsistent if $\rho > 0.5$, in the sense that
-$k = 2$ will be preferred to $k = 1$ almost surely for large enough $n$.
+Gabriel cross-validation is inconsistent if $\rho > 0.5$, in the sense that $k
+= 2$ will be preferred to $k = 1$ almost surely for large enough $n$.
+
 
 Given a sample $(X_1, Y_1), \dotsc, (X_n, Y_n)$, we first apply $k$-means to
 $\{ Y_i \}_{i=1}^{n}$.  If $k = 1$ and $n$ is large enough, then the centroid
@@ -1313,6 +1322,7 @@ $\E(Y \mid Y > 0) = \sqrt{2/\pi}$ and $\E(Y \mid Y < 0) = -\sqrt{2/\pi}$.  We
 have used Lemma~\ref{lem:truncated-normal-moments} to compute the
 expectations.  In $k = 2$ case, then if $n$ is large enough, the cluster
 assignment will be determined according to whether $Y > 0$.
+
 
 In the $k = 1$ case, if $n$ is large enough, the average Gabriel
 cross-validation error converges to $\E(Y^2) = 1$. In the $k = 2$ case, if $n$
@@ -1325,20 +1335,20 @@ that $Y \mid X$ is normal with mean $\rho X$ and variance $(1 - \rho^2)$, so
 that $\E[(Y - a)^2 \mid X] = (\rho X - a)^2 + (1 - \rho^2)$.  Applying
 Lemma~\ref{lem:truncated-normal-moments}, in the $k = 2$ case we get that the
 Gabriel cross-validation error converges to $1 + a^2 (1 - 2 \rho)$.  In the
-$\rho < 0$ case, it converges to $1 + a^2 (1 + 2 \rho)$.  In
-particular, if $|\rho| > 0.5$, then the asymptotic cross-validation error for $k
-= 2$ will be smaller than for $k = 1$.
+$\rho < 0$ case, it converges to $1 + a^2 (1 + 2 \rho)$.  In particular, if
+$|\rho| > 0.5$, then the asymptotic cross-validation error for $k = 2$ will be
+smaller than for $k = 1$.
+
 
 We confirm this with a simulation.  We perform $10$ replicates.  In each
 replicate, we generate $20000$ observations from a mean-zero bivariate normal
 distribution with unit marginal variances and correlation $\rho$.  We perform
 a single $2 \times 2$ fold of Gabriel cross-validation and report the
 cross-validation mean squared error for the number of clusters $k$ ranging
-from $1$ to $5$.  Figure~\ref{fig:nullcorr-equal} shows the
-cross-validation errors for all $10$ replicates.  The simulation demonstrates
-that in the Gabriel cross-validation criterion chooses the correct answer $k =
-1$ whenever $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever
-$|\rho| > 0.5$.
+from $1$ to $5$.  Figure~\ref{fig:nullcorr-equal} shows the cross-validation
+errors for all $10$ replicates.  The simulation demonstrates that in the
+Gabriel cross-validation criterion chooses the correct answer $k = 1$ whenever
+$\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.
 
 \begin{figure}
 \centering
