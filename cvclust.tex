@@ -406,23 +406,48 @@ and set
 Suppose that $X_1, \dotsc, X_n$ are independent draws from $P$, and if $P_n$
 is the empirical measure formed by placing mass $1/n$ on each $X_i$.  Let
 $A_n$ be a set minimizing $W(A_n, P_n)$.  Pollard gave conditions for $A_n$ to
-converge to the minimizer of $W(\cdot, P)$.  His main theorem assumes that the
+converge to a minimizer of $W(\cdot, P)$.  His main theorem assumes that the
 minimizer of $W(\cdot, P)$ is unique, which is too strong for our purposes
 (this fails, for example, with a bivariate normal distribution with identity
 covariance whenever $k \geq 2$).  It is straightforward to generalize his
-result to cases with multiple maximizers.  To do so, we will need the
-following three lemmas.  The proofs of these lemmas are modifications of
-arguments given in Sections~3 and~4 of Pollard's article.
+result to cases with multiple maximizers.
+
+To state the consistency theorem define
+\[
+  \sbA_k = \{ \bar A \subseteq \mathbb{R}^d
+            : W(\bar A, P) = m_k(P)
+              \text{ and $\bar A$ contains $k$ or fewer points} \}.
+\]
+We will later show that $\sbA_k$ is nonempty and compact whenever
+$\int \|x\|^2 P(dx) < \infty$.
+Let $H(\cdot, \cdot)$ denote the Hausdorff metric, defined for compact subsets
+$A, B$ of $\mathbb{R}^d$ by $H(A,B) < \delta$ if and only if every point of
+$A$ is within Euclidean distance $\delta$ of at least one point of $B$, and
+vice versa.  We can now state the generalized version of Pollard's $k$-means
+consistency theorem.
 
 
+\begin{theorem}[$k$-Means Consistency]\label{lem:kmeans-consistency}
+Suppose that $\int \|x\|^2 P(dx) < \infty$ and that $A_n$ minimizes
+$W(\cdot, P_n)$ over $\sA_k$.  Then for all $n$ there exists an
+$\bar A_n \in \sbA_k$ such that $H(A_n, \bar A_n) \to 0\text{ a.s.}$,
+and $W(A_n, P_n) \to m_k(P)\text{ a.s.}$
+\end{theorem}
 
 
-\begin{lemma}[Continuity]\label{lem:pollard-continuous}\label{lem:pollard-last}
+The proof of this theorem relies on a series of lemmas, which are extensions
+of results given in Pollard's original article.  First, we show that the map
+$A \mapsto W(A, P)$ is continuous.  Next, we show that $\sbA_k$ is nonempty
+and compact.  Then, it follows that for $n$ large enough, all minimizers of
+$W(\cdot, A_n)$ are contained in a compact set $\sE_k$.  The final ingredient
+of the proof is Pollard's uniform strong law of large numbers, which says that
+$\sup_{A \in \sE_k} |W(A,P) - W(A,P_n)| \to 0\text{ a.s.}$
+
+
+\begin{lemma}[Continuity]\label{lem:kmeans-continuous}
 If $\int \|x\|^2 P(x) < \infty$, then the map $A \mapsto W(A, P)$ is
 continuous on $\sA_k$ with respect to the topology induced by the Hausdoff
-metric $H(\cdot, \cdot)$, defined for compact subsets $A, B$ of $\mathbb{R}^d$
-by $H(A,B) < \delta$ if and only if every point of $A$ is within Euclidean
-distance $\delta$ of at least one point of $B$, and vice versa.
+metric.
 \end{lemma}
 \begin{proof}
 This is a slight extension of the argument given at the end of Pollard's
@@ -565,7 +590,7 @@ We have now established that $m_k(P) = \inf \{ W(A,P) : A \in \sE_k \}$,
 and that $W(\cdot, P)$ does not obtain its infimum over $\sA_k$ outside of
 $\sE_k$.  The final step of the proof is to show $W(\cdot, P)$ obtains its
 infimum over $\sE_k$.  This follows from the extreme value theorem, since
-$\sE_k$ is compact and, by Lemma~\ref{lem:pollard-continuous}, the map $A
+$\sE_k$ is compact and, by Lemma~\ref{lem:kmeans-continuous}, the map $A
 \mapsto W(A,P)$ is continuous over $\sA_k$.
 \end{proof}
 
@@ -598,7 +623,7 @@ without further modification.
 \end{proof}
 
 
-\begin{lemma}[Uniform SLLN]\label{lem:pollard-uniform}
+\begin{lemma}[Uniform SLLN]\label{lem:kmeans-uniform-slln}
 If $\int \|x\|^2 P(x) < \infty$, then
 \(
   \sup_{A \in \sE_k} |W(A, P) - W(A,P_n)| \to 0\text{ a.s.}
@@ -608,14 +633,11 @@ If $\int \|x\|^2 P(x) < \infty$, then
 Pollard proves this result at the beginning of his Section~4.
 \end{proof}
 
+With Lemmas~\ref{lem:kmeans-continuous}--\ref{lem:kmeans-uniform-slln}, we can
+proceed to the proof of Theorem~\ref{lem:kmeans-consistency}.
 
-\begin{theorem}[$k$-Means Consistency]
-Suppose that $\int \|x\|^2 P(dx) < \infty$ and that $A_n$ minimizes
-$W(\cdot, P_n)$ over $\sA_k$.  Then for all $n$ there exists an
-$\bar A_n \in \sbA_k$ such that $H(A_n, \bar A_n) \to 0\text{ a.s.}$,
-and $W(A_n, P_n) \to m_k(P)\text{ a.s.}$
-\end{theorem}
-\begin{proof}
+\begin{proof}[Proof of Theorem~\ref{lem:kmeans-consistency}]
+
 The proof proceeds inductively over $k$.  For $k=1$, the result follows from
 the strong law of large numbers.  For $k > 1$, assume that the result holds
 for smaller values of $k$.  If the support of $P$ has fewer than $k$ points,
@@ -623,18 +645,18 @@ then the result is trivially true.  Otherwise, the induction hypothesis
 implies that there exists a $B_n \in \sA_{k-1}$ with $W(B_n, P_n) \to
 m_{k-1}(P)\text{ a.s.}$  Hence, Lemma~\ref{lem:pollard-compact} ensures that
 there is a finite $M$ such that $A_n \in \sE_k$ almost surely for large
-enough~$n$.  Take $M$ to be large enough so that $\sE_k$ also contains $\sbA_k$.
+enough~$n$.  Take $M$ to be large enough so that $\sE_k$ also contains
+$\sbA_k$.
 
 The set $\sE_k$ is compact and the map $f: \sE_k \to \mathbb{R}$ with $f(A) =
 W(A, P)$ is continuous.  Thus, for every $\varepsilon > 0$ there exists an
 $\eta > 0$ depending on $\varepsilon$ such that if $A \in \sE_k$ and $H(A,
 \bar A) \geq \varepsilon$ for every $\bar A \in \sbA_k$, then $W(A,P) \geq
 m_{k}(P) + \eta$.  Let $\bar A_0$ be any member of $\sbA_k$.  By construction,
-$W(A_n, P_n) \leq W(\bar A, P_n)$.  Lemma~\ref{lem:pollard-uniform} ensures
+$W(A_n, P_n) \leq W(\bar A, P_n)$.  Lemma~\ref{lem:kmeans-uniform-slln} ensures
 that $W(\bar A_0, P_n) \to m_k(P)\text{ a.s.}$  Thus, for $n$ large enough,
 $W(A_n, P_n) < m_{k}(P) + \eta$, which implies that there exists an $\bar A_n
 \in \sbA_k$ with $H(A_n, \bar A_n) < \varepsilon$.
-
 \end{proof}
 
 
@@ -642,7 +664,7 @@ $W(A_n, P_n) < m_{k}(P) + \eta$, which implies that there exists an $\bar A_n
 
 Now, define $\mathcal{\bar A} = \mathcal{\bar A}(k)$ to be the class of sets
 $\bar A$ with $k$ or fewer points such that $W(\bar A,P) = m_k(P)$.
-Lemmas~\ref{lem:pollard-compact} and~\ref{lem:pollard-continuous} together
+Lemmas~\ref{lem:pollard-compact} and~\ref{lem:kmeans-continuous} together
 with the extreme value theorem imply that this class is nonempty.
 
 
