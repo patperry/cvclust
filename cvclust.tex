@@ -47,25 +47,46 @@
 
 \bibpunct{(}{)}{;}{a}{,}{,}
 
+% operators
 \newcommand{\CV}{\operatorname{CV}}
 \newcommand{\E}{\operatorname{E}}
+\DeclareMathOperator*{\cov}{cov}
+\DeclareMathOperator*{\tr}{tr}
+\DeclareMathOperator*{\var}{var}
+
+% convergence
+\newcommand{\toas}{\overset{\mathit{a.s.}}{\to}}
+
+% sets
 \newcommand{\R}{\mathbb{R}}
-\newcommand{\dataX}{\mathfrak{X}}
-\newcommand{\Xtrain}{X_{\text{train}}}
-\newcommand{\Ytrain}{Y_{\text{train}}}
-\newcommand{\Xtest}{X_{\text{test}}}
-\newcommand{\Ytest}{Y_{\text{test}}}
-\newcommand{\hGX}{\hat G^{X}}
-\newcommand{\hGY}{\hat G^{Y}}
-\newcommand{\bpi}{\bar \pi}
-\newcommand{\bmuX}{\bar \mu^{X}}
-\newcommand{\bmuY}{\bar \mu^{Y}}
 \newcommand{\sA}{\mathcal{A}}
 \newcommand{\sbA}{\mathcal{\bar A}}
 \newcommand{\sC}{\mathcal{C}}
 \newcommand{\sE}{\mathcal{E}}
 \newcommand{\sN}{\mathcal{N}}
 \newcommand{\sX}{\mathcal{X}}
+
+% scalars
+\newcommand{\bpi}{\bar \pi}
+
+% vectors
+\newcommand{\muX}{\mu^{X}}
+\newcommand{\muY}{\mu^{Y}}
+\newcommand{\bmuX}{\bar \mu^{X}}
+\newcommand{\bmuY}{\bar \mu^{Y}}
+
+% matrices
+\newcommand{\dataX}{\mathfrak{X}}
+\newcommand{\SigmaY}{\Sigma^Y}
+\newcommand{\Xtrain}{X_{\text{train}}}
+\newcommand{\Ytrain}{Y_{\text{train}}}
+\newcommand{\Xtest}{X_{\text{test}}}
+\newcommand{\Ytest}{Y_{\text{test}}}
+
+% class labels
+\newcommand{\hGX}{\hat G^{X}}
+\newcommand{\hGY}{\hat G^{Y}}
+
 
 \begin{document}
 \title{Estimating the number of clusters using Cross Validation}
@@ -202,7 +223,8 @@ the Gabriel cross-validation to locate the optimal cluster number $k$. The
 Wold cross-validation algorithm is described in Appendix $A$.
 
 
-\subsection*{Gabriel CV algorithm}
+\subsection{Gabriel CV algorithm}
+\label{sec:gabriel-cv-algorithm}
 
 We are given a data matrix with $N$ rows and $P$ columns.  In each fold of
 cross-validation, we permute the rows and columns of the data matrix and then
@@ -428,7 +450,7 @@ least one point of $B$, and vice versa.  We can now state the generalized
 $k$-means consistency theorem.
 
 
-\begin{theorem}[$k$-Means Consistency]\label{lem:kmeans-consistency}
+\begin{theorem}[$k$-Means Consistency]\label{thm:kmeans-consistency}
 Suppose that $\int \|x\|^2 P(dx) < \infty$ and that $A_n$ minimizes $W(\cdot,
 P_n)$ over $\sA_k$.  Then for all $n$ there exists an $\bar A_n \in \sbA_k$
 such that $H(A_n, \bar A_n) \to 0\text{ a.s.}$, and $W(A_n, P_n) \to
@@ -613,7 +635,6 @@ class of sets
 where $B(5M)$ denotes the Euclidean ball of radius $5M$ centered at the
 origin.
 \end{lemma}
-
 \begin{proof}
 Pollard proves this result, in Section~3 of his paper,  assuming that there is
 a unique set of $j$ points minimizing $W(\cdot, P)$ for each value of $j = 1,
@@ -636,9 +657,9 @@ Pollard proves this result at the beginning of his Section~4.
 \end{proof}
 
 With Lemmas~\ref{lem:kmeans-continuous}--\ref{lem:kmeans-uniform-slln}, we can
-proceed to the proof of Theorem~\ref{lem:kmeans-consistency}.
+proceed to the proof of Theorem~\ref{thm:kmeans-consistency}.
 
-\begin{proof}[Proof of Theorem~\ref{lem:kmeans-consistency}]
+\begin{proof}[Proof of Theorem~\ref{thm:kmeans-consistency}]
 The proof proceeds inductively over $k$.  For $k=1$, the result follows from
 the strong law of large numbers.  For $k > 1$, assume that the result holds
 for smaller values of $k$.  If the support of $P$ has fewer than $k$ points,
@@ -666,7 +687,7 @@ The following lemma is not required for the $k$-means consistency theorem, but
 it will prove necessary for analyzing the asymptotic behavior of Gabriel
 cross-validation.
 
-\begin{lemma}
+\begin{lemma}\label{lem:kmeans-separation}
 Set $\mu = \int x P(dx)$.  If $\int \|x\|^2 P(dx) < \infty$, then there exists
 an $r > 0$ such that for every $A \in \sbA_k$, there is at most one center $a
 \in A$ with $\|a - \mu\| \leq r$.
@@ -720,10 +741,37 @@ To prove consistency of Gabriel cross-validation, it suffices to analyze a
 single fold of the cross-validation procedure.  We will assume the following
 setup:
 
-Observations $\{ (X_i, Y_i) \}_{i=1}^{n+N}$ are independent and identically
-distributed.  The distribution for each $(X_i, Y_i)$ pair is such that $X_i$
-and $Y_i$ have marginal distribution $P^X$ and $P^Y$, and the vectors $X_i$
-and $Y_i$ are independent.
+
+\begin{theorem}
+For each $n$, let $N(n)$ be a nonnegative integer with $N(n) \to \infty$ as $n
+\to \infty$, and let $\{ (X_{n,i}, Y_{n,i}) \}_{i=1}^{n+N(n)}$ be independent
+identically distributed random variables.  For any fixed $k$, let $\CV(k)$
+be the cross-validation error from a single Gabriel CV fold, computed as
+described in Sec.~\ref{sec:gabriel-cv-algorithm}.  Suppose that
+\begin{enumerate}[label=(\roman*)]
+\item the distribution for each $(X, Y)$ pair is such that $X$ and $Y$ have
+  marginal distributions $P^X$ and $P^Y$, and the vectors $X$ and $Y$ are
+  independent of each other;
+
+\item the distribution $P^Y$ satisfies $\int \|y\|^2 P^Y(dy) < \infty$;
+
+\item the support of $P^Y$ contains at least two points.
+\end{enumerate}
+Then for any fixed $k > 1$, almost surely eventually  $\CV(k) > \CV(1)$.
+\end{theorem}
+\begin{proof}
+Set $\muY = \E(Y)$ and $\SigmaY = \cov(Y)$.  The strong law of large
+numbers implies that
+\(
+  \CV(1) \toas \int \|y - \mu^Y\|^2 P(dy) = \tr(\SigmaY).
+\)
+If $k > 1$, then Theorem~\ref{thm:kmeans-consistency} and
+Lemma~\ref{lem:kmeans-separation} imply that there exists an $r > 0$ such that
+almost surely eventually at most one cluster center in
+$\{ \bmuY_1, \dotsc, \bmuY_k \}$ is within distance $r$ of $\muY$.  Without
+loss of generality suppose that $\bmuY_1$ is the closest cluster center to
+$\muY$.
+\end{proof}
 
 
 
