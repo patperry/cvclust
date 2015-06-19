@@ -82,6 +82,7 @@ print_table <- function(setting, summary)
 }
 
 for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
+    cat("tabulating results for '", s, "'\n", sep="")
     prederr <- readRDS(file.path(s, "prederr.rds"))
     nrep <- length(prederr)
     kmax <- length(prederr[[1]])
