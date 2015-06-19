@@ -4,6 +4,8 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
     if (file.exists(file.path(s, "prederr.rds")))
         next
 
+    cat("computing prediction error for '", s, "'\n", sep="")
+
     replicates <- readRDS(file.path(s, "replicates.rds"))
     kmeans <- readRDS(file.path(s, "kmeans.rds"))
 
