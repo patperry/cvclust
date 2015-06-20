@@ -7,6 +7,7 @@
 #   library("e1071")
 #   library("mclust")
 #   library("MASS")
+#   library("nnet")
 #   load_all("../../lib/fpc")
 #   load_all("../../lib/NbClust")
 #   source("../../lib/NbClust.R")
@@ -18,6 +19,11 @@
 #   
 
 methods <- list(
+    "gabriel-nearest" = function(x, maxcenters) {
+        cv <- cv.kmeans.gabriel(x, 2, 2, maxcenters,
+                                classify.method="nearest")
+        cv$centers
+    },
     "gabriel-lda-equal" = function(x, maxcenters) {
         cv <- cv.kmeans.gabriel(x, 2, 2, maxcenters,
                                 classify.method="lda-equal")

@@ -6,6 +6,7 @@ library("devtools")
 library("e1071")
 library("mclust")
 library("MASS")
+library("nnet")
 library("parallel")
 load_all("../../lib/fpc", export_all=FALSE)
 load_all("../../lib/NbClust", export_all=FALSE)
@@ -45,12 +46,14 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
 
             clusterExport(cl=cl, varlist=c("replicates", "method", "kmax",
                                            "classify_lda",
+                                           "classify_nearest",
                                            "cluster_kmeans",
                                            "compute.jump",
                                            "cv.kmeans.gabriel",
                                            "Impute",
                                            "jump",
                                            "kmeans.rndstart",
+                                           "predict.classify_nearest",
                                            "mclustBIC",
                                            "WoldIter",
                                            "Wold_holdout"))
