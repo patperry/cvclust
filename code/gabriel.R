@@ -3,13 +3,14 @@
 # Depends:
 #   library("bcv")
 #   library("MASS")
+#   library("nnet")
 #   source("classify.R")
 #   source("cluster.R")
 #
 
 
-cv.kmeans.gabriel <- function(x, krow = 5, kcol = 2, maxcenters = 10,
-                              classify.method = c("lda-equal", "lda-proportions", "svm"))
+cv.kmeans.gabriel <- function(x, krow = 2, kcol = 2, maxcenters = 10,
+                              classify.method = c("nearest", "lda-equal", "lda-proportions", "svm"))
 {
     classify.method <- match.arg(classify.method)
     x <- as.matrix(x)
@@ -44,7 +45,9 @@ cv.kmeans.gabriel <- function(x, krow = 5, kcol = 2, maxcenters = 10,
     if (!missing(maxcenters) && maxcenters != maxcenters.o) 
         warning("maxcenters has been set to ", maxcenters)
 
-    if (classify.method == "lda-equal") {
+    if (classify.method == "nearest") {
+        classify <- classify_nearest
+    } else if (classify.method == "lda-equal") {
         classify <- function(x, grouping)
             classify_lda(x, grouping, prior="equal")
     } else if (classify.method == "lda-proportions") {
