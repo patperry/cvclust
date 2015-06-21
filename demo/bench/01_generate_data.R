@@ -5,8 +5,8 @@ library("parallel")
 source("settings.R") # settings
 
 
-# Use the L'Ecuyer RNG so that we can split the seeds, allowing
-# each replicate to have a separate stream of random numbers.
+# Use the L'Ecuyer RNG so that we can have multiple streams of
+# random numbers
 rng_kind <- "L'Ecuyer-CMRG"
 rng_normal_kind <- "Inversion"
 
@@ -22,19 +22,27 @@ for (s in names(settings)) {
 
         cat("generating replicates for '", s, "'\n", sep="")
 
+        # generate the list of seeds
         set.seed(settings[[s]]$seed, rng_kind, rng_normal_kind)
+        seeds <- vector("list", nrep)
+        seeds[[1L]] <- .Random.seed
+        for (r in seq_len(nrep - 1L))
+            seeds[[r+1L]] <- nextRNGStream(seeds[[r]])
+
+        # generate the replicates
         replicates <- vector("list", nrep)
 
         pb <- txtProgressBar(0, nrep, style=3)
         for (r in seq_len(nrep)) {
+            # set the seed for this replicate
+            .Random.seed <<- seeds[[r]]
             replicates[[r]] <- settings[[s]]$simulate()
 
-            # split the RNG and save one stream with the replicate
-            s0 <- .Random.seed
-            replicates[[r]][["rng"]] <- list(seed = nextRNGSubStream(s0),
+            # save the state of the RNG
+            replicates[[r]][["rng"]] <- list(seed = .Random.seed,
                                              kind = rng_kind,
                                              normal_kind = rng_normal_kind)
-            .Random.seed <- nextRNGStream(s0)
+
             setTxtProgressBar(pb, r)
         }
         close(pb)
