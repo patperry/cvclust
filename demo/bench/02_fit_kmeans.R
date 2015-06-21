@@ -1,9 +1,14 @@
 #!/usr/bin/Rscript --vanilla
 
 source("../../code/cluster.R") # cluster_kmeans
+library("parallel")
 
 kmax <- 15
 
+options(cl.cores=max(1, detectCores() - 1))
+cl <- makeCluster(getOption("cl.cores", 2))
+
+clusterExport(cl=cl, varlist=c("cluster_kmeans", "kmax"))
 
 for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
     f.replicates <- file.path(s, "replicates.rds")
@@ -13,20 +18,16 @@ for (s in list.dirs(full.names=FALSE, recursive=FALSE)) {
         cat("fitting k-means for '", s, "'\n", sep="")
 
         replicates <- readRDS(f.replicates)
-        nrep <- length(replicates)
-        kmeans <- vector("list", nrep)
-
-        pb <- txtProgressBar(0, nrep, style=3)
-        for (r in seq_len(nrep)) {
-            kmeans[[r]] <- vector("list", kmax)
-            for (k in seq_len(kmax)) {
-                kmeans[[r]][[k]] <- cluster_kmeans(replicates[[r]]$x, k)
-            }
-            setTxtProgressBar(pb, r)
-        }
-        close(pb)
+        kmeans <- parLapply(cl, replicates, function(r) {
+                km <- vector("list", kmax)
+                for (k in seq_len(kmax)) {
+                    km[[k]] <- cluster_kmeans(r$x, k)
+                }
+                km
+            })
 
         saveRDS(kmeans, f.kmeans)
     }
 }
 
+stopCluster(cl)
