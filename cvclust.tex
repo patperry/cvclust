@@ -285,8 +285,12 @@ $k$, the number of clusters:
 \noindent
 In principle, we could use any clustering and classification methods in
 steps~\ref{step:gabriel-cluster} and~\ref{step:gabriel-classify}.  In this
-report, we use $k$-means as the clustering algorithm and linear discriminant
-analysis (LDA) as the classification procedure.
+report, we use $k$-means as the clustering algorithm.  For the classification
+step, we compute the mean value of $X$ for each class; we assign an
+observation to class $g$ if that class has the closest mean (randomly breaking
+ties between classes).  The classification step is equivalent to linear
+discriminant analysis with equal class priors and identity noise covariance
+matrix.
 
 
 To choose the folds, we randomly partition the rows and columns into $K$ and
