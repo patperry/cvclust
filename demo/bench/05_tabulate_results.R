@@ -25,10 +25,12 @@ method.names <- list(
     "Jump" = "Jump",
     "PS" = "Prediction Strength",
     "Stab" = "Stability",
-    "gabriel-lda-equal" = "Gabriel CV",
-    "gabriel-lda-equal-5X2" = "Gabriel-5X2 CV",
-    "gabriel-lda-proportion" = "Gabriel-proportion CV",
-    "gabriel-lda-proportion-5X2" = "Gabriel-proportion-5X2 CV",
+    "gabriel-nearest-2x2" = "Gabriel CV (Nearest; $2 \\times 2$)",
+    "gabriel-nearest-5x2" = "Gabriel CV (Nearest; $5 \\times 2$)",
+    "gabriel-lda-equal-2x2" = "Gabriel CV (LDA Equal; $2 \\times 2$)",
+    "gabriel-lda-equal-5x2" = "Gabriel CV (LDA Equal; $5 \\times 2$)",
+    "gabriel-lda-proportion-2x2" = "Gabriel (CV LDA Prop.; $2 \\times 2$)",
+    "gabriel-lda-proportion-5x2" = "Gabriel (CV LDA Prop.; $5 \\times 2$)",
     "wold" = "Wold CV")
 
 exclude <- function(setting, method)

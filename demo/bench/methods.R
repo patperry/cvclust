@@ -19,27 +19,32 @@
 #   
 
 methods <- list(
-    "gabriel-nearest" = function(x, maxcenters) {
+    "gabriel-nearest-2x2" = function(x, maxcenters) {
         cv <- cv.kmeans.gabriel(x, 2, 2, maxcenters,
                                 classify.method="nearest")
         cv$centers
     },
-    "gabriel-lda-equal" = function(x, maxcenters) {
+    "gabriel-nearest-5x2" = function(x, maxcenters) {
+        cv <- cv.kmeans.gabriel(x, 5, 2, maxcenters,
+                                classify.method="nearest")
+        cv$centers
+    },
+    "gabriel-lda-equal-2x2" = function(x, maxcenters) {
         cv <- cv.kmeans.gabriel(x, 2, 2, maxcenters,
                                 classify.method="lda-equal")
         cv$centers
     },
-    "gabriel-lda-equal-5X2" = function(x, maxcenters) {
+    "gabriel-lda-equal-5x2" = function(x, maxcenters) {
         cv <- cv.kmeans.gabriel(x, 5, 2, maxcenters,
                               classify.method="lda-equal")
         cv$centers
     },
-    "gabriel-lda-proportion" = function(x, maxcenters) {
+    "gabriel-lda-proportion-2x2" = function(x, maxcenters) {
         cv <- cv.kmeans.gabriel(x, 2, 2, maxcenters,
                                 classify.method="lda-proportions")
         cv$centers
     },
-    "gabriel-lda-proportion-5X2" = function(x, maxcenters) {
+    "gabriel-lda-proportion-5x2" = function(x, maxcenters) {
         cv <- cv.kmeans.gabriel(x, 5, 2, maxcenters,
                               classify.method="lda-proportions")
         cv$centers
