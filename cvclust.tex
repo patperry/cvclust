@@ -48,6 +48,7 @@
 \bibpunct{(}{)}{;}{a}{,}{,}
 
 % operators
+\DeclareMathOperator*{\argmin}{arg\,min}
 \newcommand{\CV}{\operatorname{CV}}
 \newcommand{\E}{\operatorname{E}}
 \DeclareMathOperator*{\cov}{cov}
@@ -303,34 +304,73 @@ $\CV(k)$ over all $K \times L$ folds.
 
 
 
-\section{Theoretical justification of Gabriel CV method}
+\section{Self-Consistency of Gabriel CV method}
 
-This section gives the self-consistency proof of the proposed Gabriel method. What's more, its asymptotic property under suitable condition will be shown in this section in order to give the idea of why the Gabriel CV method works.\\
 
-Because K-means algorithm is a key part in the proof below, it's convenient to have a review of K-means here:\\
-Given a set of observations $\mathbf{X} = (x_1,...,x_n)$, and the number of clusters $K$, K-means' goal is to minimize the within cluster dispersion. That is, find the partition $\mathbb{P}_K$ of $\mathbf{X}$, where $\mathbb{P}_K(\mathbf{X})= (p_1,p_2,...,p_K)$, such that
-\[	\underset{\mathbb{P}_K}{\operatorname{argmin}} \sum^K_{i=1}\sum_{x \in p_i } ||x-\hat{\mu}_i||^2\]
-where $\hat{\mu}_i$ is the sample mean of $p_i$.
-\subsection{Self-Consistency}
-Same as in section $2$, let the data set $\mathbf{X} \in \R^{n \times p}$ been partitioned as
- \[ 
- \begin{pmatrix}
-\mathbf{X}^L_{train} & \mathbf{X}^R_{train}\\
-  \mathbf{X}^L_{test}  & \mathbf{X}^R_{test}\\
-  \end{pmatrix}
- \]
-\subsection*{Assumptions}
-\begin{enumerate}[label={Assumption},leftmargin=*]
-\item $1.$ There are $K$ true centers $(\mu_1,...,\mu_K)$ where $\mathbf{X}$ generated from
-\item $2.$ The $K$ partitioned centers $(\mu^L_1,...,\mu^L_K)$ are all distinct in $L$ dimensions: $||\mu^L_i-\mu^L_j|| \neq 0$ for any $i \neq j$; $(\mu^R_1,...,\mu^R_K)$ are all distinct in $R$ dimensions
-\item $3.$ The training set contains at least one member of each cluster
-\item $4.$ The test set contains at least one member of each cluster
-\item $5.$ There is no noise, so that $$x_i = \mu \left(c_i\right) \in \{\mu_1,...,\mu_K\} $$ and $$\mu \left(c_i\right) = \mu_j \hspace{0.2in} \text{iff} \hspace{0.2in} c_i = j$$ where $c_i$ is the true cluster for observation $i$, which implies $$x^L_i = \mu^L\left(c_i\right) \in \{\mu^L_1,...,\mu^L_K\},\hspace{0.2in} x^R_i = \mu^R\left(c_i\right) \in \{\mu^R_1,...,\mu^R_K\}$$
+This section gives the self-consistency proof of the proposed Gabriel method.
+Specifically, we will show that under appropriate conditions, in the absence
+of noise, the Gabriel cross-validation procedure finds the optimal number of
+clusters.
+
+
+Because $k$-means algorithm is essential to the method, we review the
+procedure here.  Given a set of observations $\{ x_1, \dotsc ,x_n \}$, and a
+specified the number of clusters $k$, the goal of the $k$-means procedure is
+to find a set of $k$ or cluster centers $A = \{ a_1, \dotsc, a_k \} $
+minimizing the within cluster dispersion
+\[
+  W(A) = \sum_{i=1}^{n} \min_{a \in A} \|x_i - a\|^2.
+\]
+This implicitly defines a cluster assignment rule
+\[
+  g(x) = \argmin_{g \in \{1, \dotsc, k\}} \|x - a_g\|^2,
+\]
+with ties broken arbitrarily.  We will assume that the $k$-means procedure
+finds an optimal solution, $A$, but we will not assume that this solution is
+unique.
+
+
+It will suffice to analyze a single fold of the cross-validation procedure.
+As in in section~\ref{sec:gabriel-cv-algorithm} we assume that the $P$
+variables of the data set have been partitioned into $p$ predictor variables
+represented in vector~$X$ and $q$ response variables represented in
+vector~$Y$.  The $N$ observations have been divided into two sets: $n$ train
+observations and $m$ test observations.
+
+
+We make the following assumptions:
+\begin{enumerate}[label={\arabic*.},leftmargin=*]
+
+  \item There are $k$ true centers $\mu(1), \dotsc,\mu(k)$, with the $g$th
+    cluster center partitioned as $\mu(g) = \bigl(\muX(g), \muY(g)\bigr)$ with
+    $\muX(g) \in \R^p$ and $\muY(g) \in \R^q$ for $g = 1, \dotsc, k$.
+
+  \item The vectors $\muX(1), \dotsc,\muX(k)$ are all distinct; likewise,
+    $\muY(1), \dotsc,\muY(k)$ are all distinct.
+
+  \item The training set contains at least one member of each cluster.
+
+  \item The test set contains at least one member of each cluster.
+
+  \item Each observation $i$ has a true cluster $G_i \in \{ 1, \dotsc, k \}$.
+    There is no noise, so that $X_i = \muX({G_i})$ and $Y_i = \muY(G_i)$ for
+    $i = 1, \dotsc, n+m$.
+
 \end{enumerate}
  
+
 \begin{proposition}
-	If assumptions $1, 2, 3, 5$ hold, then there exists a classification method works perfectly in case of ($k \leq K$): the re-substitution error is $0$. That is, for $\forall x_i \in \mathbf{X}_{train}$ prediction on $x^L_i$ always correctly predict cluster where $x^R_i$ is in.
+If assumptions $1, 2, 3, 5$ hold, then there exists a classification method
+works perfectly in case of ($k \leq K$): the re-substitution error is $0$.
+That is, for $\forall x_i \in \mathbf{X}_{train}$ prediction on $x^L_i$ always
+correctly predict cluster where $x^R_i$ is in.
 \end{proposition}
+\begin{proof}
+To train classifier $\mathcal{C}$, we have training set $\left(\mathbf{X}^L_{train},\mathcal{G} \right) = \{\left(x^L_i,\hat{g} \left(x^R_i\right)\right), i =1,2,...,m\}$. By assumption $5$, $\forall i$ $x_i = \mu_j$, $j=1,2,...,K$ and $k \leq K$. Hence the training set has $K$ unique pairs $\{\left(\mu^L_j, \hat{g} \left(\mu^R_j\right)\right),j=1,2,...,K\}$, with $K$ unique $\mu^L_j$ by assumption $3$ and $k$ unique $\hat{g} \left(\mu^R_j\right)$. This is because each pair $(\mu^L_j,\mu^R_j)$ is unique by assumption $2$ and $\left(\mu^R_j,\hat{g} \left(\mu^R_j\right)\right)$ is unique since K-means assigns one and only one label to each $\mu^R_j$. Define the classifier $\mathcal{C}$ as following: \[ \mathcal{C}(x^L_i) = \sum^K_{j=1}\hat{g} \left(\mu^R_j\right) \cdot I_{\{c_i = j\}}  \] It's easy to see such classifier has re-substitution error $0$.
+\end{proof}
+
+
+
 
 \begin{theorem}
 Given assumptions $1-5$, $ E\left(Error_k\right) > 0$ for $k<K$ and  $ E\left(Error_k\right) = 0$ for $k=K$. Hence if $k \leq K$, the Gabriel algorithm selects $k=K$ with probability $1$.
@@ -368,43 +408,6 @@ By Proposition $1$, $\mathcal{C}$ has re-substitution error $0$, which means its
 \[ Error_K = \sum^K_{j=1} \sum_{g_j = \hat{g} \left(x^L_i\right)} ||\hat{\mu}^R \left(g_j\right) - x^R_i||^2 =  \sum^K_{j=1} \sum_{g_j = \hat{g} \left(x^L_i\right)} ||\hat{\mu}^R \left(g_j\right) - \mu^R_j||^2= 0\]
 The last equation holds because of equation $(2)$.
 \end{proof}
-
-\begin{itemize}
-	\item Proof of \textbf{Proposition} $1$.
-	\begin{proof}
-	To train classifier $\mathcal{C}$, we have training set $\left(\mathbf{X}^L_{train},\mathcal{G} \right) = \{\left(x^L_i,\hat{g} \left(x^R_i\right)\right), i =1,2,...,m\}$. By assumption $5$, $\forall i$ $x_i = \mu_j$, $j=1,2,...,K$ and $k \leq K$. Hence the training set has $K$ unique pairs $\{\left(\mu^L_j, \hat{g} \left(\mu^R_j\right)\right),j=1,2,...,K\}$, with $K$ unique $\mu^L_j$ by assumption $3$ and $k$ unique $\hat{g} \left(\mu^R_j\right)$. This is because each pair $(\mu^L_j,\mu^R_j)$ is unique by assumption $2$ and $\left(\mu^R_j,\hat{g} \left(\mu^R_j\right)\right)$ is unique since K-means assigns one and only one label to each $\mu^R_j$. Define the classifier $\mathcal{C}$ as following: \[ \mathcal{C}(x^L_i) = \sum^K_{j=1}\hat{g} \left(\mu^R_j\right) \cdot I_{\{c_i = j\}}  \] It's easy to see such classifier has re-substitution error $0$. 
-	\end{proof}
-	\item Proof of \textbf{Proposition} $1$ when the classifier is LDA.
-	\begin{proof}
-	Since Proposition $1$ is only used in Lemma $2$, therefore it's sufficient to prove it in case of $k = K$. Note that training set contains $K$ unique pairs $\{\left(\mu^L_j, \hat{g} \left(\mu^R_j\right)\right), j=1,2,...,K\}$, with $K$ unique $\mu^L_j$ and $K$ unique $\hat{g} \left(\mu^R_j\right)$ now, where $\mu^L_j, \hat{g} \left(\mu^R_j\right)$ has one-to-one correspondence, i.e.
-\[ \left\lbrace\left(\mu^L_j,\hat{g} \left(\mu^R_j\right) \right), j=1,2,...,K\right\rbrace =  \left\lbrace\left(\mu^L_j, g_j \right), j=1,2,...,K\right\rbrace \]
-By equation $(3)$.\\\\
-Let the prior probability of class $g_j$ be $\pi_j, \hspace{0.05in} j=1,...,K$. By assumption $3$, $\pi_j > 0$. The class-conditional density of $X$ in class $\mathcal{G} = g_j$ is $$f_j\left(x_i\right) = \mathbb{P}\left( X=x_i | \mathcal{G} = g_j \right) $$ where $x_i \in \{\mu^L_1,...,\mu^L_K\}$ and $f_j\left(x_i\right)$ has multivariate Gaussian distribution
-\[ f_j\left(x_i\right) = \frac{1}{(2\pi)^{p/2}|\Sigma_j|^{1/2}}e^{-\frac{1}{2}(x_i-\mu_j)^T\Sigma^{-1}_j(x_i-\mu_j)	}\]
-LDA assumes a commom covariance matrix $\Sigma_j = \Sigma \hspace{0.1in} \forall j$.
-The posterior probability is 
-\[	\mathbb{P}\left( \mathcal{G} = g_j | X=x_i  \right)  = \frac{f_j\left(x_i\right) \pi_j}{\sum^K_{l=1}f_l\left(x_i\right) \pi_l}	\]
-In practice, $\pi_j, \mu_j$ and $\Sigma$ are estimated from data by
- \begin{itemize}
- 	\item  $\hat{\pi}_j = \frac{N_j}{N}$, where $N_j$ is the number of class-$g_j$ observation in training set and $N$ is the total observation in training set
- 	\item  $\hat{\mu}_j = \sum_{c_i=j} x_i/N_j$ 
- 	\item  $\hat{\Sigma} = \frac{1}{N-K} \sum^K_{j=1}\sum_{c_i=j} (x_i - \hat{\mu}_j )(x_i - \hat{\mu}_j )^T$
- \end{itemize}
-In our case, $\hat{\mu}_j = \mu^L_j$ and $\hat{\Sigma}$ is zero matrix by construction. But in real case, the estimate of within-group covariance $\hat{\Sigma}$ is a positive-definite matrix. We therefore assume $\hat{\Sigma}$ to be any positive-definite matrix. Also, we assume the observations in training set are evenly distributed across all class, i.e. $\pi_j$ is a positive constant for all $j = 1,...,K$ \\\\   
-LDA predicts class for each $x_i = \mu^L(c_i)\in \{\mu^L_1,...,\mu^L_K\}$ by maximizing the posterior probability
-\begin{align}
-     \hat{\mathcal{G}}(x_i) & = \underset{g_j}{\operatorname{argmax}}\hspace{0.05 in} \mathbb{P}\left( \mathcal{G} = g_j | X=x_i  \right)  \nonumber   \\ 
-     & = \underset{g_j}{\operatorname{argmax}}\hspace{0.05 in} f_j\left(x_i\right) \pi_j \nonumber \nonumber  \\
-     & = \underset{g_j}{\operatorname{argmax}}\hspace{0.05 in} f_j\left(x_i\right) \nonumber  \nonumber  \\    
-     & = \underset{g_j}{\operatorname{argmax}}\hspace{0.05 in}  \frac{1}{(2\pi)^{p/2}|\hat{\Sigma}|^{1/2}}e^{-\frac{1}{2}(x_i-\mu^L_j)^T\hat{\Sigma}^{-1}(x_i-\mu^L_j)	} \nonumber  \\  
-     &=  \underset{g_j}{\operatorname{argmin}}\hspace{0.05 in} (x_i-\mu^L_j)^T\hat{\Sigma}^{-1}(x_i-\mu^L_j) \nonumber   \\  
-     &= \sum^K_{j=1} g_j \cdot I_{c_i = j}
-\end{align}
-The last equation holds because $\hat{\Sigma}$ is assumed to be positive-definite, so is its inverse  $\hat{\Sigma}^{-1}$. Hence $(x_i-\mu^L_j)^T\hat{\Sigma}^{-1}(x_i-\mu^L_j) >0$ for any non-zero vector $(x_i-\mu^L_j)$. The lower bound $0$ is attained only when $(x_i-\mu^L_j)$ is a zero vector, which is only possible when $x_i=\mu^L(c_i) = \mu^L_j$, i.e. $c_i = j$ by assumption $2$ and $5$. \\\\
-Because the RHS of equation $(4)$ coincide with RHS of equation $(3)$, the proof is complete.
-\end{proof}
-\end{itemize}
-
 
 \clearpage
 
@@ -747,8 +750,8 @@ setup:
 
 
 \begin{theorem}
-For each $n$, let $N(n)$ be a nonnegative integer with $N(n) \to \infty$ as $n
-\to \infty$, and let $\{ (X_{n,i}, Y_{n,i}) \}_{i=1}^{n+N(n)}$ be independent
+For each $n$, let $m(n)$ be a nonnegative integer with $m(n) \to \infty$ as $n
+\to \infty$, and let $\{ (X_{n,i}, Y_{n,i}) \}_{i=1}^{n+m(n)}$ be independent
 identically distributed random variables.  For any fixed $k$, let $\CV(k)$
 be the cross-validation error from a single Gabriel CV fold, computed as
 described in Sec.~\ref{sec:gabriel-cv-algorithm}.  Suppose that
@@ -774,7 +777,7 @@ Lemma~\ref{lem:kmeans-separation} imply that there exists an $r > 0$ such that
 almost surely eventually at most one cluster center in
 $\{ \bmuY_1, \dotsc, \bmuY_k \}$ is within distance $r$ of $\muY$.  Without
 loss of generality suppose that $\bmuY_1$ is the closest cluster center to
-$\muY$.
+$\muY$. [TODO: finish proof]
 \end{proof}
 
 
