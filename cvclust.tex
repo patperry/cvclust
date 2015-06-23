@@ -432,7 +432,7 @@ for all $i = 1, \dotsc, m+n$.  In particular, this implies that $\bmuY(\hGX_i)
 
 
 
-\section{Asymptotic Analysis of $k$-Means}
+\section{Asymptotic Analysis of $k$-means}
 
 To analyze the asymptotic properties of of Gabriel cross validation, we first
 need to understand the properties of the $k$-means procedure.  We will use
@@ -760,6 +760,8 @@ so that
 
 \section{Asymptotic Analysis of Gabriel Cross-Validation}
 
+\subsection{Single Cluster}
+
 Here, we show that Gabriel Cross-Validation is consistent when the data come
 from a single cluster; the algorithm picks $k = 1$ with probability tending to
 $1$ as the number of rows in the data matrix $\dataX$ increase.
@@ -802,6 +804,7 @@ $\muY$. [TODO: finish proof]
 \end{proof}
 
 
+\subsection{Well-Separated Clusters with Noise}
 
 \clearpage
 
