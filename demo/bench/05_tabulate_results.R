@@ -23,10 +23,10 @@ method.names <- list(
     "CH" = "CH",
     "Hartigan" = "Hartigan",
     "Jump" = "Jump",
-    "PS" = "Prediction Strength",
+    "PS" = "Pred.~Strength",
     "Stab" = "Stability",
 #    "gabriel-nearest-2x2" = "Gabriel CV ($2 \\times 2$)",
-    "gabriel-nearest-5x2" = "Gabriel CV ($5 \\times 2$)",
+    "gabriel-nearest-5x2" = "Gabriel CV",
 #    "gabriel-lda-equal-2x2" = "Gabriel CV (LDA Equal; $2 \\times 2$)",
 #    "gabriel-lda-equal-5x2" = "Gabriel CV (LDA Equal; $5 \\times 2$)",
 #    "gabriel-lda-proportion-2x2" = "Gabriel (CV LDA Prop.; $2 \\times 2$)",
@@ -43,15 +43,15 @@ exclude <- function(setting, method)
     FALSE
 }
 
-print_table <- function(setting, summary)
+print_table <- function(setting, summary, pe=FALSE, zero=FALSE)
 {
-    cat("\\textit{", setting.names[[setting]], "} & \\\\\n", sep="")
+    cat("\\textit{", setting.names[[setting]], "} & \\\\*\n", sep="")
 
     kmax <- length(summary[["oracle"]]$counts)
 
     for (m in names(method.names)) {
         s <- summary[[m]]
-        if (is.null(s))
+        if (is.null(s) || (m == "oracle" && !pe))
             next
         cat(method.names[[m]])
         for (k in seq_len(kmax)) {
@@ -61,25 +61,36 @@ print_table <- function(setting, summary)
             } else if (k == nclust[[setting]]) {
                 cat("\\textbf{", s$counts[k], "}", sep="")
             } else {
-                cat(s$counts[k])
+                if (zero || s$counts[k] != 0) {
+                    cat(s$counts[k])
+                } else {
+                    cat("$\\cdot$")
+                }
             }
         }
         if (exclude(setting, m)) {
             cat("& \\textendash")
         } else {
-            cat(" & ", s$count_na, sep="")
+            cat(" & ")
+            if (zero || s$count_na != 0) {
+                cat(s$count_na)
+            } else {
+                cat("$\\cdot$")
+            }
         }
 
-        if (m == "oracle") {
-            cat(" & 1")
-        } else if (exclude(setting, m)) {
-            cat(" & \\textendash")
-        } else {
-            cat(sprintf(" & %.1f $\\pm$ %.1f",
-                        s$prederr_rel$mean,
-                        s$prederr_rel$sd))
+        if (pe) {
+            if (m == "oracle") {
+                cat(" & 1")
+            } else if (exclude(setting, m)) {
+                cat(" & \\textendash")
+            } else {
+                cat(sprintf(" & %.1f $\\pm$ %.1f",
+                            s$prederr_rel$mean,
+                            s$prederr_rel$sd))
+            }
         }
-        cat(" \\\\\n")
+        cat(" \\\\*\n")
     }
 }
 
