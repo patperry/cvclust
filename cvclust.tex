@@ -298,11 +298,13 @@ To choose the folds, we randomly partition the rows and columns into $K$ and
 $L$ subsets, respectively.  Each fold is indexed by a pair $(r,s)$ of
 integers, with $r \in \{1, \dotsc, K\}$ and $s \in \{1, \dotsc, L\}$.  Fold
 $(r,s)$ treats the $r$th row subset as ``test'', and the $s$th column subset
-as ``response''.  Following \citet{owen2009bi}, we take $K = L = 2$.  For the
-number of clusters, we select the value of $k$ that minimizes the average of
-$\CV(k)$ over all $K \times L$ folds.
+as ``response''.  We typically take $K = 5$ and $L = 2$.  For the number of
+clusters, we select the value of $k$ that minimizes the average of $\CV(k)$
+over all $K \times L$ folds (choosing the smallest value of $k$ in the event
+of a tie).
 
 
+\clearpage
 
 \section{Self-Consistency of Gabriel CV method}
 
@@ -335,29 +337,44 @@ As in in section~\ref{sec:gabriel-cv-algorithm} we assume that the $P$
 variables of the data set have been partitioned into $p$ predictor variables
 represented in vector~$X$ and $q$ response variables represented in
 vector~$Y$.  The $N$ observations have been divided into two sets: $n$ train
-observations and $m$ test observations.
+observations and $m$ test observations.  The following theorem gives
+conditions for Gabriel CV to recover the true number of clusters in the
+absence of noise.
 
 
-We make the following assumptions:
-\begin{enumerate}[label={\arabic*.},leftmargin=*]
+\begin{theorem}\label{thm:self-consistency}
+Let $\{ (X_i, Y_i) \}_{i=1}^{n+m}$ be the data from a single fold of Gabriel
+cross-validation.  For any $k$, let $CV(k)$ be the cross-validation error for
+this fold, computed as described in Section~\ref{sec:gabriel-cv-algorithm}.
+Suppose that
+\begin{enumerate}[label=(\roman*)]
 
-  \item There are $k$ true centers $\mu(1), \dotsc,\mu(k)$, with the $g$th
+  \item There are $K$ true centers $\mu(1), \dotsc,\mu(K)$, with the $g$th
     cluster center partitioned as $\mu(g) = \bigl(\muX(g), \muY(g)\bigr)$ with
-    $\muX(g) \in \R^p$ and $\muY(g) \in \R^q$ for $g = 1, \dotsc, k$.
+    $\muX(g) \in \R^p$ and $\muY(g) \in \R^q$ for $g = 1, \dotsc, K$.
 
-  \item The vectors $\muX(1), \dotsc,\muX(k)$ are all distinct; likewise,
-    $\muY(1), \dotsc,\muY(k)$ are all distinct.
+  \item The vectors $\muX(1), \dotsc,\muX(K)$ are all distinct; likewise,
+    $\muY(1), \dotsc,\muY(K)$ are all distinct.
 
-  \item The training set contains at least one member of each cluster.
-
-  \item The test set contains at least one member of each cluster.
-
-  \item Each observation $i$ has a true cluster $G_i \in \{ 1, \dotsc, k \}$.
+  \item \label{asn:self-consistency-noiseless}
+    Each observation $i$ has a true cluster $G_i \in \{ 1, \dotsc, K \}$.
     There is no noise, so that $X_i = \muX({G_i})$ and $Y_i = \muY(G_i)$ for
     $i = 1, \dotsc, n+m$.
 
+  \item The training set contains at least one member of each cluster:
+    for all $g$ in the range $1, \dotsc, K$, there exists at least one $i$ in
+    the range $1, \dotsc, n$ such that $G_i = g$.
+
+  \item \label{asn:self-consistency-test}
+    The test set contains at least one member of each cluster: for all $g$ in
+    the range $1, \dotsc, K$, there exists at least one $i$ in the range $n+1,
+    \dotsc, n+m$ such that $G_i = g$.
+
 \end{enumerate}
- 
+Then $CV(k) < CV(K)$ for $k < K$, and $CV(k) = CV(K)$ for $k > K$, so that
+Gabriel CV correctly chooses $k = K$.
+\end{theorem}
+
 
 \begin{proposition}
 If assumptions $1, 2, 3, 5$ hold, then there exists a classification method
@@ -366,29 +383,51 @@ That is, for $\forall x_i \in \mathbf{X}_{train}$ prediction on $x^L_i$ always
 correctly predict cluster where $x^R_i$ is in.
 \end{proposition}
 \begin{proof}
-To train classifier $\mathcal{C}$, we have training set $\left(\mathbf{X}^L_{train},\mathcal{G} \right) = \{\left(x^L_i,\hat{g} \left(x^R_i\right)\right), i =1,2,...,m\}$. By assumption $5$, $\forall i$ $x_i = \mu_j$, $j=1,2,...,K$ and $k \leq K$. Hence the training set has $K$ unique pairs $\{\left(\mu^L_j, \hat{g} \left(\mu^R_j\right)\right),j=1,2,...,K\}$, with $K$ unique $\mu^L_j$ by assumption $3$ and $k$ unique $\hat{g} \left(\mu^R_j\right)$. This is because each pair $(\mu^L_j,\mu^R_j)$ is unique by assumption $2$ and $\left(\mu^R_j,\hat{g} \left(\mu^R_j\right)\right)$ is unique since K-means assigns one and only one label to each $\mu^R_j$. Define the classifier $\mathcal{C}$ as following: \[ \mathcal{C}(x^L_i) = \sum^K_{j=1}\hat{g} \left(\mu^R_j\right) \cdot I_{\{c_i = j\}}  \] It's easy to see such classifier has re-substitution error $0$.
+To train classifier $\mathcal{C}$, we have training set
+$\left(\mathbf{X}^L_{train},\mathcal{G} \right) = \{\left(x^L_i,\hat{g}
+\left(x^R_i\right)\right), i =1,2,...,m\}$. By assumption $5$, $\forall i$
+$x_i = \mu_j$, $j=1,2,...,K$ and $k \leq K$. Hence the training set has $K$
+unique pairs $\{\left(\mu^L_j, \hat{g}
+\left(\mu^R_j\right)\right),j=1,2,...,K\}$, with $K$ unique $\mu^L_j$ by
+assumption $3$ and $k$ unique $\hat{g} \left(\mu^R_j\right)$. This is because
+each pair $(\mu^L_j,\mu^R_j)$ is unique by assumption $2$ and
+$\left(\mu^R_j,\hat{g} \left(\mu^R_j\right)\right)$ is unique since K-means
+assigns one and only one label to each $\mu^R_j$. Define the classifier
+$\mathcal{C}$ as following: \[ \mathcal{C}(x^L_i) = \sum^K_{j=1}\hat{g}
+\left(\mu^R_j\right) \cdot I_{\{c_i = j\}}  \] It's easy to see such
+classifier has re-substitution error $0$.
 \end{proof}
 
 
-
-
-\begin{theorem}
-Given assumptions $1-5$, $ E\left(Error_k\right) > 0$ for $k<K$ and  $ E\left(Error_k\right) = 0$ for $k=K$. Hence if $k \leq K$, the Gabriel algorithm selects $k=K$ with probability $1$.
-\end{theorem}
-\noindent
-Not that $k > K$ is not considered here because there are only $K$ unique points in $\mathbf{X}$. K-means will not work for parameter which is larger than the number of unique points in data $\mathbf{X}$.\\\\ 
-\noindent
 The proof of above theorem follows from following two lemmas:
 \begin{lemma}
-	If the assumptions of Theorem $1$ hold, then when $k<K$, the CV Error $>0$
+Suppose that the assumptions of Theorem $1$ are in force.  If $k < K$, then
+$\CV(k) > 0$.
 \end{lemma}
 \begin{proof}
-	It is sufficient to prove that when $k<K$,  $Error_k>0$. By the definition of $Error_k$,
-\begin{equation}
-Error_k = \sum^k_{j=1} \sum_{g_j = \hat{g} \left(x^L_i\right)} ||\hat{\mu}^R \left(g_j\right) - x^R_i||^2
-\end{equation}
-	where $\hat{\mu}^R \left(g_j\right)$ is the center of cluster $g_j$ returned from K-means. By assumption $4$, test set contains at least one member of each cluster. Since there are $K$ true centers, and by assumption $5$, $x_i = \mu \left(c_i\right) \in \{\mu_1,...,\mu_K\} $, test set contains $K$ centers. It means there are $K$ distinct $x^R_i \left(=\mu^R \left(c_i\right)\right)$ in $\mathbf{X}^R_{test}$ set by assumption $2$. However, in equation $(1)$, there are only $k$ distinct $\hat{\mu}^R \left(g_j\right)$.  Because $k < K$, it means not every element $||\hat{\mu}^R \left(g_j\right) - x^R_i||^2 = 0$ in equation $(1)$. Therefore,  $$Error_k = \sum^k_{j=1} \sum_{g_j = \hat{g} \left(x^L_i\right)} ||\hat{\mu}^R \left(g_j\right) - x^R_i||^2 > 0$$
+By definition,
+\[
+  \CV(k)
+    =
+      \sum_{i=n+1}^{n+m}
+        \| Y_i - \bmuY (\hGX_i) \|^2,
+\]
+where $\bmuY(g)$ is the center of cluster $g$ returned from applying $k$-means
+to $Y_1, \dotsc, Y_n$.  Assumptions~\ref{asn:self-consistency-noiseless}
+and~\ref{asn:self-consistency-test}, imply that as $i$ ranges over the test
+set $n+1, \dotsc, n+m$, the response $Y_i$ ranges over all $K$ distinct values
+in $\{ \muY(1), \dotsc, \muY(K) \}$.  However, there are only $k$ distinct
+values of $\bmuY(g)$.  Thus, at least one summand
+\(
+  \| Y_i - \bmuY(\hGX_i) \|^2
+\)
+is nonzero.  Therefore,
+\(
+  \CV(k) > 0.
+\)
 \end{proof}
+
+
 \begin{lemma}
 	If the assumptions of Theorem $1$ hold, when $k=K$, the CV Error $=0$
 \end{lemma}
