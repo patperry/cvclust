@@ -900,36 +900,34 @@ table, which is defined by
 \clearpage
 
 \begin{center}
-{%\footnotesize
+\footnotesize
 \begin{longtable}{lcccccccccccccccc}
 \caption{\label{table1} Simulation Results}\\
-\toprule
-\phantom{Pred.~Strength}
-& \multicolumn{16}{c}{Estimated Number of Clusters} \\
-\cmidrule(lr){2-17}
-Method
-  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15
-  & \textsc{na} \\
-\midrule
-\endfirsthead
-\multicolumn{17}{c}%
-{\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
 \toprule
 \phantom{Pred.~Strength}
   & \multicolumn{16}{c}{Estimated Number of Clusters} \\
 \cmidrule(lr){2-17}
 Method
-  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15
-  & \textsc{na} \\
+  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & NA \\
+\midrule
+\endfirsthead
+\multicolumn{17}{c}%
+  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
+\midrule
+\phantom{Pred.~Strength}
+  & \multicolumn{16}{c}{Estimated Number of Clusters} \\
+\cmidrule(lr){2-17}
+Method
+  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & NA \\
 \midrule
 \endhead
-%\bottomrule
 \multicolumn{17}{r}{\textit{Continued on next page}} \\
 \endfoot
 \bottomrule
-\multicolumn{17}{l}{
-{\footnotesize {In Setting~1, ``\textendash'' means the method can not be used
-with parameter $k=1$}.}}
+\multicolumn{17}{l}{\footnotesize
+  \textsuperscript{$\ast$} CH, Hartigan, and Stability are excluded from
+  Setting~1 because they cannot select $k=1$.
+}
 \endlastfoot
 \input{demo/bench/setting1/results.tex}
 \midrule
@@ -943,7 +941,6 @@ with parameter $k=1$}.}}
 \midrule
 \input{demo/bench/setting6/results.tex}
 \end{longtable}
-}
 \end{center}
 
 

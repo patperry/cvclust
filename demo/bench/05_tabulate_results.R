@@ -54,10 +54,12 @@ print_table <- function(setting, summary, pe=FALSE, zero=FALSE)
         if (is.null(s) || (m == "oracle" && !pe))
             next
         cat(method.names[[m]])
+        if (exclude(setting, m))
+            cat("\\textsuperscript{$\\ast$}")
         for (k in seq_len(kmax)) {
             cat(" & ")
             if (exclude(setting, m)) {
-                cat("\\textendash")
+                cat("$\\cdot$")
             } else if (k == nclust[[setting]]) {
                 cat("\\textbf{", s$counts[k], "}", sep="")
             } else {
@@ -69,7 +71,7 @@ print_table <- function(setting, summary, pe=FALSE, zero=FALSE)
             }
         }
         if (exclude(setting, m)) {
-            cat("& \\textendash")
+            cat("& $\\cdot$")
         } else {
             cat(" & ")
             if (zero || s$count_na != 0) {
@@ -83,7 +85,7 @@ print_table <- function(setting, summary, pe=FALSE, zero=FALSE)
             if (m == "oracle") {
                 cat(" & 1")
             } else if (exclude(setting, m)) {
-                cat(" & \\textendash")
+                cat(" & $\\cdot$")
             } else {
                 cat(sprintf(" & %.1f $\\pm$ %.1f",
                             s$prederr_rel$mean,
