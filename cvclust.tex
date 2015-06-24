@@ -98,29 +98,52 @@
 \date{}
 \maketitle
 \begin{abstract}
-Many clustering methods, including K-means, require the user to specify the number of clusters as an input parameter. A variety of methods have been devised to choose the number of clusters automatically, but they often rely on strong modeling assumptions. We propose a data-driven approach to estimate the number of clusters based on a novel form of cross-validation. This differs from ordinary cross-validation, because clustering is fundamentally an unsupervised learning problem. Simulation and real data analysis results show that our proposed method outperforms existing methods, especially in high-dimensional settings with heavy-tailed data.
+Many clustering methods, including $k$-means, require the user to specify the
+number of clusters as an input parameter. A variety of methods have been
+devised to choose the number of clusters automatically, but they often rely on
+strong modeling assumptions. We propose a data-driven approach to estimate the
+number of clusters based on a novel form of cross-validation. This differs
+from ordinary cross-validation, because clustering is fundamentally an
+unsupervised learning problem. Simulation and real data analysis results show
+that our proposed method outperforms existing methods, especially in
+high-dimensional settings with heavy-tailed data.
 \end{abstract}
 
-\section{Introduction}
-As a main task of exploratory data analysis, clustering organizes unlabeled observations into groups such that observations in same group are more similar compare to those in different group. Clustering is an important topic in unsupervised learning because it can reveal the internal structure of data through grouping, segment the data through partitioning and summarize data for other purposes such as dimension reduction. It has being widely used in various fields such as psychology, biology, statistics and machine learning including pattern recognition, image segmentation etc.
 
-After being proposed more than $50$ years, $K$-mean remains one of the most
+\section{Introduction}
+
+As a main task of exploratory data analysis, clustering organizes unlabeled
+observations into groups such that observations in same group are more similar
+compare to those in different group. Clustering is an important topic in
+unsupervised learning because it can reveal the internal structure of data
+through grouping, segment the data through partitioning and summarize data for
+other purposes such as dimension reduction. It has being widely used in
+various fields such as psychology, biology, statistics and machine learning
+including pattern recognition, image segmentation etc.
+
+
+After being proposed more than $50$ years, $k$-means remains one of the most
 popular and widely used clustering algorithms \citep{jain2010data}. Like many
-other clustering methods, $K$-mean requires an input parameter $k$, the number
-of clusters, to be specified by the user. Automatically and quantitatively
-deciding such parameter is important and yet unsolved problem
+other clustering methods, $k$-means requires an input parameter $k$, the
+number of clusters, to be specified by the user. Automatically and
+quantitatively deciding such parameter is important and yet unsolved problem
 \citep{fujita2014non}. Various methods have been proposed to tackle this
 difficulty. One ad hoc approach is to explore the relationship between $W_k$
 (within-cluster dispersion) and the number of cluster $k$ for a certain
-clustering method such as $K$-mean. Since $W_k$ decreases as $k$ increases,
-one usually find the ``elbow" of curve $W_k$ \textsl{VS} $k$ as the
-appropriate number of clusters. The example on the top row of Figure
-\ref{fig:elbow} demonstrates such approach for data with $k=4$, where the
-``elbow" point indeed reveals the true number of clusters. This is based on
-the idea that under partitioning data set has more impact than over
+clustering method such as $k$-means. Since $W_k$ decreases as $k$ increases,
+one usually find the ``elbow" of curve obtain by plotting $W_k$ versus $k$ as
+the appropriate number of clusters. The example on the top row of
+Figure~\ref{fig:elbow} demonstrates such approach for data with $k=4$, where
+the ``elbow" point indeed reveals the true number of clusters. This is based
+on the idea that under partitioning data set has more impact than over
 partitioning data set in terms of $W_k$. However, locating the ``elbow" point
 is somewhat subjective and sometimes is not appropriate to select the optimal
-$k$. The second example on the bottom row of Figure \ref{fig:elbow} shows a  situation where there is no clear choice of the ``elbow" point -- both $k=2$ and $k=3$ can be viewed as the ``elbow" point. What's more, the true $k=4$ can never be selected as the optimal $k$ using such approach in this case since it can hardly be viewed as the ``elbow" of the curve.
+$k$. The second example on the bottom row of Figure \ref{fig:elbow} shows a
+situation where there is no clear choice of the ``elbow" point -- both $k=2$
+and $k=3$ can be viewed as the ``elbow" point. What's more, the true $k=4$ can
+never be selected as the optimal $k$ using such approach in this case since it
+can hardly be viewed as the ``elbow" of the curve.
+
 
 \begin{figure}
 \centering
@@ -149,12 +172,59 @@ plotted against the number of clusters, $k$.}
 \end{figure}
 
 
-Recently, there are several new proposals to find the $k$ automatically. Gap statistics \citep{tibshirani2001estimating} estimates $k$ by comparing the change in within-cluster dispersion with that expected under an appropriate reference null distribution. Specifically, the graph of $log(W_k)$ is compared with its expectation under an appropriate null reference distribution of the data. The value of $k$ associated with the largest gap between $log(W_k)$ and the reference curve is selected as optimal $k$. \cite{sugar2003finding} proposed an approach which finds the number of clusters based on distortion, a quantity that measures the average distance, per dimension. It's backed by a rigorous theoretical justification based on information-theoretic ideas.   \cite{fraley2002model}'s Model-based method employs the EM algorithm to estimate the parameters in Gaussian mixture model, and select the best model ($k$) using BIC criterion. Stability-based criterion is also proposed to locate the best $k$ by some authors such as \cite{ben2001stability}, \cite{wang2010consistent} and \cite{fang2012selection}. \cite{chiang2010intelligent} provides a nice review of existing methods for finding the right $k$ in published literature.
+Recently, there are several new proposals to find the $k$ automatically. Gap
+statistics \citep{tibshirani2001estimating} estimates $k$ by comparing the
+change in within-cluster dispersion with that expected under an appropriate
+reference null distribution. Specifically, the graph of $\log(W_k)$ is
+compared with its expectation under an appropriate null reference distribution
+of the data. The value of $k$ associated with the largest gap between
+$\log(W_k)$ and the reference curve is selected as optimal $k$.
+\citet{sugar2003finding} proposed an approach which finds the number of
+clusters based on distortion, a quantity that measures the average distance,
+per dimension. It's backed by a rigorous theoretical justification based on
+information-theoretic ideas.   \citet{fraley2002model}'s Model-based method
+employs the EM algorithm to estimate the parameters in Gaussian mixture model,
+and select the best model ($k$) using BIC criterion. Stability-based criterion
+is also proposed to locate the best $k$ by some authors such as
+\citet{ben2001stability}, \citet{wang2010consistent} and
+\citet{fang2012selection}. \citet{chiang2010intelligent} provides a nice review
+of existing methods for finding the right $k$ in published literature.
 
-Most existing methods are either model based method requires strong parameter assumptions or ad hoc method utilizes within-cluster dispersion. Although many view selecting the number of clusters as a model selection problem, very few approaches this problem from the prediction point of view. Select model with smallest prediction error via cross-validation is one of the simplest and most widely used model selection techniques in supervised learning. The lack of true class (label) in data set makes the adoption of cross-validation into unsupervised leaning problem difficult. Perhaps the only exception is \cite{tibshirani2005cluster}, which selects the optimal $k$ by prediction strength. The strategy is to first cluster the test data and training data into $k$ clusters respectively. Then, for each pair of observations that are assigned to the same test cluster, algorithm determines whether they are also assigned to the same cluster based on the training centers. The intuition here is, if $k=k_0$, the true number of clusters, then the $k$ training set clusters will be similar to the $k$ test clusters, and hence will predict them well. However, a specifically defined prediction error measure is used in such procedure, which is quite different from the one commonly used in cross-validation procedure in supervised learning. Therefore the well understood properties of cross-validation procedure in supervised learning cannot be carried over to the prediction strength method, makes the interpretation of its result difficult.
 
-Our proposed method is a complete data-driven approach which doesn't rely on any parametric assumptions. Through novel form of partitioning data set, we are able to employing the cross-validation procedure in clustering exactly the same way as in supervised learning problem. Hence, it's easy for reader to understand the intuition behind our proposed method. Simulation and real data application shows the superior performance of our proposed method compare with existing methods in high-dimension settings and heavy-tailed data. Since the embedded cross-validation procedure is well understood, it also makes our method potentially easily to be extended in future study. 
+Most existing methods are either model based method requires strong parameter
+assumptions or ad hoc method utilizes within-cluster dispersion. Although many
+view selecting the number of clusters as a model selection problem, very few
+approaches this problem from the prediction point of view. Select model with
+smallest prediction error via cross-validation is one of the simplest and most
+widely used model selection techniques in supervised learning. The lack of
+true class (label) in data set makes the adoption of cross-validation into
+unsupervised leaning problem difficult. Perhaps the only exception is
+\cite{tibshirani2005cluster}, which selects the optimal $k$ by prediction
+strength. The strategy is to first cluster the test data and training data
+into $k$ clusters respectively. Then, for each pair of observations that are
+assigned to the same test cluster, algorithm determines whether they are also
+assigned to the same cluster based on the training centers. The intuition here
+is, if $k=k_0$, the true number of clusters, then the $k$ training set
+clusters will be similar to the $k$ test clusters, and hence will predict them
+well. However, a specifically defined prediction error measure is used in such
+procedure, which is quite different from the one commonly used in
+cross-validation procedure in supervised learning. Therefore the well
+understood properties of cross-validation procedure in supervised learning
+cannot be carried over to the prediction strength method, makes the
+interpretation of its result difficult.
+
+
+Our proposed method is a complete data-driven approach which doesn't rely on
+any parametric assumptions. Through novel form of partitioning data set, we
+are able to employing the cross-validation procedure in clustering exactly the
+same way as in supervised learning problem. Hence, it's easy for reader to
+understand the intuition behind our proposed method. Simulation and real data
+application shows the superior performance of our proposed method compare with
+existing methods in high-dimension settings and heavy-tailed data. Since the
+embedded cross-validation procedure is well understood, it also makes our
+method potentially easily to be extended in future study. 
  
+
 
 \section{Cross-validation for selecting the number of clusters}
 
