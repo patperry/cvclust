@@ -868,12 +868,30 @@ numbers implies that
 \(
   \CV(1) \toas \int \|y - \mu^Y\|^2 P(dy) = \tr(\SigmaY).
 \)
-If $k > 1$, then Theorem~\ref{thm:kmeans-consistency} and
+
+Now suppose that $k > 1$.  Let $\bmuY_1, \dotsc, \bmuY_k$ be the cluster
+centers gotten from applying $k$-means to $Y_{n,1}, \dotsc, Y_{n,n}$.  Since
+the support of $P^Y$ has at least two points,
+Lemma~\ref{lem:kmeans-existence}, implies that almost surely eventually at
+least two of the clusters will be nonempty and have distinct centers.  Without
+loss of generality, assume that $k$ is less than or equal to the cardinality
+of the support of $P^Y$.  Theorem~\ref{thm:kmeans-consistency} and
 Lemma~\ref{lem:kmeans-separation} imply that there exists an $r > 0$ such that
-almost surely eventually at most one cluster center in
-$\{ \bmuY_1, \dotsc, \bmuY_k \}$ is within distance $r$ of $\muY$.  Without
-loss of generality suppose that $\bmuY_1$ is the closest cluster center to
-$\muY$. [TODO: finish proof]
+almost surely eventually at most one cluster center is within distance $r$ of
+$\muY$.  Without loss of generality suppose that $\bmuY_1$ is the closest
+cluster center to $\muY$.
+
+
+Let $\bmuX_1, \dotsc, \bmuX_k$ be the corresponding sample means computed from
+$X_{n,1}, \dotsc, X_{n,n}$, with the $i$th observation assigned to cluster
+$\hGY_{n,i} = \argmin_g \| Y_{n,i} - \bmuY_{n,i} \|^2.$  Consider the
+classification rule $\hGY(X)$, which assigns $X$ to the class $g$ minimizing
+$\|X - \bmuX_g\|^2$, breaking ties uniformly at random between classes of
+equal distance.
+
+[TODO: finish]
+
+
 \end{proof}
 
 
