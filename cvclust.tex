@@ -505,52 +505,6 @@ for all $i = 1, \dotsc, m+n$.  In particular, this implies that $\bmuY(\hGX_i)
 = Y_i$ for $i = 1, \dotsc, m+n$, so that $\CV(k) = 0$.
 \end{proof}
 
-The following lemma is not required for the $k$-means consistency theorem, but
-it will prove necessary for analyzing the asymptotic behavior of Gabriel
-cross-validation.
-
-
-\begin{lemma}\label{lem:kmeans-separation}
-Set $\mu = \int x P(dx)$.  If $\int \|x\|^2 P(dx) < \infty$, then there exists
-an $r > 0$ such that for every $A \in \sbA_k$, there is at most one center $a
-\in A$ with $\|a - \mu\| \leq r$.
-\end{lemma}
-\begin{proof}
-If the support of $P$ has fewer than $k$ points, then the result is trivial.
-Otherwise, Lemma~\ref{lem:kmeans-existence} implies that $m_k(P) <
-m_{k-1}(P)$.  Define
-\[
-  d =
-    \inf_{A \in \sA_k}
-      \min \{ \|a - a'\| : a,a' \in A, a \neq a' \}.
-\]
-If $d = 0$, then there exists a sequence $A_n$ in $\sbA_k$ with
-\[
-  \min_{\substack{a,a' \in A_n \\ a \neq a'}} \|a - a'\| \to 0.
-\]
-Since $\sbA_k$ is compact, there exists a subsequence $n(m)$ and a set $A_0
-\in \sbA_k$ with $A_{n(m)} \to A_0$.  Take $B_n \in \sA_{k-1}$ to be the set
-formed by removing one of the centers $a'$ minimizing $\min_{\substack{a \in
-A_n \\ a \neq a'}} \|a - a'\|$.  By construction, $H(A_n, B_n) \to 0$, so that
-$B_{n(m)} \to A_0$.  Since the map $A \mapsto W(A, P)$ is continuous on
-$\sA_k$, we must have $W(B_{n(m)}, P) \to W(A_0, P) = m_k(P)$.  However, this
-is impossible since $W(B_n,P) \geq m_{k-1}(P) > m_k(P)$.  It must be the case,
-then, that $d > 0$.
-
-
-Set $r < d/2$, and let $A \in \sbA_k$ be arbitrary.  Take $a_1$ to be the
-cluster center in $A$ closest to $\mu$ (breaking ties arbitrarily).  If $\|a_1
-- \mu\| > r$, then $\|a - \mu\| > r$ for all centers $a \in A$.  Otherwise, if
-$\|a_1 - \mu\| \leq r$ and $a \in A$ is any other cluster center, then
-\(
-  2r < \|a - a_1\| \leq \|a - \mu\| + \|a_1 - \mu\|
-\)
-so that
-\(
-  \|a - \mu\| > r.
-\)
-\end{proof}
-
 
 
 \section{Analysis of Gabriel Cross-Validation with Gaussian Noise}
