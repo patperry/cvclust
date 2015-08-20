@@ -61,6 +61,8 @@
 % convergence
 \newcommand{\toas}{\overset{\mathit{a.s.}}{\to}}
 
+\newcommand{\OhP}{O_p}
+
 % sets
 \newcommand{\R}{\mathbb{R}}
 \newcommand{\sA}{\mathcal{A}}
@@ -551,71 +553,104 @@ so that
 
 
 
-\section{Asymptotic Analysis of Gabriel Cross-Validation}
+\section{Analysis of Gabriel Cross-Validation with Gaussian Noise}
 
 \subsection{Single Cluster}
 
-Here, we show that Gabriel Cross-Validation is consistent when the data come
-from a single cluster; the algorithm picks $k = 1$ with probability tending to
-$1$ as the number of rows in the data matrix $\dataX$ increase.
+Now we we analyze the asymptotic performance of Gabriel Cross-Validation, in
+the case of Gaussian noise. Our main result is that with single-cluster
+Gaussian data, if the predictor and
+response columns of $\dataX$ are weakly correlated or independent, then the
+method will correctly choose to $k = 1$ cluster. We state the result in the
+case where $\dataX$ has 2 columns, but it is straightforward to generalize
+this result to higher dimensions.
+
+\begin{proposition}
+Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is that data from a single fold
+of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^2$ is an
+independent draw from a mean-zero multivariate normal distribution with unit
+marginal variances and correlation $\rho$.  In this case, the data are drawn
+from a single cluster; the true number of clusters is~$1$.  If if $\rho <
+0.5$, then $k = 1$ will be preferred to $k = 2$ for large enough $n$ and $m$.
+\end{proposition}
+
+\begin{proof}(Outline.)
+
+Given $(X_1, Y_1), \dotsc, (X_n, Y_n)$, we first apply $k$-means to $\{ Y_i
+\}_{i=1}^{n}$. With $k = 1$, the single-cluster centroid will
+be equal to $\bar Y_n$, the sample mean of the $Y_1, \dotsc, Y_n$, approximately equal to
+$\E(Y) = 0$, with error of size $\OhP(n^{-1/2})$. The cross-validation error
+will be
+\[
+  \CV(1) = \frac{1}{m} \sum_{i=n+1}^{n+m} \| Y_i - \bar Y_n \|^2
+         = 1 + \OhP(m^{-1/2}) + \OhP(n^{-1/2}).
+\]
+
+Now we will consider the $k = 2$ case.  If $n$ is large enough, then
+\citet{pollard1981strong} showed that the centroids $\bmuY_1$ and $\bmuY_2$
+will be close to $\E(Y \mid Y > 0) = \sqrt{2/\pi}$ and $\E(Y \mid Y < 0) =
+-\sqrt{2/\pi}$.  We have used Lemma~\ref{lem:truncated-normal-moments}
+(Appendix~\ref{app:technical-lemmas}) to compute the expectations.  Further,
+\citet{pollardclt} showed that the errors will be of size $\OhP(n^{-1/2})$.
 
 
-To prove consistency of Gabriel cross-validation, it suffices to analyze a
-single fold of the cross-validation procedure.  We will assume the following
-setup:
+If $\rho > 0$ and $n$ is large enough, then classification rule learned from
+$\{(X_i, \hGY_i)\}_{i=1}^{n}$ variables will be determined according to
+whether $X > 0$; if $\rho < 0$ then the decision is according to whether $X <
+0$.  More specifically, the decision boundary will be at $0 + \OhP(n^{-1/2})$.
 
+In the $\rho > 0$ case, the cross-validation error will be
+\begin{align*}
+  \CV(2)
+  &=
+    \frac{1}{m}
+    \sum_{i=n+1}^{n+m}
+      \| (Y_i - \bmuY_1) 1\{\hGX_i = 1\} \|^2
+      +
+      \| (Y_i - \bmuY_2) 1\{\hGX_i = 2\} \|^2
+\\
+  &=
+    \E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]
+      + \OhP(m^{-1/2}) + \OhP(n^{-1/2}),
+\end{align*}
+where $a = \sqrt{2/\pi}$.  From the joint normality of $X$ and $Y$, it follows
+that $Y \mid X$ is normal with mean $\rho X$ and variance $(1 - \rho^2)$, so
+that $\E[(Y - a)^2 \mid X] = (\rho X - a)^2 + (1 - \rho^2)$.  Applying
+Lemma~\ref{lem:truncated-normal-moments}, we get that for large $m$ and $n$,
+the Gabriel cross-validation error is close to
+$1 + a^2 (1 - 2 \rho)$.  
 
-\begin{theorem}
-For each $n$, let $m(n)$ be a nonnegative integer with $m(n) \to \infty$ as $n
-\to \infty$, and let $\{ (X_{n,i}, Y_{n,i}) \}_{i=1}^{n+m(n)}$ be independent
-identically distributed random variables.  For any fixed $k$, let $\CV(k)$
-be the cross-validation error from a single Gabriel CV fold, computed as
-described in Sec.~\ref{sec:gabriel-cv-algorithm}.  Suppose that
-\begin{enumerate}[label=(\roman*)]
-\item the distribution for each $(X, Y)$ pair is such that $X$ and $Y$ have
-  marginal distributions $P^X$ and $P^Y$, and the vectors $X$ and $Y$ are
-  independent of each other;
-
-\item the distribution $P^Y$ satisfies $\int \|y\|^2 P^Y(dy) < \infty$;
-
-\item the support of $P^Y$ contains at least two points.
-\end{enumerate}
-Then for any fixed $k > 1$, almost surely eventually  $\CV(k) > \CV(1)$.
-\end{theorem}
-\begin{proof}
-Set $\muY = \E(Y)$ and $\SigmaY = \cov(Y)$.  The strong law of large
-numbers implies that
-\(
-  \CV(1) \toas \int \|y - \mu^Y\|^2 P(dy) = \tr(\SigmaY).
-\)
-
-Now suppose that $k > 1$.  Let $\bmuY_1, \dotsc, \bmuY_k$ be the cluster
-centers gotten from applying $k$-means to $Y_{n,1}, \dotsc, Y_{n,n}$.  Since
-the support of $P^Y$ has at least two points,
-Lemma~\ref{lem:kmeans-existence}, implies that almost surely eventually at
-least two of the clusters will be nonempty and have distinct centers.  Without
-loss of generality, assume that $k$ is less than or equal to the cardinality
-of the support of $P^Y$.  Theorem~\ref{thm:kmeans-consistency} and
-Lemma~\ref{lem:kmeans-separation} imply that there exists an $r > 0$ such that
-almost surely eventually at most one cluster center is within distance $r$ of
-$\muY$.  Without loss of generality suppose that $\bmuY_1$ is the closest
-cluster center to $\muY$.
-
-
-Let $\bmuX_1, \dotsc, \bmuX_k$ be the corresponding sample means computed from
-$X_{n,1}, \dotsc, X_{n,n}$, with the $i$th observation assigned to cluster
-$\hGY_{n,i} = \argmin_g \| Y_{n,i} - \bmuY_{n,i} \|^2.$  Consider the
-classification rule $\hGY(X)$, which assigns $X$ to the class $g$ minimizing
-$\|X - \bmuX_g\|^2$, breaking ties uniformly at random between classes of
-equal distance.
-
-[TODO: finish]
-
-
+In the $\rho < 0$ case, a similar calculation shows that $\CV(2)$ is close to
+$1 + a^2 (1 + 2 \rho)$.  In particular, if $|\rho| < 0.5$, then with
+probability tending to $1$ and $m$ and $n$ increase, the asymptotic
+cross-validation error for $k = 1$ will be smaller than for $k = 2$.
 \end{proof}
 
 
-\subsection{Well-Separated Clusters with Noise}
+We confirm this result with a simulation.  We perform $10$ replicates.  In each
+replicate, we generate $20000$ observations from a mean-zero bivariate normal
+distribution with unit marginal variances and correlation $\rho$.  We perform
+a single $2 \times 2$ fold of Gabriel cross-validation and report the
+cross-validation mean squared error for the number of clusters $k$ ranging
+from $1$ to $5$.  Figure~\ref{fig:nullcorr-equal} shows the cross-validation
+errors for all $10$ replicates.  The simulation demonstrates that in the
+Gabriel cross-validation criterion chooses the correct answer $k = 1$ whenever
+$\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.
+
+\begin{figure}
+\centering
+\includegraphics[width=25pc]{demo/nullcorr/equal.pdf}
+\caption{Cross-validation error on $10$ replicates, with the number of
+clusters $k$ ranging from $1$ to $5$.  Data is generated from two-dimensional
+multivariate normal distribution with correlation $\rho$.  The Gabriel
+cross-validation criterion chooses the correct answer $k = 1$ whenever
+$\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
+\label{fig:nullcorr-equal}
+\end{figure}
+
+
+\subsection{Two Clusters}
+
 
 
 
@@ -898,6 +933,7 @@ high dimension or is heavy-tailed.
 
 
 \section{Technical Lemmas}
+\label{app:technical-lemmas}
 
 \begin{lemma}\label{lem:truncated-normal-moments}
 
@@ -947,63 +983,6 @@ Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
     &= \delta^2 + 1 + 4 \delta \varphi(0).
 \end{align*}
 
-
-\section{Counterexample with correlated noise}
-
-Suppose that $(X, Y)$ are jointly mean-zero multivariate normal with unit
-marginal variances and correlation $\rho$.  In this case, the data are drawn
-from a single cluster; the true number of clusters is~$1$.  We will show that
-Gabriel cross-validation is inconsistent if $\rho > 0.5$, in the sense that $k
-= 2$ will be preferred to $k = 1$ almost surely for large enough $n$.
-
-
-Given a sample $(X_1, Y_1), \dotsc, (X_n, Y_n)$, we first apply $k$-means to
-$\{ Y_i \}_{i=1}^{n}$.  If $k = 1$ and $n$ is large enough, then the centroid
-will be close to $\E(Y) = 0$, in the sense that the centroid converges almost
-surely to this value as $n$ tends to infinity \citep{pollard1981strong}.
-Similarly, if $k = 2$ and $n$ is large enough, then the centroids will tend to
-$\E(Y \mid Y > 0) = \sqrt{2/\pi}$ and $\E(Y \mid Y < 0) = -\sqrt{2/\pi}$.  We
-have used Lemma~\ref{lem:truncated-normal-moments} to compute the
-expectations.  In $k = 2$ case, then if $n$ is large enough, the cluster
-assignment will be determined according to whether $Y > 0$.
-
-
-In the $k = 1$ case, if $n$ is large enough, the average Gabriel
-cross-validation error converges to $\E(Y^2) = 1$. In the $k = 2$ case, if $n$
-is large enough and $\rho > 0$, then the linear decision rule for the $X$
-variables will be determined according to whether $X > 0$; if $\rho < 0$ then
-the decision is according to whether $X < 0$.  In the $\rho > 0$ case, the
-error converges to $\E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]$,
-where $a = \sqrt{2/\pi}$.  From the joint normality of $X$ and $Y$, it follows
-that $Y \mid X$ is normal with mean $\rho X$ and variance $(1 - \rho^2)$, so
-that $\E[(Y - a)^2 \mid X] = (\rho X - a)^2 + (1 - \rho^2)$.  Applying
-Lemma~\ref{lem:truncated-normal-moments}, in the $k = 2$ case we get that the
-Gabriel cross-validation error converges to $1 + a^2 (1 - 2 \rho)$.  In the
-$\rho < 0$ case, it converges to $1 + a^2 (1 + 2 \rho)$.  In particular, if
-$|\rho| > 0.5$, then the asymptotic cross-validation error for $k = 2$ will be
-smaller than for $k = 1$.
-
-
-We confirm this with a simulation.  We perform $10$ replicates.  In each
-replicate, we generate $20000$ observations from a mean-zero bivariate normal
-distribution with unit marginal variances and correlation $\rho$.  We perform
-a single $2 \times 2$ fold of Gabriel cross-validation and report the
-cross-validation mean squared error for the number of clusters $k$ ranging
-from $1$ to $5$.  Figure~\ref{fig:nullcorr-equal} shows the cross-validation
-errors for all $10$ replicates.  The simulation demonstrates that in the
-Gabriel cross-validation criterion chooses the correct answer $k = 1$ whenever
-$\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.
-
-\begin{figure}
-\centering
-\includegraphics[width=25pc]{demo/nullcorr/equal.pdf}
-\caption{Cross-validation error on $10$ replicates, with the number of
-clusters $k$ ranging from $1$ to $5$.  Data is generated from two-dimensional
-multivariate normal distribution with correlation $\rho$.  The Gabriel
-cross-validation criterion chooses the correct answer $k = 1$ whenever
-$\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
-\label{fig:nullcorr-equal}
-\end{figure}
 
 
 \bibliography{references}
