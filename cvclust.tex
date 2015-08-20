@@ -559,22 +559,21 @@ so that
 
 Now we we analyze the asymptotic performance of Gabriel Cross-Validation, in
 the case of Gaussian noise. Our main result is that with single-cluster
-Gaussian data, if the predictor and
-response columns of $\dataX$ are weakly correlated or independent, then the
-method will correctly choose to $k = 1$ cluster. We state the result in the
-case where $\dataX$ has 2 columns, but it is straightforward to generalize
-this result to higher dimensions.
+Gaussian data, if the predictor and response columns of $\dataX$ are weakly
+correlated or independent, then the method will correctly prefer $k = 1$ to
+$k = 2$ clusters. We state the result in the case where $\dataX$ has 2 columns,
+but it is straightforward to generalize this result to higher dimensions.
 
 \begin{proposition}
-Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is that data from a single fold
+Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
 of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^2$ is an
 independent draw from a mean-zero multivariate normal distribution with unit
 marginal variances and correlation $\rho$.  In this case, the data are drawn
-from a single cluster; the true number of clusters is~$1$.  If if $\rho <
-0.5$, then $k = 1$ will be preferred to $k = 2$ for large enough $n$ and $m$.
+from a single cluster; the true number of clusters is~$1$.  If $|\rho| < 0.5$,
+then $\CV(1) < \CV(2)$ with probability tending to one as $m$ and $n$ increase.
 \end{proposition}
 
-\begin{proof}(Outline.)
+\begin{proof}
 
 Given $(X_1, Y_1), \dotsc, (X_n, Y_n)$, we first apply $k$-means to $\{ Y_i
 \}_{i=1}^{n}$. With $k = 1$, the single-cluster centroid will
@@ -591,7 +590,7 @@ Now we will consider the $k = 2$ case.  If $n$ is large enough, then
 will be close to $\E(Y \mid Y > 0) = \sqrt{2/\pi}$ and $\E(Y \mid Y < 0) =
 -\sqrt{2/\pi}$.  We have used Lemma~\ref{lem:truncated-normal-moments}
 (Appendix~\ref{app:technical-lemmas}) to compute the expectations.  Further,
-\citet{pollardclt} showed that the errors will be of size $\OhP(n^{-1/2})$.
+\citet{pollard1982central} showed that the errors will be of size $\OhP(n^{-1/2})$.
 
 
 If $\rho > 0$ and $n$ is large enough, then classification rule learned from
@@ -651,6 +650,27 @@ $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
 
 \subsection{Two Clusters}
 
+We will now analyze a simple two-cluster setting, and derive conditions for
+Gabriel cross-validation to correctly prefer $k=2$ clusters to $k=1$.
+
+\begin{proposition}
+Suppose that $\{(X_i,Y_i)\}_{i=1}^{n+m}$ is data from a single fold of Gabriel
+cross-validation, where each $(X,Y)$ pair in $\R^2$ is an independent draw
+from an equiprobable mixture of two multivariate normal distributions with
+identity covariance. Suppose that the first mixture component has mean $(\muX,
+\muY)$, and the second has mean $(-\muX, -\muY)$, where $\muX > 0$ and
+$\muY > 0$.  If [Wei, add condition here], then $\CV(2) < \CV(1)$ with
+probability tending to one as $m$ and $n$ increase.
+\end{proposition}
+
+\begin{proof}
+  [Wei, add proof here; you can take most of this from your document,
+  ``LDA\_prior\_equal.tex'']
+\end{proof}
+
+We confirm the proposition with a simulation.
+
+[Wei, describe simulation here, and include the figure]
 
 
 
