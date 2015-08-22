@@ -82,6 +82,10 @@ Pollard, D. (1982).
 \newblock A central limit theorem for $k$-means clustering.
 \newblock {\em Ann. Probab.}, 10(4):919--926.
 
+\bibitem[Schlimmer, 1987]{schlimmer1987concept}
+Schlimmer, J.~C. (1987).
+\newblock Concept acquisition through representational adjustment.
+
 \bibitem[Sugar and James, 2003]{sugar2003finding}
 Sugar, C.~A. and James, G.~M. (2003).
 \newblock Finding the number of clusters in a dataset.

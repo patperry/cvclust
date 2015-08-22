@@ -194,13 +194,13 @@ of existing methods for finding the right $k$ in published literature.
 
 
 Most existing methods are either model based method requires strong parameter
-assumptions or ad hoc method utilizes within-cluster dispersion. Although many
-view selecting the number of clusters as a model selection problem, very few
+assumptions or otherwise lack of clear interpretation and theoretical justification.
+Although many view selecting the number of clusters as a model selection problem, very few
 approaches this problem from the prediction point of view. Select model with
 smallest prediction error via cross-validation is one of the simplest and most
 widely used model selection techniques in supervised learning. The lack of
 true class (label) in data set makes the adoption of cross-validation into
-unsupervised leaning problem difficult. Perhaps the only exception is
+unsupervised leaning problem difficult. One exception is
 \cite{tibshirani2005cluster}, which selects the optimal $k$ by prediction
 strength. The strategy is to first cluster the test data and training data
 into $k$ clusters respectively. Then, for each pair of observations that are
@@ -213,7 +213,9 @@ procedure, which is quite different from the one commonly used in
 cross-validation procedure in supervised learning. Therefore the well
 understood properties of cross-validation procedure in supervised learning
 cannot be carried over to the prediction strength method, makes the
-interpretation of its result difficult.
+interpretation of its result difficult. \citet{wang2010consistent} also uses 
+cross-validation to select the optimal $k$. Instead of selecting $k$ which minimizes 
+prediction error, such method picks $k$ which minimizes the specifically defined clustering instability.
 
 
 Our proposed method is a complete data-driven approach which doesn't rely on
@@ -590,7 +592,7 @@ errors for all $10$ replicates.  The simulation demonstrates that in the
 Gabriel cross-validation criterion chooses the correct answer $k = 1$ whenever
 $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.
 
-\begin{figure}
+\begin{figure}[H]
 \centering
 \includegraphics[width=25pc]{demo/nullcorr/equal.pdf}
 \caption{Cross-validation error on $10$ replicates, with the number of
@@ -613,18 +615,89 @@ cross-validation, where each $(X,Y)$ pair in $\R^2$ is an independent draw
 from an equiprobable mixture of two multivariate normal distributions with
 identity covariance. Suppose that the first mixture component has mean $(\muX,
 \muY)$, and the second has mean $(-\muX, -\muY)$, where $\muX > 0$ and
-$\muY > 0$.  If [Wei, add condition here], then $\CV(2) < \CV(1)$ with
+$\muY > 0$.  If $1 + 2\Phi(\mu^Y)+ \frac{2\varphi(\mu^Y)}{\mu^Y} < 4\Phi(\mu^X)$, then $\CV(2) < \CV(1)$ with
 probability tending to one as $m$ and $n$ increase.
 \end{proposition}
 
 \begin{proof}
-  [Wei, add proof here; you can take most of this from your document,
-  ``LDA\_prior\_equal.tex'']
+There are two clusters $G_1$ and $G_2$, where observations from $G_1$ are distributed as
+\[	\mathcal{N}\left( \begin{pmatrix} 
+    \mu^X \\
+    \mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)	\]
+and observations from $G_2$ are distributed as
+\[	\mathcal{N}\left( \begin{pmatrix} 
+    -\mu^X \\
+    -\mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)	\]
+where $\mu^X_1 > 0$ and $\mu^Y_1 > 0$. Let $G_i$ be the true cluster where observation $i$ is generated from, by assumption
+\[	P(G_i=G_1) = P(G_i=G_2) = 1/2	\]
+After applying $k$-means on $\{ Y_i\}_{i=1}^{n}$ with $k=2$, if $n$ is large enough, we have the estimated centroids $\bar{\mu}^Y_1$ and $\bar{\mu}^Y_2$ be close to $E(Y \mid Y>0)$ and $\E(Y \mid Y < 0)$,
+with errors will be of size $\OhP(n^{-1/2})$. Here
+\begin{align}
+E(Y \mid Y>0) &= E(Y_1 \mid Y_1 > 0) \cdot P(Y_1>0) + E(Y_2 \mid Y_2 > 0) \cdot P(Y_2>0) \nonumber \\ 
+   &= 2\varphi(\mu^Y)+2\mu^Y\Phi(\mu^Y)-\mu^Y  \\  \nonumber 
+\end{align}
+where $Y_1 \sim N(\mu^Y, 1)$ and $Y_2 \sim N(-\mu^Y, 1)$, and we used Lemma~\ref{lem:truncated-normal-moments}
+(Appendix~\ref{app:technical-lemmas}). Similarly, we have
+\begin{align}
+E(Y \mid Y<0) &= E(Y_1 \mid Y_1 < 0) \cdot P(Y_1<0) + E(Y_2 \mid Y_2 < 0) \cdot P(Y_2<0) \nonumber \\ 
+   &= -2\varphi(\mu^Y)-2\mu^Y\Phi(\mu^Y)+\mu^Y  \\  \nonumber 
+\end{align}
+ where $\varphi()$ and $\Phi()$ are the standard normal probability and cumulative distribution function respectively.  
+
+
+Same as in single cluster case, the classification rule learned from
+$\{(X_i, \hGY_i)\}_{i=1}^{n}$ variables will be determined according to
+whether $X > 0$, with the decision boundary be at $0 + \OhP(n^{-1/2})$.
+By symmetry, the CV error for points from $G_1$ is same as the points from $G_2$. Because $P(G=G_1) = P(G=G_2) =1/2$, the CV error can be calculated solely from $G_2$, that is
+
+\begin{align*}
+  \CV(2)
+  &=
+    \frac{1}{m}
+    \sum_{i=n+1}^{n+m}
+      \| (Y_i - \bmuY_1) 1\{\hGX_i = 1\} \|^2
+      +
+      \| (Y_i - \bmuY_2) 1\{\hGX_i = 2\} \|^2, \hspace{0.2in}Y\sim N(-\mu^Y,1)
+\\
+  &=
+    \E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]
+      + \OhP(m^{-1/2}) + \OhP(n^{-1/2})\\
+   \end{align*}
+   With 
+   \begin{align}
+ \E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]  =& P(\hGX_i = 1)\cdot E[(Y - a)^2] + P(\hGX_i = 2)\cdot E[(Y + a)^2] \nonumber \\  \nonumber
+ =& [1-\Phi(\mu^X)][var(Y)+(-\mu^Y - a)^2]+\\ \nonumber
+  & \Phi(\mu^X)[var(Y)+(-\mu^Y + a)^2]\\  \nonumber
+  =& [1-\Phi(\mu^X)][1+(\mu^Y + a)^2]+\Phi(\mu^X)[1+(\mu^Y -a )^2]   \\  \nonumber
+  =& 1+(\mu^Y + a)^2 -4a\Phi(\mu^X)\mu^Y  \nonumber
+\end{align}
+where $a$ is given by $(1)$.
+
+
+When $k=1$, the result is straight forward since the estimated centroid will approximately equal to
+$0$, with error of size $\OhP(n^{-1/2})$. The cross-validation error
+will be
+\[
+  \CV(1) = \frac{1}{m} \sum_{i=n+1}^{n+m} \| Y_i - \bar Y_n \|^2
+         = 1 + (\mu^Y)^2 + \OhP(m^{-1/2}) + \OhP(n^{-1/2}).
+\]
+So if we have $1 + 2\Phi(\mu^Y)+ \frac{2\varphi(\mu^Y)}{\mu^Y} < 4\Phi(\mu^X)$, we have $\CV(2) < \CV(1)$
 \end{proof}
 
-We confirm the proposition with a simulation.
+We confirm this result with a simulation.  We perform $10$ replicates for each pair of $(\mu^X, \mu^Y)$, where both $\mu^X$ and $\mu^Y$ take value on grid of $[0,3]$ with step $0.1$.  In each
+replicate, we generate $20000$ observations from two multivariate normal distributions with identity covariance, where one has mean $(\muX, \muY)$ and the other one has mean $(-\muX, -\muY)$.
+We perform a single $2 \times 2$ fold of Gabriel cross-validation and report the
+times (out of $10$ replicates) when $k=2$ is selected by the algorithm in stead of $k=1$. Figure~\ref{fig:overlap-color_plot} shows the frequency $k=2$ is selected by the algorithm for each pair of $(\mu^X, \mu^Y)$. The red spot means high number (close to $10$) is selected by the algorithm, which means algorithm very likely will pick $k=2$ over $k=1$ for the corresponding $(\mu^X, \mu^Y)$. While blue spot means algorithm prefer $k=1$ for the corresponding value of $(\mu^X, \mu^Y)$. We can see the simulation result perfectly align with the theoretical curve (the black line), which separates the $k=2$ zone from the $k=1$ zone. It demonstrates that the Gabriel cross-validation works exactly as it suppose to under such setting. The position of red spots shows that when the two clusters are reasonably apart (not overlapping too heavily) in both dimensions, the Gabriel cross-validation is asymptotically consistent.
 
-[Wei, describe simulation here, and include the figure]
+\begin{figure}[H]
+\centering
+\includegraphics[width=25pc]{demo/overlap/color_plot.pdf}
+\caption{Number of times $k=2$ is selected out of $10$ replicates for each pair of $(\muX, \muY)$. The heat map shows the frequency $k=2$ is selected by the algorithm, with blue means low number (of $k=2$) is selected and red color means high number is selected. The black line is the theoretical curve, above which the algorithm suppose to pick $k=2$ and below which algorithm select $k=1$.  }
+\label{fig:overlap-color_plot}
+\end{figure}
+
 
 
 
@@ -638,20 +711,21 @@ with a basket of existing methods including Gap statistics
 statistics \citep{hartigan1975clustering}, Jump method
 \citep{sugar2003finding}, Prediction strength \citep{tibshirani2005cluster},
 Bootstrap stability \citep{fang2012selection} in following simulation
-settings. We select $L=R$ and $5-$fold cross-validation in row
-($m=\frac{4}{5}n$) as default parameter setting for our proposed Gabriel
-method. Note that set $L=R$ corresponding to $2-$fold cross-validation in
+settings. We select $p=q$ and $5-$fold cross-validation in row
+($m=\frac{1}{4}n$) as default parameter setting for our proposed Gabriel
+method. Note that set $p=q$ corresponding to $2-$fold cross-validation in
 column.
 \begin{enumerate}
 
   \item Single cluster in $10$ dimensions --- $200$ observations, each
     observation uniformly distributed over $[0,1]$ in each dimension. 
 
-  \item Two clusters in $4$ dimensions --- $50$ i.i.d standard normal
-    observations are generated, i.e. generated from multivariate normal
-    $\mathcal{N}\left(\boldsymbol\mu,\mathbf{I}\right)$ for each cluster, with
-    cluster center $\boldsymbol\mu = (1,0,0,1)$ and $(1,3.5,3.5,1)$
-    respectively  
+  \item Two clusters in $4$ dimensions --- $50$ i.i.d
+    observations are generated from both multivariate normal
+    $\mathcal{N}\left(\mu_1,0.5\Sigma\right)$ and multivariate normal
+    $\mathcal{N}\left(\mu_2,1.5\Sigma\right)$, where 
+    cluster center $\mu_1 = (1,0,0,1)$ and $\mu_2 =(1,3.5,3.5,1)$
+    respectively. $\Sigma$ has $AR(1)$ structure with $\rho=-0.2$ and $\sigma=1$.
 
   \item Four clusters in $100$ dimensions ---  Each cluster has $100$ or $150$
     i.i.d standard normal observations, with cluster centers randomly
@@ -683,42 +757,15 @@ clusters. The parameters in setting 2--6 are chosen such that about half of
 the random realization were discarded. The idea is borrowed from
 \cite{tibshirani2001estimating}.
 
-
-Besides the number of clusters selected by each algorithm is returned, we also
-give the prediction error (PE) for each algorithm in each setting. The PE is
-defined by 
-\[
-  \PE(k)
-    =
-      \frac{\|\hat{\mathbf{X}}_k- \boldsymbol{\mu} \|_F}
-           {PE_{\text{oracle}}}
-\]
-where
-\[
-  \PE_{\text{oracle}} = \min_k \|\hat{\mathbf{X}}_k- \boldsymbol{\mu} \|_F
-\]
-Matrix $\boldsymbol{\mu}$ consists of true centers of observations in data
-matrix $\mathbf{X}$, while $\hat{\mathbf{X}}_k$ is obtained by replacing each
-observation in $\mathbf{X}$ by its closest cluster center result from applying
-K-means on $\mathbf{X}$ with parameter $k$. Here $k$ is the optimal number of
-clusters selected by each algorithm on data $\mathbf{X}$. This is only
-possible on simulated data because otherwise one would never know the true
-center matrix~$\boldsymbol{\mu}$.
-
-
-The oracle selected number for each data $\mathbf{X}$ is also given on the
-table, which is defined by 
-\[
-  K_{\text{oracle}}
-    =
-      \argmin_{k} \|\hat{\mathbf{X}}_k - \boldsymbol{\mu} \|_F
-\]
-
+Table \ref{table1} shows the distribution of $k$ selected by each algorithm in 
+each simulation setting. We run $k$ from $1$ to $15$, and the best $k$ within this range
+is selected by the algorithms. [ NA in the table means...]
 \clearpage
 
 \begin{center}
 \footnotesize
 \begin{longtable}{lcccccccccccccccc}
+\captionsetup{justification=centering}
 \caption{\label{table1} Simulation Results}\\
 \toprule
 \phantom{Pred.~Strength}
@@ -771,27 +818,29 @@ local maximum. This is because among all the possible options, the global
 maximum criteria gives the best result in our simulation settings.
 
 
-The ``\textendash'' sign in Setting~1 is because for CH-index, Hartigen and
-Bootstrap stability, the minimum $k$ they can pick is $2$. So they are not
-included for comparison since the true $k=1$. Setting $2-4$ have Gaussian
-distribution, where the Gaussian mixture model-based clustering suppose to
-perform the best. It is only the case for setting $2$. In setting $3$ and $4$,
+For CH-index, Hartigen and Bootstrap stability, the minimum $k$ they can pick is $2$. So they are not
+included for comparison since the true $k=1$. It also demonstrates the difficulty 
+that null scenario poses for some existing algorithms. For those could select $k=1$,
+most of them work well under such setting except for Jump method. Setting $2-4$ have Gaussian
+distribution, where the Gaussian mixture model-based method suppose to
+perform the best. However, it only performs reasonably well in setting $2$. In setting $3$ and $4$,
 it has a very poor performance even if the underlying distribution is indeed
-Gaussian mixture model. It highlights the difficulties that high dimension
-data could cause. Other methods (Gap statistics, CH-index, Hartigan, Jump
+Gaussian mixture model. It highlights the difficulty that high dimension
+data could cause. Other methods (CH-index, Hartigan, Jump
 method, Prediction strength and Boostrap stability) also have problems in
 these two high-dimension settings as we could not find any one with reasonable
-performance in terms of finding the correct $k$ in both cases. In terms of PE,
-Boostrap stability and Gap statistics have reasonable performance, but come
-with the price of picking larger $k$. Our proposed Gabriel method (also Wold
-CV method) clearly stands out from the basket of existing methods using either
-measure under the high-dimension setting $3$ and $4$.
+performance in terms of finding the correct $k$ in both cases. The only exception is
+Gap statistics, which works perfectly in both settings. Our proposed Gabriel method (also Wold
+CV method) clearly stands out from the basket of existing methods under the 
+high-dimension setting $3$ and $4$, as we can see they both perform perfectly under
+such settings. 
 
 
 Setting $5$ and $6$ corresponding to the situation where data are heavy-tailed
 instead of normal distributed, coupled with unequal number of observations or
-unequal variance for different clusters. From Table \ref{table1}, we can see
-that our proposed Gabriel method is robust and has superior performance
+unequal variance for different clusters. From Table \ref{table1}, we can see none of 
+the existing methods has good performance in both settings. In contrast,
+our proposed Gabriel method is robust and has superior performance
 compare with other methods. Because one can hardly tell the underlying
 distribution of data in practice, the resilience to non-Gaussian data gives
 the Gabriel method a clear edge. 
@@ -808,8 +857,8 @@ data set since it was widely used in literature.
 
 
 The first one is congress voting data which consists of voting records of
-$98$th United States Congress, $2$nd session. This data set includes votes for
-each of the U.S. House of Representatives Congressmen on the $16$ key votes
+$98$th United States Congress, $2$nd session \citep{schlimmer1987concept}. 
+This data set includes votes for each of the U.S. House of Representatives Congressmen on the $16$ key votes
 identified by the \textit{CQA} (Congressional Quarterly Almanac). For each
 vote, each Congressman either vote positively ``yea" (voted for/paired
 for/announced for),  negatively ``nay'' (voted against/paired
@@ -818,7 +867,7 @@ contain ``?" before comparing each algorithm. It results in $232$ remaining
 records, with $124$ democrat and $108$ republican. 
 
 
-The second data set is the well-known Wisconsin breast cancer data set \citep{mangasarian1990pattern}. After excluding the records with missing data, this data set consists records of $683$ patients, each with measurements of nine attributes of their biopsy specimens. It is known that there exist at least two groups of patients: $444$ patients with benign specimens and $239$ patients with malignant specimens.\\
+The second data set is the well-known Wisconsin breast cancer data set \citep{mangasarian1990pattern}. After excluding the records with missing data, this data set consists records of $683$ patients, each with measurements of nine attributes of their biopsy specimens. It is known that there exist at least two groups of patients: $444$ patients with benign specimens and $239$ patients with malignant specimens.
 
 The third data set is the Sonar data returned from two targets -- a metal
 cylinder and a rock with similar shape, which is first studied by
@@ -834,6 +883,7 @@ $2$ clusters.
 
 \begin{table}[H]
 \begin{center}
+\captionsetup{justification=centering}
 \caption{\label{table2} Number of clusters selected by each algorithm}
 \begin{tabular}{lccccc}
     \hline                  
@@ -854,13 +904,13 @@ Wold & $2$ && $3$ && $10$ \\  \hline
 
 Since most congressmen vote base on their parties' interest, $2$ parties
 (Democratic and Republican) represent two clusters in this data set. So the
-optimal number should be two. Close inspection shows \textit{kmeans} with
+optimal number should be two. Close inspection shows $k$-means with
 $k=2$ separates the two parties very well with the lowest miss-classification
 error $10.43\%$ ($k=3$ has $14.78\%$). Note that CH-index and Bootstrap
 stability also return $k=2$, but $2$ is the lower bound those methods can
 select for $k$. So it's not clear they actually choose $k=2$ or they hit the
 lower bound (they would pick $k=1$ if allowed). For the breast cancer data,
-it's know to have at least $2$ cluster based on whether it's benign specimens
+it's known to have at least $2$ cluster based on whether it's benign specimens
 or not. But it doesn't mean the optimal $k$ should be $2$.
 \cite{fujita2014non} noticed that the malign group is quite heterogeneous and
 can be further clustered into at least two subgroups. Hence, the result $k=3$
