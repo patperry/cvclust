@@ -749,6 +749,11 @@ column.
     with $\boldsymbol\mu$ randomly generated from
     $\mathcal{N}\left(\mathbf{0},19\mathbf{I}\right)$ and $\lambda = 1, 1/2,
     1/5$ respectively.
+
+  \item[7.] One cluster in $10$ dimensions with correlated noise -- $200$
+    mean-zero multivariate normal observations; the covariance matrix $\Sigma$
+    has $\Sigma_{ij} = 0.9$ for $i \neq j$ and $\Sigma_{ii} = 1$ for $i = 1,
+    \dotsc, 10$.
 \end{enumerate}
 Note that in setting 2--6, all clusters are well-separated, i.e. no
 overlapping. In fact, any simulated clusters with minimum distance less than
@@ -804,6 +809,8 @@ Method
 \input{demo/bench/setting5/results.tex}
 \midrule
 \input{demo/bench/setting6/results.tex}
+\midrule
+\input{demo/bench/setting7/results.tex}
 \end{longtable}
 \end{center}
 

@@ -295,12 +295,27 @@ setting6 <- function()
 }
 
 
+setting7 <- function()
+{
+    p <- 10
+    n <- 200
+    mean <- numeric(p)
+    cov <- matrix(.9, p, p)
+    diag(cov) <- 1
+    mu <- matrix(0, n, p)
+    eps <- mvrnorm(n, mean, cov)
+
+    list(x = mu + eps, mean = mu)
+}
+
+
 # seeds taken from random.org, uniform { 1, ..., 10000000 }
 settings <- list("setting1" = list(simulate = setting1, seed = 4244250),
                  "setting2" = list(simulate = setting2, seed = 5513442),
                  "setting3" = list(simulate = setting3, seed = 5685887),
                  "setting4" = list(simulate = setting4, seed = 1243061),
                  "setting5" = list(simulate = setting5, seed = 7997590),
-                 "setting6" = list(simulate = setting6, seed = 5427086))
+                 "setting6" = list(simulate = setting6, seed = 5427086),
+                 "setting7" = list(simulate = setting7, seed = 1595473))
 
 
