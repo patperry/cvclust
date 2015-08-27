@@ -601,7 +601,7 @@ $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.
 clusters $k$ ranging from $1$ to $5$.  Data is generated from two-dimensional
 multivariate normal distribution with correlation $\rho$.  The Gabriel
 cross-validation criterion chooses the correct answer $k = 1$ whenever
-$\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
+$|\rho| < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
 \label{fig:nullcorr-equal}
 \end{figure}
 
@@ -618,7 +618,7 @@ Suppose that $\cov(Y) = U \Lambda U^\T$ is the eigendecomposition of
 $\cov(Y)$. For simplicity, suppose that the leading eigenvalue $\lambda_1$
 has unit multiplicity, so that the first principal subspace of $Y$ is a line,
 given by the span of the vector $u_1 \in \R^q$. When we apply $k$-means to
-$Y_1, \dotsc, Y_n$, the centroids will be close to
+$Y_1, \dotsc, Y_n$ with $k = 2$, the centroids will be close to
 $\bmuY_1 =  \sqrt{2\lambda_1 /\pi} u_1$ and
 $\bmuY_2 = -\sqrt{2\lambda_1 /\pi} u_1$, with errors of size $\OhP(n^{-1/2})$.
 
