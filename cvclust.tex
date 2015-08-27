@@ -55,8 +55,10 @@
 \newcommand{\PE}{\operatorname{PE}}
 \newcommand{\E}{\operatorname{E}}
 \DeclareMathOperator*{\cov}{cov}
+\DeclareMathOperator*{\corr}{corr}
 \DeclareMathOperator*{\tr}{tr}
 \DeclareMathOperator*{\var}{var}
+\newcommand{\T}{T}
 
 % convergence
 \newcommand{\toas}{\overset{\mathit{a.s.}}{\to}}
@@ -511,7 +513,7 @@ for all $i = 1, \dotsc, m+n$.  In particular, this implies that $\bmuY(\hGX_i)
 
 \section{Analysis of Gabriel Cross-Validation with Gaussian Noise}
 
-\subsection{Single Cluster}
+\subsection{Single cluster in two dimensions}
 
 Now we we analyze the asymptotic performance of Gabriel Cross-Validation, in
 the case of Gaussian noise. Our main result is that with single-cluster
@@ -520,7 +522,7 @@ correlated or independent, then the method will correctly prefer $k = 1$ to
 $k = 2$ clusters. We state the result in the case where $\dataX$ has 2 columns,
 but it is straightforward to generalize this result to higher dimensions.
 
-\begin{proposition}
+\begin{proposition}\label{prop:1clust-2dim}
 Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
 of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^2$ is an
 independent draw from a mean-zero multivariate normal distribution with unit
@@ -604,7 +606,60 @@ $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
 \end{figure}
 
 
-\subsection{Two Clusters}
+\subsection{Single cluster in higher dimensions}
+
+To generalize the result of the previous section to higher dimensions, 
+suppose that $\{ (X_i, Y_i) \}_{i=1}^{n+m}$ is data from a single fold of
+Gabriel Cross-Validation, with each $(X, Y)$ pair in $\R^p \times \R^q$ a
+draw a mean-zero multivariate normal distribution. To analyze this setting, it
+suffices to consider the mean-zero case with $\cov(X) = I_p$.
+
+Suppose that $\cov(Y) = U \Lambda U^\T$ is the eigendecomposition of
+$\cov(Y)$. For simplicity, suppose that the leading eigenvalue $\lambda_1$
+has unit multiplicity, so that the first principal subspace of $Y$ is a line,
+given by the span of the vector $u_1 \in \R^q$. When we apply $k$-means to
+$Y_1, \dotsc, Y_n$, the centroids will be close to
+$\bmuY_1 =  \sqrt{2\lambda_1 /\pi} u_1$ and
+$\bmuY_2 = -\sqrt{2\lambda_1 /\pi} u_1$, with errors of size $\OhP(n^{-1/2})$.
+
+The means for the $X$ variables will be close to
+$\bmuX_1 = \E(X \mid u_1^\T Y > 0)$ and
+$\bmuX_2 = \E(X \mid u_1^\T Y < 0)$,
+with errors of size $\OhP(n^{-1/2})$.  Let
+\[
+  \begin{bmatrix}
+    I_p & \lambda_1^{1/2} \rho \\
+    \lambda_1^{1/2} \rho^T & \lambda_1
+  \end{bmatrix}
+\]
+be the covariance matrix of $(X, u_1^\T Y)$,
+where $\rho = (\rho_1, \dotsc, \rho_p)$ is such that $\rho_i = \corr(X_i,
+u_1^\T Y)$ for $i = 1, \dotsc, p$.
+. Then,
+\[
+  \bmuX_1 = \sqrt{2 \lambda_1 / \pi} \rho,
+  \qquad
+  \bmuX_2 = -\sqrt{2 \lambda_1 / \pi} \rho;
+\]
+thus, the classification rule learned from $\{ (X_i, \hGY_i) \}_{i=1}^{n}$
+will send observations to class $1$ or $2$ according to whether
+$\rho^\T X + \OhP(n^{-1/2})$ is positive or negative.
+
+
+We have reduced the analysis of cross-validation error to the two-dimensional
+case. In particular, following the calculations from the proof of
+Prop.~\ref{prop:1clust-2dim}, if $|\corr(\rho^\T X, u_1^\T Y)| < 0.5$, then with
+probability tending to one as $m$ and $n$ increase, $\CV(1) < \CV(2)$.
+The condition $|\corr(\rho^\T X, u_1^\T)| < 0.5$ reduces to
+\[
+  \sum_{i=1}^p \rho_i^2 < 0.25.
+\]
+A sufficient (but not necessary) condition to ensure that this holds is that
+the magnitude of the canonical correlation between the $X$ variables and
+the $Y$ variables is below $0.5 / \sqrt{p}$.
+
+
+\subsection{Two clusters}
 
 We will now analyze a simple two-cluster setting, and derive conditions for
 Gabriel cross-validation to correctly prefer $k=2$ clusters to $k=1$.
