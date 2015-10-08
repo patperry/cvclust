@@ -174,7 +174,7 @@ unsupervised learning because it can reveal the internal structure of data
 through grouping, segment the data through partitioning and summarize data for
 other purposes such as dimension reduction. It has being widely used in
 various fields such as psychology, biology, statistics and machine learning
-including pattern recognition, image segmentation etc.
+including pattern recognition, image segmentation etc \citep{jain1999data}.
 
 After being proposed more than $50$ years, $k$-means remains one of the most
 popular and widely used clustering algorithms \citep{jain2010data}. Like many
@@ -242,15 +242,16 @@ is also proposed to locate the best $k$ by some authors such as
 \citet{fang2012selection}. \citet{chiang2010intelligent} provides a nice review
 of existing methods for finding the right $k$ in published literature.
 
-Most existing methods are either model based method requires strong parameter
+Most existing methods are either model based method requires strong modeling
 assumptions or otherwise lack of clear interpretation and theoretical justification.
 Although many view selecting the number of clusters as a model selection problem, very few
 approaches this problem from the prediction point of view. Select model with
 smallest prediction error via cross-validation is one of the simplest and most
 widely used model selection techniques in supervised learning. The lack of
 true class (label) in data set makes the adoption of cross-validation into
-unsupervised leaning problem difficult. One exception is
-\cite{tibshirani2005cluster}, which selects the optimal $k$ by prediction
+unsupervised leaning problem difficult.
+
+One exception is \cite{tibshirani2005cluster}, which selects the optimal $k$ by prediction
 strength. The strategy is to first cluster the test data and training data
 into $k$ clusters respectively. Then, for each pair of observations that are
 assigned to the same test cluster, algorithm determines whether they are also
@@ -259,17 +260,20 @@ is, if $k=k_0$, the true number of clusters, then the $k$ training set
 clusters will be similar to the $k$ test clusters, and hence will predict them
 well. However, a specifically defined prediction error measure is used in such
 procedure, which is quite different from the one commonly used in
-cross-validation procedure in supervised learning. Therefore the well
-understood properties of cross-validation procedure in supervised learning
-cannot be carried over to the prediction strength method, makes the
-interpretation of its result difficult. \citet{wang2010consistent} also uses 
+cross-validation procedure in supervised learning. \citet{wang2010consistent} also uses 
 cross-validation to select the optimal $k$. Instead of selecting $k$ which minimizes 
-prediction error, such method picks $k$ which minimizes the specifically defined clustering instability.
-
-Our proposed method is a complete data-driven approach which doesn't rely on
-any parametric assumptions. Through novel form of partitioning data set, we
-are able to employing the cross-validation procedure in clustering exactly the
-same way as in supervised learning problem. Hence, it's easy for reader to
+prediction error, such method picks $k$ which minimizes the specifically defined 
+clustering instability. Note that these methods minimize measures that are specifically defined,
+which makes these methods hard to interpret or compare to other methods through analogy because
+the underlying measures are unique and not well understood. 
+ 
+The prediction error measure in our proposed method is exactly the same as in supervised learning.
+Our method is a complete data-driven approach which doesn't rely on
+any model assumption. Through novel form of partitioning data set, we effectively 
+transferred an unsupervised learning problem into a supervised leaning problem, which is one of
+the kind. By doing so, we are able to employing the cross-validation procedure in clustering 
+a similar way as in supervised learning problem, so that much of the intuition from supervised learning
+carries over. Hence, it's easy for reader to
 understand the intuition behind our proposed method. Simulation and real data
 application shows the superior performance of our proposed method compare with
 existing methods in high-dimension settings and heavy-tailed data. Since the
@@ -620,6 +624,10 @@ $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
 \label{fig:nullcorr-equal}
 \end{figure}
 
+Proposition $1$ gives a very simple condition for the Gabriel method to correctly 
+pick $k=1$ with single cluster in $2$ dimensions. The following proposition generalizes
+such condition for data in arbitrary dimension. 
+
 \begin{proposition}
 Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
 of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^{p+q}$ is an
@@ -695,6 +703,17 @@ $||\hat{\mu}^Y_1 - \bar{\mu}^Y_1||^2 > ||\hat{\mu}^Y_1||^2$ or $CV(2) > CV(1)$ i
  \frac{\sqrt{\lambda_1}}{2} > \frac{u^T_1\Sigma_{YX}\Sigma_{XY}u_1}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}} 
 \]
 \end{proof}
+
+Although the condition given by Proposition $2$ is succinct in such that it's straight forward to see how
+the structure of covariance matrix $\Sigma_{XY}$ affects the performance of Gabriel CV method, it's not simple and easy to interpret such condition as the one in Proposition $1$. In specific, each block of matrix $\Sigma_{XY}$ influences the condition while the combined effect
+determines whether Gabriel CV method chooses $k=1$ or $k=2$.
+
+In practice, one can check such condition using estimated sample covariance matrix for single cluster case. 
+If such condition doesn't met, one solution is rotating the matrix to eliminate the correlation between each dimension then perform Gabriel CV method on the rotated data matrix. Another empirically observed solution is 
+to leave most columns for clustering, i.e. increase the dimension of $\Sigma_{YY}$. Such solution is especially 
+useful for data containing multiple clusters, where neither estimating sample covariance matrices nor
+rotating to eliminate correlation is feasible. Although the theory for such solution is available for special cases,
+its general version hasn't been developed.    
 
 \subsection{Two Clusters}
 
@@ -779,12 +798,12 @@ So if we have $1 + 2\Phi(\mu^Y)+ \frac{2\varphi(\mu^Y)}{\mu^Y} < 4\Phi(\mu^X)$, 
 We confirm this result with a simulation.  We perform $10$ replicates for each pair of $(\mu^X, \mu^Y)$, where both $\mu^X$ and $\mu^Y$ take value on grid of $[0,3]$ with step $0.1$.  In each
 replicate, we generate $20000$ observations from two multivariate normal distributions with identity covariance, where one has mean $(\muX, \muY)$ and the other one has mean $(-\muX, -\muY)$.
 We perform a single $2 \times 2$ fold of Gabriel cross-validation and report the
-times (out of $10$ replicates) when $k=2$ is selected by the algorithm in stead of $k=1$. Figure~\ref{fig:overlap-color_plot} shows the frequency $k=2$ is selected by the algorithm for each pair of $(\mu^X, \mu^Y)$. The red spot means high number (close to $10$) is selected by the algorithm, which means algorithm very likely will pick $k=2$ over $k=1$ for the corresponding $(\mu^X, \mu^Y)$. While blue spot means algorithm prefer $k=1$ for the corresponding value of $(\mu^X, \mu^Y)$. We can see the simulation result perfectly align with the theoretical curve (the black line), which separates the $k=2$ zone from the $k=1$ zone. It demonstrates that the Gabriel cross-validation works exactly as it suppose to under such setting. The position of red spots shows that when the two clusters are reasonably apart (not overlapping too heavily) in both dimensions, the Gabriel cross-validation is asymptotically consistent.
+times (out of $10$ replicates) when $k=2$ is selected by the algorithm in stead of $k=1$. Figure~\ref{fig:overlap-color_plot} shows the frequency $k=2$ is selected by the algorithm for each pair of $(\mu^X, \mu^Y)$. The dark spot means high number (close to $10$) is selected by the algorithm, which means algorithm very likely will pick $k=2$ over $k=1$ for the corresponding $(\mu^X, \mu^Y)$. While light spot means algorithm prefer $k=1$ for the corresponding value of $(\mu^X, \mu^Y)$. We can see the simulation result perfectly align with the theoretical curve (the black line), which separates the $k=2$ zone from the $k=1$ zone. It demonstrates that the Gabriel cross-validation works exactly as it suppose to under such setting. The position of dark spots shows that when the two clusters are reasonably apart (not overlapping too heavily) in both dimensions, the Gabriel cross-validation is asymptotically consistent.
 
 \begin{figure}[H]
 \centering
 \includegraphics[width=3in]{demo/overlap/color_plot.pdf}
-\caption{Number of times $k=2$ is selected out of $10$ replicates for each pair of $(\muX, \muY)$. The heat map shows the frequency $k=2$ is selected by the algorithm, with blue means low number (of $k=2$) is selected and red color means high number is selected. The black line is the theoretical curve, above which the algorithm suppose to pick $k=2$ and below which algorithm select $k=1$.  }
+\caption{Number of times $k=2$ is selected out of $10$ replicates for each pair of $(\muX, \muY)$. The heat map shows the frequency $k=2$ is selected by the algorithm, with light means low number (of $k=2$) is selected and dark color means high number is selected. The black line is the theoretical curve, above which the algorithm suppose to pick $k=2$ and below which algorithm select $k=1$.  }
 \label{fig:overlap-color_plot}
 \end{figure}
 %----------------------------------------------------------------
@@ -840,7 +859,8 @@ the random realization were discarded. The idea is borrowed from
 
 Table \ref{table1} shows the distribution of $k$ selected by each algorithm in 
 each simulation setting. We run $k$ from $1$ to $15$, and the best $k$ within this range
-is selected by the algorithms. [ NA in the table means...]
+is selected by the algorithms. NA in the table means algorithm did not converge or otherwise 
+failed. 
 \clearpage
 
 \begin{center}
@@ -991,17 +1011,40 @@ Gabriel method and CH-index selects $k=2$. Majority of the methods collapse to
 either select the maximum or select the minimum number, underline how
 difficult it was to pick the right $k$ when dimension increases. 
 
-
-\section{Conclusion}
+\section{Discussion}
 \label{sec:conc}
 In this paper, we proposed a novel approach to estimate the number of
 clusters. The intuition behind our proposed methods is to transfer the
 unsupervised learning problem into supervised learning problem via novel form
-of cross validation. We proved the self-consistency for our proposed Gabriel
-CV method as well as its asymptotic property with noise, and showed the
-robustness of our method by simulation. Our method has very good performance
-in our limited simulation settings, and clearly the superior one when data is
-high dimension or is heavy-tailed.
+of cross validation. Such approach is quite different from previous methods which 
+utilize the within/between cluster dispersion or stability criterion for selecting the 
+optimal $k$. Our method utilizes the connection between different dimensions (columns)
+of data through the uniqueness of each cluster center. We proved the self-consistency 
+for our proposed Gabriel CV method as well as its asymptotic property with Gaussian noise,
+and showed the robustness of our method by simulation. Our method has very good performance
+in our limited simulation settings and real data application, and clearly the superior
+one when data is high dimension or is heavy-tailed.
+
+Besides no modeling assumption is required, our proposed method is robust against data set 
+with variance heterogeneity, unequal number of observations, non-Gaussian noise and high-dimension. 
+Such robustness is important in practice because for any given data, it's hard to tell whether
+its clusters have different number of observations, is the variance equal for each cluster,
+or what underlying noise distribution it has. The weakness of our proposed method is 
+that its theory assumes only week correlation between ``predictor'' columns and ``response'' 
+columns. In practice, many data sets don't exhibit high correlations between columns, where
+our proposed method can be safely applied. In case the high correlation does exist, some procedure
+such as rotating the data set and/or leave out most columns for clustering may be used to
+reduce its effect as previously mentioned. However, the theory for those procedure have not
+been fully developed and it could be the future research topic. 
+
+Another situation where our proposed method cannot be directly used is when the clusters 
+are non-convex. In such situation, $k$-means itself doesn't work well, for example two 
+concentric circles share the same cluster center \citep{hastie2009elements}. However, it's 
+possible that our proposed Gabriel CV method can be used on the transformed data set. In the
+concentric circles case where spectral clustering is appropriate, our proposed method can be applied 
+on the eigenvector subspace of the graph Laplacian matrix inside the spectral clustering algorithm
+to find the optimal $k$. This can also be the future research topic. 
+
 \clearpage
 
 \section*{\textbf{APPENDIX}}
