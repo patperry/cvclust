@@ -708,11 +708,23 @@ Although the condition given by Proposition $2$ is succinct in such that it's st
 the structure of covariance matrix $\Sigma_{XY}$ affects the performance of Gabriel CV method, it's not simple and easy to interpret such condition as the one in Proposition $1$. In specific, each block of matrix $\Sigma_{XY}$ influences the condition while the combined effect
 determines whether Gabriel CV method chooses $k=1$ or $k=2$.
 
-In practice, one can check such condition using estimated sample covariance matrix for single cluster case. 
-If such condition doesn't met, one solution is rotating the matrix to eliminate the correlation between each dimension then perform Gabriel CV method on the rotated data matrix. Another empirically observed solution is 
-to leave most columns for clustering, i.e. increase the dimension of $\Sigma_{YY}$. Such solution is especially 
-useful for data containing multiple clusters, where neither estimating sample covariance matrices nor
-rotating to eliminate correlation is feasible. Although the theory for such solution is available for special cases,
+In practice, check such condition is tricky. One need to know the covariance matrix of each cluster to check if the condition holds. However, in order to estimate the covariance matrix we need to know the cluster center of each cluster, which in turn need to know the number of clusters in the data. A possible solution is following
+\begin{enumerate}
+	\item For parameter $k$ starts at $k=1$ do the following
+	\begin{enumerate}[label=(\roman*)]
+		\item Estimate $k$ cluster centers by applying $k$-means with parameter $k$
+		\item Estimate the covariance matrix $\hat{\Sigma}$ for each cluster 
+		\item Check the condition for each $\hat{\Sigma}$
+		\item If the the condition doesn't hold, rotate that cluster through 
+		rotation matrix $R^T$, where $\hat{\Sigma} = RLR^T$ 
+		\item Apply previously proposed Gabriel CV method on the rotated data, get estimated number $k^*$
+	\end{enumerate}
+	\item If $k^* = k$, stop the algorithm and return $k$; otherwise repeat step $1$ for parameter $k+1$
+\end{enumerate}
+from which we can see the condition checking step can not be separated from the proposed Gabriel CV method.
+Another empirically observed solution is to leave out most columns for clustering, i.e. increase the 
+dimension of $\Sigma_{YY}$. Such method is observed reducing the impact of correlation on the performance 
+of the proposed method. Although the theory for such solution is available for special cases,
 its general version hasn't been developed.    
 
 \subsection{Two Clusters}
