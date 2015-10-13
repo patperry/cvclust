@@ -1,5 +1,7 @@
 
 Raw <- read.csv("Raw_result.csv")
+## "Group" column accidently deleted from above data file
+Raw$Group <- rep(1:(31*31),each=10)
 
 Number <- rep(NA,30*30)
 X_ax <- rep(NA,30*30)
@@ -15,8 +17,7 @@ library(plotrix)
 
 pdf("color_plot.pdf")
 
-plot(X_ax,Y_ax,col=color.scale(-Number,c(2,1,0),c(0,2,4),c(3,5,6)),main="Red presents high value",
-pch=16,cex=2,xlab="U_x", ylab="U_y")
+plot(X_ax,Y_ax,col=color.scale(-Number,c(2,1,0),c(0,2,4),c(3,5,6)),pch=16,cex=2,xlab="U_x", ylab="U_y")
 ##-----------------------------------------------
 
 YtoX <- function(U_y){
