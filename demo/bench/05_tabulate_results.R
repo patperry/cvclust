@@ -29,6 +29,7 @@ method.names <- list(
     "Stab" = "Stability",
 #    "gabriel-nearest-2x2" = "Gabriel CV ($2 \\times 2$)",
     "gabriel-nearest-5x2" = "Gabriel CV",
+    "gabriel-rot-5x2" = "Gabriel CV (Rot)",
 #    "gabriel-lda-equal-2x2" = "Gabriel CV (LDA Equal; $2 \\times 2$)",
 #    "gabriel-lda-equal-5x2" = "Gabriel CV (LDA Equal; $5 \\times 2$)",
 #    "gabriel-lda-proportion-2x2" = "Gabriel (CV LDA Prop.; $2 \\times 2$)",

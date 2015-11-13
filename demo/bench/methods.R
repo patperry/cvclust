@@ -24,6 +24,23 @@ methods <- list(
                                 classify.method="nearest")
         cv$centers
     },
+    "gabriel-rot-5x2" = function(x, maxcenters) {
+        # generate a random rotation
+        dim <- ncol(x)
+        z <- matrix(rnorm(dim * dim), dim, dim)
+        qr <- qr(z)
+        q <- qr.Q(qr)
+        sign <- sample(c(-1, 1), dim, replace=TRUE)
+        rot <- q %*% diag(sign, dim)
+
+        # rotate the columns of the data matrix
+        x_rot <- x %*% rot
+
+        # apply Gabriel CV to rotated data
+        cv <- cv.kmeans.gabriel(x_rot, 2, 2, maxcenters,
+                                classify.method="nearest")
+        cv$centers
+    },
     "gabriel-nearest-5x2" = function(x, maxcenters) {
         cv <- cv.kmeans.gabriel(x, 5, 2, maxcenters,
                                 classify.method="nearest")
