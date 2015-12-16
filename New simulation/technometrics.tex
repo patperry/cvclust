@@ -280,14 +280,23 @@ existing methods in high-dimension settings and heavy-tailed data. Since the
 embedded cross-validation procedure is well understood, it also makes our
 method potentially easily to be extended in future study. 
 
-Among all the proposed methods, very few provide theoretical consistency result for choosing $k$. 
+Some proposed methods provide theoretical consistency result for choosing $k$. 
 Assume data is a mixture of $G$ $p$-dimension clusters with equal prior, identically distributed with 
 common covariance matrix and finite fourth moments in each dimension, \citet{sugar2003finding} shows
 the Jump method will pick the correct $k$ under the conditions that cluster centers are sufficiently
-separated and an appropriate transformation is used. \cite{tibshirani2005cluster} proved that the prediction 
-strength method is consistent under the setting that the $k$ clusters are uniformly distributed on $k$ unit balls
-in $p$-dimension, with pairwise distance of centers are at least four. 
+separated and an appropriate transformation is used. Specifically, let $\Delta\sqrt{p}$ denotes the 
+minimum Euclidean distance between cluster centers, \citet{sugar2003finding} shows that the jump will
+be maximized at $k=G$ given that $\Delta > 6$ and the existence of a positive $Y$ such that
+\[	\left(\frac{p\Delta^2W}{9G}\right)^{-Y}+\left(W\left[\frac{2^{2H^*(X)}}{K^2_{max}2\pi e}\right]-(\frac{\Delta}{6})^2(1-W) \right)^{-Y} < 2	\]
+and $\left(\frac{p\Delta^2W}{9G}\right)^{-Y} <1/2$, where $H^*(X)$ is the minimum entropy of the cluster 
+membership over each dimension and $W =1- \frac{6^4V_{\mathbf{X}}}{(\Delta^2-36)^2}$ with $V_{\mathbf{X}} = var\left( 1/p ||\mathbf{X}-\mu_j||^2_{\Gamma^{-1}} \mid \mathbf{X} \hspace{0.05in}\text{in jth cluster}\right)$
 
+\cite{tibshirani2005cluster} proved that the prediction strength method is consistent under the setting 
+that the observations in $p$-dimension are uniformly distributed within one unit from their respective cluster centers, with minimum distance between the $G$ cluster centers is four unit. Under such well-separated setting, 
+they show that 
+\[ ps(G) = 1+ \OhP(1), \hspace{0.5in} \underset{k \geq G+1}{\text{sup}} ps(k)\leq \frac{2}{3}+ \OhP(1) \]
+therefore $\hat{k}$ is consistent in estimating $G$.  
+When data does come from mixture of Gaussian distribution, the model-based method of \citet{fraley2002model} is consistent in estimating $k$ in low dimension.
 
 \section{Cross-validation for selecting the number of clusters}
 \label{sec:meth}
@@ -841,10 +850,22 @@ with a basket of existing methods including Gap statistics
 statistics \citep{hartigan1975clustering}, Jump method
 \citep{sugar2003finding}, Prediction strength \citep{tibshirani2005cluster},
 Bootstrap stability \citep{fang2012selection} in following simulation
-settings. We select $p=q$ and $5-$fold cross-validation in row
+settings. All methods are executed with their default parameter settings. 
+We select $p=q$ and $5-$fold cross-validation in row
 ($m=\frac{1}{4}n$) as default parameter setting for our proposed Gabriel
 method. Note that set $p=q$ corresponding to $2-$fold cross-validation in
-column.
+column. Wold method (detailed in Appendix $A$) and correlation-corrected 
+Gabriel method (section $4.3$) are also included for comparison. 
+
+Note that in all settings, cluster centers are randomly generated from 
+multivariate normal distribution $\mathcal{N}\left(\mathbf{0},\varsigma \mathbf{I}\right)$. 
+All clusters are well-separated, i.e. no overlapping. In fact, any simulated 
+clusters with minimum distance less than one unit was discarded, so there is
+clear definition of true number of clusters. The parameters $\varsigma$ is chosen 
+such that about half of the random realization were discarded. The idea is borrowed from
+\cite{tibshirani2001estimating}. The proportion of each method successfully picks the correct
+$k$ out of $100$ simulation trials is reported, along with its corresponding confident interval
+by Wilson's method \citep{wilson1927probable}.
 
 \begin{enumerate}
 
@@ -852,25 +873,24 @@ column.
   	Each cluster has $100$ or $50$
     multivariate normal observations with common covariance matrix $\Sigma$ 
     which has compound symmetric structure with $1$ in diagonal and $\rho$ 
-    off diagonal. For each $\rho$, $100$ data are simulated and the proportion each
-    method successfully picks $k=6$ is reported. $\rho$ takes value in $\{0,0.1,...,0.9\}$.
+    off diagonal. $\rho$ takes value in $\{0,0.1,...,0.9\}$.
 	
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting1/Overlay.pdf}
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting1/Facet.pdf}
 	\label{fig:setting1}
 	\end{figure}
 	
-  \item \textbf{Noise dimensions} --- Three clusters in $6$ dimensions. Each cluster has $100$ or $50$
+  \item \textbf{Noise dimensions} --- Three clusters in $6$ dimensions. Each cluster has $1000$ or $500$
     mean zero multivariate normal observations with identity covariance matrix. 
     We add $P$ dimensions of noise to the data, which is randomly generated from uniform$[0,1]$. The noise
     dimension $P$ takes values in $\{0,6,...,54\}$. 
 	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting2/Overlay.pdf}
-	\label{fig:setting2}
-	\end{figure}
+	%\begin{figure}[H]
+	%\centering
+	%\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting2/Facet.pdf}
+	%\label{fig:setting2}
+	%\end{figure}
 	
   \item \textbf{High dimension} --- Eight clusters in $p$ dimensions, $p$ takes values 
   	in $\{10,20,...,100\}$. Each cluster has $100$ or $50$ mean zero multivariate normal 
@@ -878,7 +898,7 @@ column.
 	
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting3/Overlay.pdf}
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting3/Facet.pdf}
 	\label{fig:setting3}
 	\end{figure}
 	
@@ -892,29 +912,50 @@ column.
 	
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting4/Overlay.pdf}
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting4/Facet.pdf}
 	\label{fig:setting4}
 	\end{figure}
 	
 	\item \textbf{Heavy tail data} --- Five clusters in $15$ dimensions, each has
      $80$ observations in it. Observations have independent $t$ distribution in each dimension  
-     with degree of freedom $\nu$, which takes value in $\{2,3,...,11\}$
+     with degree of freedom $\nu$, which takes value in $\{11,10,...,2\}$
      
 	\begin{figure}[H]
 	\centering
-	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting5/Overlay.pdf}
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting5/Facet.pdf}
 	\label{fig:setting4}
 	\end{figure}
 \end{enumerate}
 
-Note that in all settings above, cluster centers are randomly generated from 
-multivariate normal distribution $\mathcal{N}\left(\mathbf{0},\varsigma \mathbf{I}\right)$. 
-All clusters are well-separated, i.e. no overlapping. In fact, any simulated 
-clusters with minimum distance less than $1$ unit was discarded, so there is
-clear definition of true number of clusters. The parameters $\varsigma$ is chosen 
-such that about half of the random realization were discarded. The idea is borrowed from
-\cite{tibshirani2001estimating}.
+From the graph of setting $1$, we can see high correlation between dimensions cause problem for most 
+existing methods as well as the proposed Gabriel CV method and Wold method. Higher correlation clearly 
+degenerate most algorithms' ability to find the correct $k$ as data no longer spherical in $p$-dimension.
+And the recent proposed methods (Gabriel CV method, Gap statistic, Jump method) seem to be more sensitive to
+high correlation than those old methods such as CH-index and Hartigan statistics. The only two methods 
+work well in high correlation are the Gaussian model-based BIC method \citep{fraley2002model} and the 
+correlation-corrected Gabriel method. 
 
+Plot of setting $3$ shows some methods are insensitive to higher dimension such as Jump method and Gap 
+statistics, while others deteriorate quickly with increasing dimension, most notably the Gaussian 
+model-based BIC method. Note here the data are still generated from mixture of Gaussian. In contrast, our 
+proposed Gabriel CV method as well as its correlation-corrected version actually working better in higher 
+dimension. 
+
+Result of setting $4$ indicates most previously methods are sensitive to variance heterogeneity among 
+clusters, most notably the Gap statistics and model-based BIC method. The proposed Gabriel CV method
+and its correlation-corrected version consistently perform well in estimating $k$ and quite insensitive
+to variance heterogeneity. The Wold method also performs well in this setting.   
+
+The last non-Gaussian setting examines methods' performance in heavy-tail data. With degree of freedom 
+decreases, the tail becomes more flat and the Gaussian assumption becomes more inappropriate. It explains
+the sharp plunge of Gaussian model-based BIC method in the plot. For most methods, their performances are 
+relatively stable until the tail gets very heavy. In case where degree of freedom is $2$, Gap statistics 
+and Jump method dived considerably compare to the Gabriel method and Wold method. 
+
+In conclusion, the proposed Gabriel CV method compares well with current state-of-the-art methods and 
+is very robust against variance heterogeneity, high dimension and heavy-tail data. One weakness of the 
+Gabriel CV method is that it's sensitive to the high correlation among dimensions. In such case, its 
+correlation-corrected version will perform well under the assumption of common covariance structure. 
 
 \section{Real data application}
 We also applied our proposed method to three real world data sets obtained
@@ -997,18 +1038,19 @@ of data through the uniqueness of each cluster center. We proved the self-consis
 for our proposed Gabriel CV method as well as its asymptotic property with Gaussian noise,
 and showed the robustness of our method by simulation. Our method has very good performance
 in our limited simulation settings and real data application, and clearly the superior
-one when data is high dimension or is heavy-tailed.
+one when data has heterogeneous variance or is heavy-tailed.
 
-Besides no modeling assumption is required, our proposed method is robust against data set 
+Besides no strong modeling assumption is required, our proposed method is robust against data set 
 with variance heterogeneity, unequal number of observations, non-Gaussian noise and high-dimension. 
 Such robustness is important in practice because for any given data, it's hard to tell whether
 its clusters have different number of observations, is the variance equal for each cluster,
 or what underlying noise distribution it has. The weakness of our proposed method is 
 that its theory assumes only week correlation between ``predictor'' columns and ``response'' 
 columns. In practice, many data sets don't exhibit high correlations between columns, where
-our proposed method can be safely applied. In case the high correlation does exist, some procedure
-such as rotating the data set and/or leave out most columns for clustering may be used to
-reduce its effect as previously mentioned. However, the theory for those procedure have not
+our proposed method can be safely applied. In case the high correlation does exist, 
+the correlation-corrected version of Gabriel CV method in section $4.3$ can be used if we can 
+assume common covariance structure. Other procedure such as leave out most columns for clustering 
+may also be used to reduce its effect. However, the theory for such procedure has not
 been fully developed and it could be the future research topic. 
 
 Another situation where our proposed method cannot be directly used is when the clusters 

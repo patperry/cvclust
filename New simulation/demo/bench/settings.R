@@ -295,11 +295,13 @@ setting1 <- function(c){
 			list(x=MM$Data, ngroup = 6)
 }
 
-## Para3_6dim = Para.hunt(Dim = 6, C.num = 3, Rho = 0, Obs.num=100, Initial = 5)
-Para3_6dim = 2.9
+###### Para3_6dim = Para.hunt(Dim = 6, C.num = 3, Rho = 0, Obs.num=100, Initial = 5)
+###### Para3_6dim = 2.9
+## Para3_6dim = Para.hunt(Dim = 6, C.num = 3, Rho = 0, Obs.num=1000, Initial = 4)
+Para3_6dim = 3.2375
 
 setting2 <- function(c){
-			MM <- Data_generate(Dim = 6, C.num = 3, Para = Para3_6dim, Rho = 0, Obs.num = 100)
+			MM <- Data_generate(Dim = 6, C.num = 3, Para = Para3_6dim, Rho = 0, Obs.num = 1000)
 			if(c==1){
 				Data.x =  MM$Data
 			}else{
