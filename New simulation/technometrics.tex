@@ -249,7 +249,15 @@ approaches this problem from the prediction point of view. Select model with
 smallest prediction error via cross-validation is one of the simplest and most
 widely used model selection techniques in supervised learning. The lack of
 true class (label) in data set makes the adoption of cross-validation into
-unsupervised leaning problem difficult.
+unsupervised learning problem difficult. A naive algorithm may works as following:
+with the data split by rows into training set and test set, cluster the training 
+data with parameter $k$; then predict each observation in test data by the closest
+cluster center returned in last step. The prediction error is calculated by the 
+difference between the predicted cluster centers and observations' true value, and algorithm 
+picks the $k$ which minimizes such error. Such algorithm will always pick the maximum number 
+of $k$ allowed because more cluster centers means more tight fit to the data space, therefore
+smaller within-cluster dispersion even if the prediction is evaluated on an independent
+test set \citep{hastie2009elements}.
 
 One exception is \cite{tibshirani2005cluster}, which selects the optimal $k$ by prediction
 strength. The strategy is to first cluster the test data and training data
@@ -268,8 +276,7 @@ which makes these methods hard to interpret or compare to other methods through 
 the underlying measures are unique and not well understood. 
  
 The prediction error measure in our proposed method is exactly the same as in supervised learning.
-Our method is a complete data-driven approach which doesn't rely on
-any model assumption. Through novel form of partitioning data set, we effectively 
+Our method is a complete data-driven approach which doesn't rely on strong model assumption. Through novel form of partitioning data set, we effectively 
 transferred an unsupervised learning problem into a supervised leaning problem, which is one of
 the kind. By doing so, we are able to employing the cross-validation procedure in clustering 
 a similar way as in supervised learning problem, so that much of the intuition from supervised learning
@@ -294,9 +301,11 @@ membership over each dimension and $W =1- \frac{6^4V_{\mathbf{X}}}{(\Delta^2-36)
 \cite{tibshirani2005cluster} proved that the prediction strength method is consistent under the setting 
 that the observations in $p$-dimension are uniformly distributed within one unit from their respective cluster centers, with minimum distance between the $G$ cluster centers is four unit. Under such well-separated setting, 
 they show that 
-\[ ps(G) = 1+ \OhP(1), \hspace{0.5in} \underset{k \geq G+1}{\text{sup}} ps(k)\leq \frac{2}{3}+ \OhP(1) \]
+\[ ps(G) = 1+ o_p(1), \hspace{0.5in} \underset{k \geq G+1}{\text{sup}} ps(k)\leq \frac{2}{3}+ o_p(1) \]
 therefore $\hat{k}$ is consistent in estimating $G$.  
 When data does come from mixture of Gaussian distribution, the model-based method of \citet{fraley2002model} is consistent in estimating $k$ in low dimension.
+
+Let $\Psi$ denotes any given base-clustering algorithm (e.g $k$-means), and $\Psi(Z,k)$ the clustering obtained by applying $\Psi$ on data $Z$ with parameter $k$. Also let $k_0$ be the optimal number of cluster and $d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ be the measure of distance between clustering $\Psi(Z_1,k)$ and $\Psi(Z_2,k)$ where $Z_1$ and $Z_2$ are two independent samples from population. \citet{wang2010consistent} shows that their proposed method will consistently select $k = k_0$, given such $k_0$ exists and $d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ converges to zero at proper rate $r_k$. However, $k_0$ is defined as the most stable number for $\Psi$ among all the possible $k$, instead of the number of components in mixture model or well-separated compact regions commonly seen in literature. Therefore, their consistent result actually is convergent result, i.e. the selected $k$ converges to its limit $k_0$ given such limit exists.
 
 \section{Cross-validation for selecting the number of clusters}
 \label{sec:meth}
@@ -642,6 +651,11 @@ $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
 \label{fig:nullcorr-equal}
 \end{figure}
 
+The reason why Gabriel CV method tends to select larger $k$ when correlation is high 
+between dimensions is that it resembles the naive method mentioned in section \ref{sec:intro} 
+under such circumstance. In fact, if $X$, $Y$ are perfectly correlated, Gabriel method is 
+equivalent to the naive method.
+
 Proposition $1$ gives a very simple condition for the Gabriel method to correctly 
 pick $k=1$ with single cluster in $2$ dimensions. The following proposition generalizes
 such condition for data in arbitrary dimension. 
@@ -738,6 +752,54 @@ If we do $2$ fold cross-validation in the column, i.e. $p=q$, then the result in
 under the compound symmetric structure given above, where $\Sigma_{XY}$ has $p+q=2p$ dimension. If $\rho < \rho^*$, then Gabriel CV prefers $CV(1)$ over $CV(2)$ and vice versa. It means the boundary value $\rho^*$ depends on the dimension of $\Sigma_{XY}$ linearly. 
 
 If dimension is $p+q = 2$ with $p=q$, then above boundary condition shows the boundary value $\rho^* = 0.5$, while for dimension $p+q = 100$, the  boundary value $\rho^* = \frac{1}{51}$. However, such value also depends on the ratio of $p$ over $q$. Also in $p+q = 100$ dimension, if we pick $p=2$ and $q=98$ (leave majority of the columns for clustering), the the boundary value $\rho^* \in (\frac{1}{6},\frac{1}{7})$. 
+
+\begin{theorem}
+Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
+of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^2$ is an
+independent draw from a mean-zero multivariate normal distribution with unit
+marginal variances and correlation $\rho$.  In this case, the data are drawn
+from a single cluster; the true number of clusters is~$1$.  If $|\rho| < 0.5$,
+then $\CV(1) < \CV(k)$, $k > 1$ with probability tending to one as $m$ and $n$ increase.
+\end{theorem}
+
+\begin{proof}
+Given $(X_1, Y_1), \dotsc, (X_n, Y_n)$, let $A_k = \{a_1,a_2,...,a_k\}$ denotes the set of cluster centers from applying $k$-means to $\{ Y_i\}_{i=1}^{n}$ with parameter $k$. Because $\{ Y_i\}_{i=1}^{n}$ is symmetric, it's easy to see that the cluster centers are symmetric around $0$, i.e. if $a^* \in A_k$ then $-a^* \in A_k$. The $k$ clusters are symmetric in the same sense. Also, if $k$ is odd, then only one cluster contains both negative and positive $Y$ and it's symmetric with center $0$. The rest have pure positive or negative intervals; if $k$ is even, then all clusters have pure positive or negative intervals. 
+
+Let $a_i$ denotes a cluster center with interval $[b_i, c_i]$. By above argument, either $0 \leq b_i < c_i$ ($b_i < c_i \leq 0$) or $b_i = -c_i$ which corresponding to $a_i=0$ with $k$ be odd. By symmetry, it's sufficient to only consider case $0 \leq b_i < c_i$ (with $a_i > 0 $) and $b_i = -c_i$ (with $a_i = 0 $) with $\rho \geq 0$. 
+
+From joint normality of $X$ and $Y$, it follows that $X \mid Y$ is normal with mean $\rho Y$. Therefore, the mean value $\bar{X}_i$ of $X$ in cluster with $Y$ center $a_i$ is  
+
+\begin{align*}
+	\bar{X}_i &= E[X \mid b_i \leq Y \leq c_i] \\
+			&= E[ E(X \mid Y) \mid b_i \leq Y \leq c_i] \\
+			&= E[\rho Y \mid b_i \leq Y \leq c_i] \\
+			&= \rho E[ Y \mid b_i \leq Y \leq c_i] \\
+			&= \rho a_i
+\end{align*}
+
+That is, the mean values of $X$ in the $k$ clusters is $\{\rho a_1,\rho a_2,...,\rho a_k\}$. Because we assign each observation to the closest $\bar{X}_i$, $i=1,2,...,k$, it's easy to see the corresponding interval on $X$ for $\bar{X}_i = \rho a_i$ is $[\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$, where $a_{i-1}$ and $a_{i+1}$ are the two adjacent centers to $a_i$ on $Y$. Note that $[\frac{ \left( a_{i-1}+a_i\right)}{2}, \frac{\left( a_{i}+a_{i+1}\right)}{2}] = [b_i, c_i]$ by the algorithm definition of $k$-means. The $Y$ center for such interval on $X$ is
+
+\begin{align*}
+	\hat{\mu}^Y_i &= E[Y \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	 &= E[ E(Y \mid X) \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	 &= E[ \rho X \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	 & =  \rho E[X \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	  & =  \rho E[X \mid \rho b_i \leq X \leq \rho c_i] \\
+	  &\leq \rho a_i
+\end{align*}
+
+where the equality holds if $b_i = -c_i$ or $\rho = 1$ on the last step. This is because 
+
+\begin{align*}
+	 E[X \mid \rho b_i \leq X \leq \rho c_i] &= E[Y \mid \rho b_i \leq Y \leq \rho c_i] \\
+	\mathtt{0 \leq b_i < c_i}, \hspace{0.05in} \mathtt{0 \leq \rho \leq 1} \hspace{0.1in} & \leq E[Y \mid b_i \leq Y \leq c_i] \\
+	&= a_i
+\end{align*}
+
+The first equation above is because the same marginal distribution of $X$ and $Y$.  
+
+Note that Gabriel CV method predicts $Y$ to be $a_i$ for $X \in [\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$, and if $k=1$ the predicted $Y = 0$ for all $X$. Hence, to see if $CV(k) > CV(1)$ for  $X \in [\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$, one only need to see if $ a_i-\hat{\mu}^Y_i > \hat{\mu}^Y_i - 0$. Since $ \hat{\mu}^Y_i \leq \rho a_i$, it's clear that $CV(k) > CV(1)$ whenever $\rho < 0.5$. This is true to all segment $[\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] = [\rho b_i, \rho c_i]$ except the one with $b_i = -c_i$, in which $CV(k) = CV(1)$. Since $k>1$ and at most one segment has $CV(k) = CV(1)$ while the rest have $CV(k) > CV(1)$ if $\rho < 0.5$, it is clear that the overall prediction error $CV(k) > CV(1)$. By symmetry, we can see $CV(k) > CV(1)$ if $|\rho| < 0.5$. The proof is complete.
+\end{proof}
 
 \subsection{Two Clusters}
 
@@ -886,11 +948,11 @@ by Wilson's method \citep{wilson1927probable}.
     We add $P$ dimensions of noise to the data, which is randomly generated from uniform$[0,1]$. The noise
     dimension $P$ takes values in $\{0,6,...,54\}$. 
 	
-	%\begin{figure}[H]
-	%\centering
-	%\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting2/Facet.pdf}
-	%\label{fig:setting2}
-	%\end{figure}
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting2/Facet.pdf}
+	\label{fig:setting2}
+	\end{figure}
 	
   \item \textbf{High dimension} --- Eight clusters in $p$ dimensions, $p$ takes values 
   	in $\{10,20,...,100\}$. Each cluster has $100$ or $50$ mean zero multivariate normal 
