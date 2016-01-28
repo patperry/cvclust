@@ -1020,7 +1020,7 @@ Gabriel CV method is that it's sensitive to the high correlation among dimension
 correlation-corrected version will perform well under the assumption of common covariance structure. 
 
 \section{Real data application}
-We also applied our proposed method to three real world data sets obtained
+We also applied our proposed method to three real world data sets, two were obtained
 from the University of California Irvine machine learning repository. The
 first and third data sets are selected because there are clear number of
 clusters in those two data sets. The second data set is used as a benchmark
@@ -1038,16 +1038,9 @@ records, with $124$ democrat and $108$ republican.
 
 The second data set is the well-known Wisconsin breast cancer data set \citep{mangasarian1990pattern}. After excluding the records with missing data, this data set consists records of $683$ patients, each with measurements of nine attributes of their biopsy specimens. It is known that there exist at least two groups of patients: $444$ patients with benign specimens and $239$ patients with malignant specimens.
 
-The third data set is the Sonar data returned from two targets -- a metal
-cylinder and a rock with similar shape, which is first studied by
-\cite{gorman1988analysis} using a neural network. Both targets were impinged
-by pulse which was a wide-band linear FM chirp $(ka = 55.6)$. Returns were
-collected at a range of $10$ meters and obtained from the cylinder at aspect
-angles spanning $90^{\circ}$ and from the rock at aspect angles spanning
-$180^{\circ}$. The data set contains $208$ returns ($111$ cylinder returns and
-$97$ rock returns), with each composed of $60$ spectral samples, normalized to
-take on values between $0$ and $1$. So the data has $60$ features with clearly
-$2$ clusters. 
+
+The third data set is gene expression data of $5$ types of brain tumours from \cite{de2008clustering}, which contains $42$ observations including $10$ medulloblastomas, $10$ malignant gliomas, $10$ atypical teratoid/rhabdoid tumours (AT/RTs), $8$ primitive neuroectodermal tumours (PNETs) and $4$ normal cerebella. It was originally used by \cite{pomeroy2002prediction} to show that medulloblastomas are molecularly distinct from other types of brain tumours. There were $7129$ genes originally, but after feature selection, $1379$ genes left. So the data set is $42 \times 1379$, which serves as a high dimensional example.
+
 
 \begin{table}[H]
 \begin{center}
@@ -1055,16 +1048,17 @@ $2$ clusters.
 \caption{\label{table2} Number of clusters selected by each algorithm}
 \begin{tabular}{lccccc}
     \hline                  
- & Congress Voting && Breast Cancer && Sonar \\ \hline                    
+ & Congress Voting && Breast Cancer && Brain Tumours \\ \hline                    
 CH-index & $2$ && $2$  && $2$    \\
-Hartigan & $3$ && $3$  &&  $3$   \\
-Jump & $9$ && $9$ && $10$  \\   
+Hartigan & $3$ && $3$  &&  $4$   \\
+Jump & $10$ && $9$ && $1$  \\   
 Prediction strength & $2$ &&  $2$ && $1$    \\
-Bootstrap stability & $2$ &&  $2$ &&  $10$   \\ 
-Gap & $10$ && $9$ && $10$  \\   
-Gaussian-Mix & $7$ && $5$ && $1$  \\   
-Gabriel & $2$  && $3$  && $2$  \\    
-Wold & $2$ && $3$ && $10$ \\  \hline 
+Bootstrap stability & $2$ &&  $2$ &&  $7$   \\ 
+Gap & $8$ && $10$ && $10$  \\   
+Gaussian-Mix & $2$ && $5$ && $2$  \\   
+Gabriel & $2$  && $3$  && $5$  \\    
+Wold & $2$ && $3$ && $4$ \\  \hline 
+
 \end{tabular}
 \end{center}
 \hspace{0.5in} \footnotesize {All the algorithms executed with their default parameter settings with $k$ ranges from $1$ to $10$}
@@ -1082,11 +1076,12 @@ it's known to have at least $2$ cluster based on whether it's benign specimens
 or not. But it doesn't mean the optimal $k$ should be $2$.
 \cite{fujita2014non} noticed that the malign group is quite heterogeneous and
 can be further clustered into at least two subgroups. Hence, the result $k=3$
-given by our proposed Gabriel method (as well as Wold method) make sense. For
-the Sonar data set which is relatively high-dimension, only our proposed
-Gabriel method and CH-index selects $k=2$. Majority of the methods collapse to
-either select the maximum or select the minimum number, underline how
-difficult it was to pick the right $k$ when dimension increases. 
+given by our proposed Gabriel method make sense. For
+the brain tumours gene expression data set which is high-dimension, it is also clear that 
+the correct number of clusters should be $5$, each cluster corresponding to one type of 
+brain tumour. From the table we can see only our proposed
+Gabriel method correctly selects $k=5$, underline how
+difficult it was to pick the right $k$ when dimension is high. 
 
 \section{Discussion}
 \label{sec:conc}
