@@ -9,7 +9,7 @@
    library("nnet")
    load_all("../lib/fpc")
    load_all("../lib/NbClust")
-   source("../lib/NbClust.R")
+   #source("../lib/NbClust.R")
    source("../code/classify.R")
    source("../code/cluster.R")
    source("../code/gabriel.R")

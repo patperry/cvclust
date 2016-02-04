@@ -157,25 +157,11 @@ Uncorrelate <- function(Data, K){
 
 Uncorrelate2 <- function(Data,K){
 	Fit <- kmeans(Data, K, nstart = 100)
-	ClusterID <- unique(Fit$cluster)
-	
-	for( j in ClusterID){
-		ID <- which(Fit$cluster == j)
-		DATA <- Data[ID,]
-		Center <- colMeans(DATA)
-		DATA <- DATA - matrix(Center, nrow(DATA), ncol(DATA), byrow= T)
-		if( !exists("Pool") ){
-			Pool <- DATA
-		}else{
-			Pool <- rbind(Pool,DATA)
-		}
-	}
+	Pool <- Data - Fit$center[Fit$cluster,]
 
-	Decomp <- eigen(cov(Pool))
-	Diag_matrix <- Decomp$vectors
-	eigen_value <- sqrt(1/Decomp$values)
-
-	result <- Data%*%Diag_matrix%*%diag(eigen_value)
+	SVD <- svd(Pool)
+	E = 10^(-5)
+	result <- Data%*%SVD$v%*%(diag(1/(SVD$d+E)))
 	result <- Rotate(result)
 
 	return(result)

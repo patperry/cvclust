@@ -1055,8 +1055,9 @@ Jump & $10$ && $9$ && $1$  \\
 Prediction strength & $2$ &&  $2$ && $1$    \\
 Bootstrap stability & $2$ &&  $2$ &&  $7$   \\ 
 Gap & $8$ && $10$ && $10$  \\   
-Gaussian-Mix & $2$ && $5$ && $2$  \\   
+Gaussian-BIC & $2$ && $5$ && $2$  \\   
 Gabriel & $2$  && $3$  && $5$  \\    
+Gabriel-corr-correct & $2$  && $2$  && $5$  \\  
 Wold & $2$ && $3$ && $4$ \\  \hline 
 
 \end{tabular}
@@ -1064,24 +1065,26 @@ Wold & $2$ && $3$ && $4$ \\  \hline
 \hspace{0.5in} \footnotesize {All the algorithms executed with their default parameter settings with $k$ ranges from $1$ to $10$}
 \end{table} 
 
-Since most congressmen vote base on their parties' interest, $2$ parties
+Since most congressmen vote based on their parties' interest, two parties
 (Democratic and Republican) represent two clusters in this data set. So the
 optimal number should be two. Close inspection shows $k$-means with
 $k=2$ separates the two parties very well with the lowest miss-classification
-error $10.43\%$ ($k=3$ has $14.78\%$). Note that CH-index and Bootstrap
+error $10.43\%$ ($k=3$ has $14.78\%$). Our proposed Gabriel CV method, along with 
+several other algorithms correctly pick $k=2$ for this data set. Note that CH-index and Bootstrap
 stability also return $k=2$, but $2$ is the lower bound those methods can
 select for $k$. So it's not clear they actually choose $k=2$ or they hit the
-lower bound (they would pick $k=1$ if allowed). For the breast cancer data,
-it's known to have at least $2$ cluster based on whether it's benign specimens
-or not. But it doesn't mean the optimal $k$ should be $2$.
-\cite{fujita2014non} noticed that the malign group is quite heterogeneous and
-can be further clustered into at least two subgroups. Hence, the result $k=3$
-given by our proposed Gabriel method make sense. For
-the brain tumours gene expression data set which is high-dimension, it is also clear that 
+lower bound (they would pick $k=1$ if allowed). 
+
+For the breast cancer data, it's known to have $2$ clusters based on 
+whether it's benign specimens or malignant specimens. Although the proposed Gabriel method
+picks $k=3$, its correlation-corrected version correctly picks $k=2$. It shows the necessity 
+to correct for the high correlation among data features. However, for this data $k=3$ is also
+an acceptable answer, as \cite{fujita2014non} noticed that the malign group is quite heterogeneous and
+can be further clustered into at least two subgroups.
+
+The brain tumours gene expression data is a typical high-dimension data with $p > n$. It is clear that 
 the correct number of clusters should be $5$, each cluster corresponding to one type of 
-brain tumour. From the table we can see only our proposed
-Gabriel method correctly selects $k=5$, underline how
-difficult it was to pick the right $k$ when dimension is high. 
+brain tumour. From table \ref{table2} we can see only our proposed Gabriel method (as well as its correlation-corrected version) correctly selects $k=5$, underline how difficult it was to pick the right $k$ when dimension is high. 
 
 \section{Discussion}
 \label{sec:conc}
