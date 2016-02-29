@@ -249,7 +249,15 @@ approaches this problem from the prediction point of view. Select model with
 smallest prediction error via cross-validation is one of the simplest and most
 widely used model selection techniques in supervised learning. The lack of
 true class (label) in data set makes the adoption of cross-validation into
-unsupervised leaning problem difficult.
+unsupervised learning problem difficult. A naive algorithm may works as following:
+with the data split by rows into training set and test set, cluster the training 
+data with parameter $k$; then predict each observation in test data by the closest
+cluster center returned in last step. The prediction error is calculated by the 
+difference between the predicted cluster centers and observations' true value, and algorithm 
+picks the $k$ which minimizes such error. Such algorithm will always pick the maximum number 
+of $k$ allowed because more cluster centers means more tight fit to the data space, therefore
+smaller within-cluster dispersion even if the prediction is evaluated on an independent
+test set \citep{hastie2009elements}.
 
 One exception is \cite{tibshirani2005cluster}, which selects the optimal $k$ by prediction
 strength. The strategy is to first cluster the test data and training data
@@ -268,8 +276,7 @@ which makes these methods hard to interpret or compare to other methods through 
 the underlying measures are unique and not well understood. 
  
 The prediction error measure in our proposed method is exactly the same as in supervised learning.
-Our method is a complete data-driven approach which doesn't rely on
-any model assumption. Through novel form of partitioning data set, we effectively 
+Our method is a complete data-driven approach which doesn't rely on strong model assumption. Through novel form of partitioning data set, we effectively 
 transferred an unsupervised learning problem into a supervised leaning problem, which is one of
 the kind. By doing so, we are able to employing the cross-validation procedure in clustering 
 a similar way as in supervised learning problem, so that much of the intuition from supervised learning
@@ -279,6 +286,26 @@ application shows the superior performance of our proposed method compare with
 existing methods in high-dimension settings and heavy-tailed data. Since the
 embedded cross-validation procedure is well understood, it also makes our
 method potentially easily to be extended in future study. 
+
+Some proposed methods provide theoretical consistency result for choosing $k$. 
+Assume data is a mixture of $G$ $p$-dimension clusters with equal prior, identically distributed with 
+common covariance matrix and finite fourth moments in each dimension, \citet{sugar2003finding} shows
+the Jump method will pick the correct $k$ under the conditions that cluster centers are sufficiently
+separated and an appropriate transformation is used. Specifically, let $\Delta\sqrt{p}$ denotes the 
+minimum Euclidean distance between cluster centers, \citet{sugar2003finding} shows that the jump will
+be maximized at $k=G$ given that $\Delta > 6$ and the existence of a positive $Y$ such that
+\[	\left(\frac{p\Delta^2W}{9G}\right)^{-Y}+\left(W\left[\frac{2^{2H^*(X)}}{K^2_{max}2\pi e}\right]-(\frac{\Delta}{6})^2(1-W) \right)^{-Y} < 2	\]
+and $\left(\frac{p\Delta^2W}{9G}\right)^{-Y} <1/2$, where $H^*(X)$ is the minimum entropy of the cluster 
+membership over each dimension and $W =1- \frac{6^4V_{\mathbf{X}}}{(\Delta^2-36)^2}$ with $V_{\mathbf{X}} = var\left( 1/p ||\mathbf{X}-\mu_j||^2_{\Gamma^{-1}} \mid \mathbf{X} \hspace{0.05in}\text{in jth cluster}\right)$
+
+\cite{tibshirani2005cluster} proved that the prediction strength method is consistent under the setting 
+that the observations in $p$-dimension are uniformly distributed within one unit from their respective cluster centers, with minimum distance between the $G$ cluster centers is four unit. Under such well-separated setting, 
+they show that 
+\[ ps(G) = 1+ o_p(1), \hspace{0.5in} \underset{k \geq G+1}{\text{sup}} ps(k)\leq \frac{2}{3}+ o_p(1) \]
+therefore $\hat{k}$ is consistent in estimating $G$.  
+When data does come from mixture of Gaussian distribution, the model-based method of \citet{fraley2002model} is consistent in estimating $k$ in low dimension.
+
+Let $\Psi$ denotes any given base-clustering algorithm (e.g $k$-means), and $\Psi(Z,k)$ the clustering obtained by applying $\Psi$ on data $Z$ with parameter $k$. Also let $k_0$ be the optimal number of cluster and $d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ be the measure of distance between clustering $\Psi(Z_1,k)$ and $\Psi(Z_2,k)$ where $Z_1$ and $Z_2$ are two independent samples from population. \citet{wang2010consistent} shows that their proposed method will consistently select $k = k_0$, given such $k_0$ exists and $d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ converges to zero at proper rate $r_k$. However, $k_0$ is defined as the most stable number for $\Psi$ among all the possible $k$, instead of the number of components in mixture model or well-separated compact regions commonly seen in literature. Therefore, their consistent result actually is convergent result, i.e. the selected $k$ converges to its limit $k_0$ given such limit exists.
 
 \section{Cross-validation for selecting the number of clusters}
 \label{sec:meth}
@@ -624,6 +651,11 @@ $\rho < 0.5$; the criterion chooses $k = 2$ clusters whenever $|\rho| > 0.5$.}
 \label{fig:nullcorr-equal}
 \end{figure}
 
+The reason why Gabriel CV method tends to select larger $k$ when correlation is high 
+between dimensions is that it resembles the naive method mentioned in section \ref{sec:intro} 
+under such circumstance. In fact, if $X$, $Y$ are perfectly correlated, Gabriel method is 
+equivalent to the naive method.
+
 Proposition $1$ gives a very simple condition for the Gabriel method to correctly 
 pick $k=1$ with single cluster in $2$ dimensions. The following proposition generalizes
 such condition for data in arbitrary dimension. 
@@ -704,28 +736,70 @@ $||\hat{\mu}^Y_1 - \bar{\mu}^Y_1||^2 > ||\hat{\mu}^Y_1||^2$ or $CV(2) > CV(1)$ i
 \]
 \end{proof}
 
-Although the condition given by Proposition $2$ is succinct in such that it's straight forward to see how
-the structure of covariance matrix $\Sigma_{XY}$ affects the performance of Gabriel CV method, it's not simple and easy to interpret such condition as the one in Proposition $1$. In specific, each block of matrix $\Sigma_{XY}$ influences the condition while the combined effect
-determines whether Gabriel CV method chooses $k=1$ or $k=2$.
+Above equation gives the condition of when Gabriel CV method would correctly choose $k=1$ over $k=2$. Although the expression is succinct, it's not straight forward to see how the structure of covariance matrix $\Sigma_{XY} \in \mathbb{R}^{(p+q) \times (p+q)}$ affects the performance of Gabriel CV method. Here, assuming covariance matrix has compound symmetric structure where only the matrix dimension $p+q$ and $\rho$ are variables, i.e. $$\Sigma_{XY} = \begin{pmatrix}
+1 & \rho & \cdots & \rho \\
+\rho & 1 & \cdots & \rho \\
+\vdots & \vdots & \cdots & \rho \\
+\rho& \rho & \cdots & 1 \\
+\end{pmatrix}
+$$
+we are able to feel what above equation implies for this specific case. Another reason to use the compound symmetric structure covariance matrix is that it's invariant under the permutation of each column vector in the matrix. Given that Gabriel CV method randomly choose $p$ columns as $X$ ($q$ columns as $Y$), compound symmetric structure insures that the covariance matrix $\Sigma_{XY}$ always look the same no matter which $p$ columns selected as $X$.  
 
-In practice, check such condition is tricky. One need to know the covariance matrix of each cluster to check if the condition holds. However, in order to estimate the covariance matrix we need to know the cluster center of each cluster, which in turn need to know the number of clusters in the data. A possible solution is following
-\begin{enumerate}
-	\item For parameter $k$ starts at $k=1$ do the following
-	\begin{enumerate}[label=(\roman*)]
-		\item Estimate $k$ cluster centers by applying $k$-means with parameter $k$
-		\item Estimate the covariance matrix $\hat{\Sigma}$ for each cluster 
-		\item Check the condition for each $\hat{\Sigma}$
-		\item If the the condition doesn't hold, rotate that cluster through 
-		rotation matrix $R^T$, where $\hat{\Sigma} = RLR^T$ 
-		\item Apply previously proposed Gabriel CV method on the rotated data, get estimated number $k^*$
-	\end{enumerate}
-	\item If $k^* = k$, stop the algorithm and return $k$; otherwise repeat step $1$ for parameter $k+1$
-\end{enumerate}
-from which we can see the condition checking step can not be separated from the proposed Gabriel CV method.
-Another empirically observed solution is to leave out most columns for clustering, i.e. increase the 
-dimension of $\Sigma_{YY}$. Such method is observed reducing the impact of correlation on the performance 
-of the proposed method. Although the theory for such solution is available for special cases,
-its general version hasn't been developed.    
+If we do $2$ fold cross-validation in the column, i.e. $p=q$, then the result in Proposition $2$ implies that the boundary value of $\rho$ is 
+\[
+	\rho^* = \frac{1}{p+1}
+\]
+under the compound symmetric structure given above, where $\Sigma_{XY}$ has $p+q=2p$ dimension. If $\rho < \rho^*$, then Gabriel CV prefers $CV(1)$ over $CV(2)$ and vice versa. It means the boundary value $\rho^*$ depends on the dimension of $\Sigma_{XY}$ linearly. 
+
+If dimension is $p+q = 2$ with $p=q$, then above boundary condition shows the boundary value $\rho^* = 0.5$, while for dimension $p+q = 100$, the  boundary value $\rho^* = \frac{1}{51}$. However, such value also depends on the ratio of $p$ over $q$. Also in $p+q = 100$ dimension, if we pick $p=2$ and $q=98$ (leave majority of the columns for clustering), the the boundary value $\rho^* \in (\frac{1}{6},\frac{1}{7})$. 
+
+\begin{theorem}
+Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
+of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^2$ is an
+independent draw from a mean-zero multivariate normal distribution with unit
+marginal variances and correlation $\rho$.  In this case, the data are drawn
+from a single cluster; the true number of clusters is~$1$.  If $|\rho| < 0.5$,
+then $\CV(1) < \CV(k)$, $k > 1$ with probability tending to one as $m$ and $n$ increase.
+\end{theorem}
+
+\begin{proof}
+Given $(X_1, Y_1), \dotsc, (X_n, Y_n)$, let $A_k = \{a_1,a_2,...,a_k\}$ denotes the set of cluster centers from applying $k$-means to $\{ Y_i\}_{i=1}^{n}$ with parameter $k$. Because $\{ Y_i\}_{i=1}^{n}$ is symmetric, it's easy to see that the cluster centers are symmetric around $0$, i.e. if $a^* \in A_k$ then $-a^* \in A_k$. The $k$ clusters are symmetric in the same sense. Also, if $k$ is odd, then only one cluster contains both negative and positive $Y$ and it's symmetric with center $0$. The rest have pure positive or negative intervals; if $k$ is even, then all clusters have pure positive or negative intervals. 
+
+Let $a_i$ denotes a cluster center with interval $[b_i, c_i]$. By above argument, either $0 \leq b_i < c_i$ ($b_i < c_i \leq 0$) or $b_i = -c_i$ which corresponding to $a_i=0$ with $k$ be odd. By symmetry, it's sufficient to only consider case $0 \leq b_i < c_i$ (with $a_i > 0 $) and $b_i = -c_i$ (with $a_i = 0 $) with $\rho \geq 0$. 
+
+From joint normality of $X$ and $Y$, it follows that $X \mid Y$ is normal with mean $\rho Y$. Therefore, the mean value $\bar{X}_i$ of $X$ in cluster with $Y$ center $a_i$ is  
+
+\begin{align*}
+	\bar{X}_i &= E[X \mid b_i \leq Y \leq c_i] \\
+			&= E[ E(X \mid Y) \mid b_i \leq Y \leq c_i] \\
+			&= E[\rho Y \mid b_i \leq Y \leq c_i] \\
+			&= \rho E[ Y \mid b_i \leq Y \leq c_i] \\
+			&= \rho a_i
+\end{align*}
+
+That is, the mean values of $X$ in the $k$ clusters is $\{\rho a_1,\rho a_2,...,\rho a_k\}$. Because we assign each observation to the closest $\bar{X}_i$, $i=1,2,...,k$, it's easy to see the corresponding interval on $X$ for $\bar{X}_i = \rho a_i$ is $[\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$, where $a_{i-1}$ and $a_{i+1}$ are the two adjacent centers to $a_i$ on $Y$. Note that $[\frac{ \left( a_{i-1}+a_i\right)}{2}, \frac{\left( a_{i}+a_{i+1}\right)}{2}] = [b_i, c_i]$ by the algorithm definition of $k$-means. The $Y$ center for such interval on $X$ is
+
+\begin{align*}
+	\hat{\mu}^Y_i &= E[Y \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	 &= E[ E(Y \mid X) \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	 &= E[ \rho X \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	 & =  \rho E[X \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
+	  & =  \rho E[X \mid \rho b_i \leq X \leq \rho c_i] \\
+	  &\leq \rho a_i
+\end{align*}
+
+where the equality holds if $b_i = -c_i$ or $\rho = 1$ on the last step. This is because 
+
+\begin{align*}
+	 E[X \mid \rho b_i \leq X \leq \rho c_i] &= E[Y \mid \rho b_i \leq Y \leq \rho c_i] \\
+	\mathtt{0 \leq b_i < c_i}, \hspace{0.05in} \mathtt{0 \leq \rho \leq 1} \hspace{0.1in} & \leq E[Y \mid b_i \leq Y \leq c_i] \\
+	&= a_i
+\end{align*}
+
+The first equation above is because the same marginal distribution of $X$ and $Y$.  
+
+Note that Gabriel CV method predicts $Y$ to be $a_i$ for $X \in [\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$, and if $k=1$ the predicted $Y = 0$ for all $X$. Hence, to see if $CV(k) > CV(1)$ for  $X \in [\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$, one only need to see if $ a_i-\hat{\mu}^Y_i > \hat{\mu}^Y_i - 0$. Since $ \hat{\mu}^Y_i \leq \rho a_i$, it's clear that $CV(k) > CV(1)$ whenever $\rho < 0.5$. This is true to all segment $[\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] = [\rho b_i, \rho c_i]$ except the one with $b_i = -c_i$, in which $CV(k) = CV(1)$. Since $k>1$ and at most one segment has $CV(k) = CV(1)$ while the rest have $CV(k) > CV(1)$ if $\rho < 0.5$, it is clear that the overall prediction error $CV(k) > CV(1)$. By symmetry, we can see $CV(k) > CV(1)$ if $|\rho| < 0.5$. The proof is complete.
+\end{proof}
 
 \subsection{Two Clusters}
 
@@ -818,7 +892,17 @@ times (out of $10$ replicates) when $k=2$ is selected by the algorithm in stead 
 \caption{Number of times $k=2$ is selected out of $10$ replicates for each pair of $(\muX, \muY)$. The heat map shows the frequency $k=2$ is selected by the algorithm, with light means low number (of $k=2$) is selected and dark color means high number is selected. The black line is the theoretical curve, above which the algorithm suppose to pick $k=2$ and below which algorithm select $k=1$.  }
 \label{fig:overlap-color_plot}
 \end{figure}
-%----------------------------------------------------------------
+
+\subsection{Correlation adjustment for Gabriel method}
+When the correlation between dimensions are high, the proposed Gabriel CV method tends to overestimate the number $k$. A simply remedy for the high correlation is available if we assume common covariance structure among the $k$ clusters. 
+\begin{enumerate}
+	\item Apply Gabriel CV method on the original data $\dataX$, get estimated number of cluster $\hat{k}$
+	\item Estimate the pooled covariance matrix $\hat{\Sigma}$ from the $\hat{k}$ clusters.
+	\item Let $\hat{\Sigma} = \Gamma\Lambda\Gamma'$ be the Eigendecomposition of $\hat{\Sigma}$, we rescale and rotate the original data $\dataX$ to get $ \widetilde{\dataX} = \dataX\Gamma\Lambda^{-1/2}Q$, where $Q$ is a random  orthonormal rotation matrix. 
+	\item Apply Gabriel CV method again on the transformed data $ \widetilde{\dataX}$ to estimate $k$. 
+\end{enumerate}
+ 
+
 \section{Simulation}
 In this section, simulation is performed to evaluate the performance of our
 proposed methods in locating the ``correct" number of clusters. We compare
@@ -828,134 +912,115 @@ with a basket of existing methods including Gap statistics
 statistics \citep{hartigan1975clustering}, Jump method
 \citep{sugar2003finding}, Prediction strength \citep{tibshirani2005cluster},
 Bootstrap stability \citep{fang2012selection} in following simulation
-settings. We select $p=q$ and $5-$fold cross-validation in row
+settings. All methods are executed with their default parameter settings. 
+We select $p=q$ and $5-$fold cross-validation in row
 ($m=\frac{1}{4}n$) as default parameter setting for our proposed Gabriel
 method. Note that set $p=q$ corresponding to $2-$fold cross-validation in
-column.
+column. Wold method (detailed in Appendix $A$) and correlation-corrected 
+Gabriel method (section $4.3$) are also included for comparison. 
+
+Note that in all settings, cluster centers are randomly generated from 
+multivariate normal distribution $\mathcal{N}\left(\mathbf{0},\varsigma \mathbf{I}\right)$. 
+All clusters are well-separated, i.e. no overlapping. In fact, any simulated 
+clusters with minimum distance less than one unit was discarded, so there is
+clear definition of true number of clusters. The parameters $\varsigma$ is chosen 
+such that about half of the random realization were discarded. The idea is borrowed from
+\cite{tibshirani2001estimating}. The proportion of each method successfully picks the correct
+$k$ out of $100$ simulation trials is reported, along with its corresponding confident interval
+by Wilson's method \citep{wilson1927probable}.
 
 \begin{enumerate}
-  \item Single cluster in $10$ dimensions --- $200$ observations, each
-    observation uniformly distributed over $[0,1]$ in each dimension. 
-  \item Two clusters in $4$ dimensions --- $50$ i.i.d
-    observations are generated from both multivariate normal
-    $\mathcal{N}\left(\mu_1,0.5\Sigma\right)$ and multivariate normal
-    $\mathcal{N}\left(\mu_2,1.5\Sigma\right)$, where 
-    cluster center $\mu_1 = (1,0,0,1)$ and $\mu_2 =(1,3.5,3.5,1)$
-    respectively. $\Sigma$ has $AR(1)$ structure with $\rho=-0.2$ and $\sigma=1$.
-  \item Four clusters in $100$ dimensions ---  Each cluster has $100$ or $150$
-    i.i.d standard normal observations, with cluster centers randomly
-    generated from multivariate normal distribution
-    $\mathcal{N}\left(\mathbf{0},0.65^2\mathbf{I}\right)$
-  \item Ten clusters in $100$ dimensions ---  Each cluster has $50$ or $100$
-    i.i.d standard normal observations, with cluster centers randomly
-    generated from multivariate normal distribution
-    $\mathcal{N}\left(\mathbf{0},0.72^2\mathbf{I}\right)$
-  \item Four log-normal clusters in $16$ dimensions --- For each cluster, $30$
-    or $60$ i.i.d centered log-normal observations are generated from
-    $ln\mathcal{N}\left(0,0.5^2 \right)$. The cluster centers are randomly
-    generated from multivariate normal distribution
-    $\mathcal{N}\left(\mathbf{0},1.2^2\mathbf{I}\right)$
-  \item[6.] Three exponential clusters in $20$ dimensions with different
-    variance --- $40$ observations in each cluster are generated from centered
-    exponential distribution ($exp(\lambda)-1/\lambda$ in each dimension),
-    with $\boldsymbol\mu$ randomly generated from
-    $\mathcal{N}\left(\mathbf{0},19\mathbf{I}\right)$ and $\lambda = 1, 1/2,
-    1/5$ respectively.
+
+  \item \textbf{Correlation between dimensions} -- Six clusters in $10$ dimensions. 
+  	Each cluster has $100$ or $50$
+    multivariate normal observations with common covariance matrix $\Sigma$ 
+    which has compound symmetric structure with $1$ in diagonal and $\rho$ 
+    off diagonal. $\rho$ takes value in $\{0,0.1,...,0.9\}$.
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting1/Facet.pdf}
+	\label{fig:setting1}
+	\end{figure}
+	
+  \item \textbf{Noise dimensions} --- Three clusters in $6$ dimensions. Each cluster has $1000$ or $500$
+    mean zero multivariate normal observations with identity covariance matrix. 
+    We add $P$ dimensions of noise to the data, which is randomly generated from uniform$[0,1]$. The noise
+    dimension $P$ takes values in $\{0,6,...,54\}$. 
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting2/Facet.pdf}
+	\label{fig:setting2}
+	\end{figure}
+	
+  \item \textbf{High dimension} --- Eight clusters in $p$ dimensions, $p$ takes values 
+  	in $\{10,20,...,100\}$. Each cluster has $100$ or $50$ mean zero multivariate normal 
+  	observations with identity covariance matrix. 
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting3/Facet.pdf}
+	\label{fig:setting3}
+	\end{figure}
+	
+     \item \textbf{Variance heterogeneity} --- Three clusters in $20$ dimensions, each has
+     $60$ observations in it. Observations are generated from 
+     $\mathcal{N}\left(\mathbf{0},\sigma_1^2\mathbf{I}\right)$,
+      $\mathcal{N}\left(\mathbf{0},\sigma_2^2\mathbf{I}\right)$ and
+       $\mathcal{N}\left(\mathbf{0},\sigma_3^2\mathbf{I}\right)$ where 
+       $\sigma_1^2 : \sigma_2^2: \sigma_3^2 = 1:\frac{1+R}{2}:R$. The maximum ratio $R$
+       takes values in $\{1,5,10,...,45\}$
+	
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting4/Facet.pdf}
+	\label{fig:setting4}
+	\end{figure}
+	
+	\item \textbf{Heavy tail data} --- Five clusters in $15$ dimensions, each has
+     $80$ observations in it. Observations have independent $t$ distribution in each dimension  
+     with degree of freedom $\nu$, which takes value in $\{11,10,...,2\}$
+     
+	\begin{figure}[H]
+	\centering
+	\includegraphics[width=5.5in, height=3.3in]{demo/bench/setting5/Facet.pdf}
+	\label{fig:setting4}
+	\end{figure}
 \end{enumerate}
-Note that in setting $2$--$6$, all clusters are well-separated, i.e. no
-overlapping. In fact, any simulated clusters with minimum distance less than
-1 unit was discarded, so there is clear definition of true number of
-clusters. The parameters in setting $2$--$6$ are chosen such that about half of
-the random realization were discarded. The idea is borrowed from
-\cite{tibshirani2001estimating}.
 
-Table \ref{table1} shows the distribution of $k$ selected by each algorithm in 
-each simulation setting. We run $k$ from $1$ to $15$, and the best $k$ within this range
-is selected by the algorithms. NA in the table means algorithm did not converge or otherwise 
-failed. 
-\clearpage
+From the graph of setting $1$, we can see high correlation between dimensions cause problem for most 
+existing methods as well as the proposed Gabriel CV method and Wold method. Higher correlation clearly 
+degenerate most algorithms' ability to find the correct $k$ as data no longer spherical in $p$-dimension.
+And the recent proposed methods (Gabriel CV method, Gap statistic, Jump method) seem to be more sensitive to
+high correlation than those old methods such as CH-index and Hartigan statistics. The only two methods 
+work well in high correlation are the Gaussian model-based BIC method \citep{fraley2002model} and the 
+correlation-corrected Gabriel method. 
 
-\begin{center}
-\footnotesize
-\begin{longtable}{lcccccccccccccccc}
-\captionsetup{justification=centering}
-\caption{\label{table1} Simulation Results}\\
-\toprule
-\phantom{Pred.~Strength}
-  & \multicolumn{16}{c}{Estimated Number of Clusters} \\
-\cmidrule(lr){2-17}
-Method
-  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & NA \\
-\midrule
-\endfirsthead
-\multicolumn{17}{c}%
-  {\tablename\ \thetable\ -- \textit{Continued from previous page}} \\
-\midrule
-\phantom{Pred.~Strength}
-  & \multicolumn{16}{c}{Estimated Number of Clusters} \\
-\cmidrule(lr){2-17}
-Method
-  & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 & 12 & 13 & 14 & 15 & NA \\
-\midrule
-\endhead
-\multicolumn{17}{r}{\textit{Continued on next page}} \\
-\endfoot
-\bottomrule
-\multicolumn{17}{l}{\footnotesize
-  \textsuperscript{$\ast$} CH, Hartigan, and Stability are excluded from
-  Setting~1 because they cannot select $k=1$.
-}
-\endlastfoot
-\input{demo/bench/setting1/results.tex}
-\midrule
-\input{demo/bench/setting2/results.tex}
-\midrule
-\input{demo/bench/setting3/results.tex}
-\midrule
-\input{demo/bench/setting4/results.tex}
-\midrule
-\input{demo/bench/setting5/results.tex}
-\midrule
-\input{demo/bench/setting6/results.tex}
-\end{longtable}
-\end{center}
+Plot of setting $3$ shows some methods are insensitive to higher dimension such as Jump method and Gap 
+statistics, while others deteriorate quickly with increasing dimension, most notably the Gaussian 
+model-based BIC method. Note here the data are still generated from mixture of Gaussian. In contrast, our 
+proposed Gabriel CV method as well as its correlation-corrected version actually working better in higher 
+dimension. 
 
-\noindent
-All methods are used with their default parameter setting except for Gap
-statistics. We selected the $k$  corresponds to the global maximum of gap
-statistics, rather than the default method which selects the smallest $k$ such
-that the gap statistics is not more than 1 standard error away from the first
-local maximum. This is because among all the possible options, the global
-maximum criteria gives the best result in our simulation settings.
+Result of setting $4$ indicates most previously methods are sensitive to variance heterogeneity among 
+clusters, most notably the Gap statistics and model-based BIC method. The proposed Gabriel CV method
+and its correlation-corrected version consistently perform well in estimating $k$ and quite insensitive
+to variance heterogeneity. The Wold method also performs well in this setting.   
 
-For CH-index, Hartigen and Bootstrap stability, the minimum $k$ they can pick is $2$. So they are not
-included for comparison since the true $k=1$. It also demonstrates the difficulty 
-that null scenario poses for some existing algorithms. For those could select $k=1$,
-most of them work well under such setting except for Jump method. Setting $2-4$ have Gaussian
-distribution, where the Gaussian mixture model-based method suppose to
-perform the best. However, it only performs reasonably well in setting $2$. In setting $3$ and $4$,
-it has a very poor performance even if the underlying distribution is indeed
-Gaussian mixture model. It highlights the difficulty that high dimension
-data could cause. Other methods (CH-index, Hartigan, Jump
-method, Prediction strength and Boostrap stability) also have problems in
-these two high-dimension settings as we could not find any one with reasonable
-performance in terms of finding the correct $k$ in both cases. The only exception is
-Gap statistics, which works perfectly in both settings. Our proposed Gabriel method (also Wold
-CV method) clearly stands out from the basket of existing methods under the 
-high-dimension setting $3$ and $4$, as we can see they both perform perfectly under
-such settings. 
+The last non-Gaussian setting examines methods' performance in heavy-tail data. With degree of freedom 
+decreases, the tail becomes more flat and the Gaussian assumption becomes more inappropriate. It explains
+the sharp plunge of Gaussian model-based BIC method in the plot. For most methods, their performances are 
+relatively stable until the tail gets very heavy. In case where degree of freedom is $2$, Gap statistics 
+and Jump method dived considerably compare to the Gabriel method and Wold method. 
 
-Setting $5$ and $6$ corresponding to the situation where data are heavy-tailed
-instead of normal distributed, coupled with unequal number of observations or
-unequal variance for different clusters. From Table \ref{table1}, we can see none of 
-the existing methods has good performance in both settings. In contrast,
-our proposed Gabriel method is robust and has superior performance
-compare with other methods. Because one can hardly tell the underlying
-distribution of data in practice, the resilience to non-Gaussian data gives
-the Gabriel method a clear edge. 
-%----------------------------------------------------------------
+In conclusion, the proposed Gabriel CV method compares well with current state-of-the-art methods and 
+is very robust against variance heterogeneity, high dimension and heavy-tail data. One weakness of the 
+Gabriel CV method is that it's sensitive to the high correlation among dimensions. In such case, its 
+correlation-corrected version will perform well under the assumption of common covariance structure. 
+
 \section{Real data application}
-We also applied our proposed method to three real world data sets obtained
+We also applied our proposed method to three real world data sets, two were obtained
 from the University of California Irvine machine learning repository. The
 first and third data sets are selected because there are clear number of
 clusters in those two data sets. The second data set is used as a benchmark
@@ -973,16 +1038,9 @@ records, with $124$ democrat and $108$ republican.
 
 The second data set is the well-known Wisconsin breast cancer data set \citep{mangasarian1990pattern}. After excluding the records with missing data, this data set consists records of $683$ patients, each with measurements of nine attributes of their biopsy specimens. It is known that there exist at least two groups of patients: $444$ patients with benign specimens and $239$ patients with malignant specimens.
 
-The third data set is the Sonar data returned from two targets -- a metal
-cylinder and a rock with similar shape, which is first studied by
-\cite{gorman1988analysis} using a neural network. Both targets were impinged
-by pulse which was a wide-band linear FM chirp $(ka = 55.6)$. Returns were
-collected at a range of $10$ meters and obtained from the cylinder at aspect
-angles spanning $90^{\circ}$ and from the rock at aspect angles spanning
-$180^{\circ}$. The data set contains $208$ returns ($111$ cylinder returns and
-$97$ rock returns), with each composed of $60$ spectral samples, normalized to
-take on values between $0$ and $1$. So the data has $60$ features with clearly
-$2$ clusters. 
+
+The third data set is gene expression data of $5$ types of brain tumours from \cite{de2008clustering}, which contains $42$ observations including $10$ medulloblastomas, $10$ malignant gliomas, $10$ atypical teratoid/rhabdoid tumours (AT/RTs), $8$ primitive neuroectodermal tumours (PNETs) and $4$ normal cerebella. It was originally used by \cite{pomeroy2002prediction} to show that medulloblastomas are molecularly distinct from other types of brain tumours. There were $7129$ genes originally, but after feature selection, $1379$ genes left. So the data set is $42 \times 1379$, which serves as a high dimensional example.
+
 
 \begin{table}[H]
 \begin{center}
@@ -990,38 +1048,43 @@ $2$ clusters.
 \caption{\label{table2} Number of clusters selected by each algorithm}
 \begin{tabular}{lccccc}
     \hline                  
- & Congress Voting && Breast Cancer && Sonar \\ \hline                    
+ & Congress Voting && Breast Cancer && Brain Tumours \\ \hline                    
 CH-index & $2$ && $2$  && $2$    \\
-Hartigan & $3$ && $3$  &&  $3$   \\
-Jump & $9$ && $9$ && $10$  \\   
+Hartigan & $3$ && $3$  &&  $4$   \\
+Jump & $10$ && $9$ && $1$  \\   
 Prediction strength & $2$ &&  $2$ && $1$    \\
-Bootstrap stability & $2$ &&  $2$ &&  $10$   \\ 
-Gap & $10$ && $9$ && $10$  \\   
-Gaussian-Mix & $7$ && $5$ && $1$  \\   
-Gabriel & $2$  && $3$  && $2$  \\    
-Wold & $2$ && $3$ && $10$ \\  \hline 
+Bootstrap stability & $2$ &&  $2$ &&  $7$   \\ 
+Gap & $8$ && $10$ && $10$  \\   
+Gaussian-BIC & $2$ && $5$ && $2$  \\   
+Gabriel & $2$  && $3$  && $5$  \\    
+Gabriel-corr-correct & $2$  && $2$  && $5$  \\  
+Wold & $2$ && $3$ && $4$ \\  \hline 
+
 \end{tabular}
 \end{center}
 \hspace{0.5in} \footnotesize {All the algorithms executed with their default parameter settings with $k$ ranges from $1$ to $10$}
 \end{table} 
 
-Since most congressmen vote base on their parties' interest, $2$ parties
+Since most congressmen vote based on their parties' interest, two parties
 (Democratic and Republican) represent two clusters in this data set. So the
 optimal number should be two. Close inspection shows $k$-means with
 $k=2$ separates the two parties very well with the lowest miss-classification
-error $10.43\%$ ($k=3$ has $14.78\%$). Note that CH-index and Bootstrap
+error $10.43\%$ ($k=3$ has $14.78\%$). Our proposed Gabriel CV method, along with 
+several other algorithms correctly pick $k=2$ for this data set. Note that CH-index and Bootstrap
 stability also return $k=2$, but $2$ is the lower bound those methods can
 select for $k$. So it's not clear they actually choose $k=2$ or they hit the
-lower bound (they would pick $k=1$ if allowed). For the breast cancer data,
-it's known to have at least $2$ cluster based on whether it's benign specimens
-or not. But it doesn't mean the optimal $k$ should be $2$.
-\cite{fujita2014non} noticed that the malign group is quite heterogeneous and
-can be further clustered into at least two subgroups. Hence, the result $k=3$
-given by our proposed Gabriel method (as well as Wold method) make sense. For
-the Sonar data set which is relatively high-dimension, only our proposed
-Gabriel method and CH-index selects $k=2$. Majority of the methods collapse to
-either select the maximum or select the minimum number, underline how
-difficult it was to pick the right $k$ when dimension increases. 
+lower bound (they would pick $k=1$ if allowed). 
+
+For the breast cancer data, it's known to have $2$ clusters based on 
+whether it's benign specimens or malignant specimens. Although the proposed Gabriel method
+picks $k=3$, its correlation-corrected version correctly picks $k=2$. It shows the necessity 
+to correct for the high correlation among data features. However, for this data $k=3$ is also
+an acceptable answer, as \cite{fujita2014non} noticed that the malign group is quite heterogeneous and
+can be further clustered into at least two subgroups.
+
+The brain tumours gene expression data is a typical high-dimension data with $p > n$. It is clear that 
+the correct number of clusters should be $5$, each cluster corresponding to one type of 
+brain tumour. From table \ref{table2} we can see only our proposed Gabriel method (as well as its correlation-corrected version) correctly selects $k=5$, underline how difficult it was to pick the right $k$ when dimension is high. 
 
 \section{Discussion}
 \label{sec:conc}
@@ -1035,18 +1098,19 @@ of data through the uniqueness of each cluster center. We proved the self-consis
 for our proposed Gabriel CV method as well as its asymptotic property with Gaussian noise,
 and showed the robustness of our method by simulation. Our method has very good performance
 in our limited simulation settings and real data application, and clearly the superior
-one when data is high dimension or is heavy-tailed.
+one when data has heterogeneous variance or is heavy-tailed.
 
-Besides no modeling assumption is required, our proposed method is robust against data set 
+Besides no strong modeling assumption is required, our proposed method is robust against data set 
 with variance heterogeneity, unequal number of observations, non-Gaussian noise and high-dimension. 
 Such robustness is important in practice because for any given data, it's hard to tell whether
 its clusters have different number of observations, is the variance equal for each cluster,
 or what underlying noise distribution it has. The weakness of our proposed method is 
 that its theory assumes only week correlation between ``predictor'' columns and ``response'' 
 columns. In practice, many data sets don't exhibit high correlations between columns, where
-our proposed method can be safely applied. In case the high correlation does exist, some procedure
-such as rotating the data set and/or leave out most columns for clustering may be used to
-reduce its effect as previously mentioned. However, the theory for those procedure have not
+our proposed method can be safely applied. In case the high correlation does exist, 
+the correlation-corrected version of Gabriel CV method in section $4.3$ can be used if we can 
+assume common covariance structure. Other procedure such as leave out most columns for clustering 
+may also be used to reduce its effect. However, the theory for such procedure has not
 been fully developed and it could be the future research topic. 
 
 Another situation where our proposed method cannot be directly used is when the clusters 
