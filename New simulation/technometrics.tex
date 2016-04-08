@@ -1039,7 +1039,11 @@ records, with $124$ democrat and $108$ republican.
 The second data set is the well-known Wisconsin breast cancer data set \citep{mangasarian1990pattern}. After excluding the records with missing data, this data set consists records of $683$ patients, each with measurements of nine attributes of their biopsy specimens. It is known that there exist at least two groups of patients: $444$ patients with benign specimens and $239$ patients with malignant specimens.
 
 
-The third data set is gene expression data of $5$ types of brain tumours from \cite{de2008clustering}, which contains $42$ observations including $10$ medulloblastomas, $10$ malignant gliomas, $10$ atypical teratoid/rhabdoid tumours (AT/RTs), $8$ primitive neuroectodermal tumours (PNETs) and $4$ normal cerebella. It was originally used by \cite{pomeroy2002prediction} to show that medulloblastomas are molecularly distinct from other types of brain tumours. There were $7129$ genes originally, but after feature selection, $1379$ genes left. So the data set is $42 \times 1379$, which serves as a high dimensional example.
+The third data set is gene expression data of $5$ types of brain tumours from \cite{de2008clustering}, which contains $42$ observations including $10$ medulloblastomas, $10$ malignant gliomas, $10$ atypical teratoid/rhabdoid tumours (AT/RTs), $8$ primitive neuroectodermal tumours (PNETs) and $4$ normal cerebella. It was originally used by \cite{pomeroy2002prediction} to show that medulloblastomas are molecularly distinct from other types of brain tumours.
+
+Data was collected with Affymetrix microarrays, which estimates the number of RNA copies found in the cell sample (frozen specimens). Data was preprocessed as following: as a common procedure, all genes with expression level below $10$ are set to a minimum level threshold of $10$. The maximum threshold is set at $16,000$. Values below or above these thresholds are often unreliable. To remove uninformative genes, for each gene $j$ (attribute), the mean $m_j$ among the samples was calculated. The $10\%$ largest and smallest values are discarded in order to remove extreme values. Based on the mean, following transformation is applied on every value $x_{ij}$ of sample $i$ and gene j
+\[	y_{ij} = \log_2 (x_{ij}/m_j)	\] 
+Genes with expression levels differing by at least $l$-flod in at least $c$ samples from their mean expression level across the sample were selected. The parameter $l$ and $c$ were chosen so as to produce a filtered data set with at least $10\%$ of the original number of genes \citep{de2008clustering}. Such preprocessing procedure results in $1379$ genes selected. After filtering step, data is restored in the original scale (i.e. $x_{ij}$). So the data set is $42 \times 1379$, which serves as a high dimensional example.
 
 
 \begin{table}[H]
@@ -1083,8 +1087,10 @@ an acceptable answer, as \cite{fujita2014non} noticed that the malign group is q
 can be further clustered into at least two subgroups.
 
 The brain tumours gene expression data is a typical high-dimension data with $p > n$. It is clear that 
-the correct number of clusters should be $5$, each cluster corresponding to one type of 
-brain tumour. From table \ref{table2} we can see only our proposed Gabriel method (as well as its correlation-corrected version) correctly selects $k=5$, underline how difficult it was to pick the right $k$ when dimension is high. 
+the correct number of clusters should be $5$, the number of brain tumour types. Indeed, $k$-means results with $k=5$ show that the $4$ normal human cerebella are well separated from brain tumours as they form a single cluster.  
+Medulloblastomas, malignant gliomas and AT/RT tumours also form $3$ respective clusters, which means they can be separated from each other. Such results are similar to those found in \cite{pomeroy2002prediction}, whose analysis
+is based on the first $3$ principle components of the original data.    
+From table \ref{table2} we can see only our proposed Gabriel method (as well as its correlation-corrected version) correctly selects $k=5$, underline how difficult it was to pick the right $k$ when dimension is high. 
 
 \section{Discussion}
 \label{sec:conc}
