@@ -38,41 +38,35 @@ for(i in 1:nrow(Test)){
 		Test[i,j] = (Test[i,j]-Mean)/SD
 	}
 }
-################################################################################
-
+############## abandon above ########################################
+##Use processed data
+Yeast <- read.table("yeast3000.txt")
+Test <- as.matrix(Yeast[,2:16])
+#######################################
 set.seed(1)
 K.original <- cv.kmeans.gabriel(Test, 5, 2, maxcenters=40, classify.method="nearest")$centers
 K.original
-DATA_new <- Uncorrelate2(Test,K.original)
 
-K2<- cv.kmeans.gabriel(DATA_new, 5, 2, maxcenters=40, classify.method="nearest")$centers
-K2
+set.seed(0)
+Test2 <- Uncorrelate2(Test,K.original)
+cv.kmeans.gabriel(Test2, 5, 2, maxcenters=40, classify.method="nearest")$centers
 
-####gabriel_cor_correct(Test, maxcenters=40, type = 2)
-#set.seed(1)		
-#Gap <- clusGap(Test, FUN = kmeans, K.max =45)
-#which(Gap[[1]][,3] == max(Gap[[1]][,3]))
-			
-#set.seed(1)	
-#mcluster <- Mclust(Test, G = 20:40)
-#mcluster$G
 ###################################################################################						
 ###==============================================================
-Data <- as.data.frame(Test)
-Data$Gene = Gene
+Data <- Yeast
+names(Data)[1] = "Gene"
+Data$Gene = as.character(Data$Gene)
+Data$Gene <- as.character(lapply(Data$Gene,function(x)substr(x,1,7)))
 
-##set.seed(1)
-##Kfit <- kmeans(Data[,1:15],9, nstart = 100)
-set.seed(12)
-Kfit <- kmeans(DATA_new,5,nstart = 100)
+set.seed(1)
+Kfit <- kmeans(Test,5,nstart = 100)
 Data$Cluster <- Kfit$cluster
 
-Names_cluster <- c("Cluster 1; size=514","Cluster 2; size=583","Cluster 3; size=682","Cluster 4; size=563","Cluster 5; size=603")
-##Names_cluster <- c("Cluster 1; size=467","Cluster 2; size=266","Cluster 3; size=408","Cluster 4; size=358","Cluster 5; size=216","Cluster 6; size=317","Cluster 7; size=315","Cluster 8; size=352","Cluster 9; size=246")
+Names_cluster <- c("Cluster 1; size=550","Cluster 2; size=590","Cluster 3; size=654","Cluster 4; size=634","Cluster 5; size=517")
 
 for(i in 1:5){
- 	Subset <- Data[Data$Cluster==i,1:15];
-	print(nrow(Subset));}
+ 	Subset <- Data[Data$Cluster==i,2:16];
+	print(nrow(Subset));
 	Means = colMeans(Subset);
 	Sds = apply(Subset, 2, sd);
 	Summary <- cbind(rep(Names_cluster[i],15),1:15,unname(Means),unname(Sds))
@@ -81,7 +75,6 @@ for(i in 1:5){
 	}else{
 	  Sum_data = rbind(Sum_data,Summary) 
 	}
-	#plot(1:15,Means,type="l");
 }
 Sum_data<- as.data.frame(Sum_data)
 names(Sum_data) <- c("Cluster","X","Y","Sd")
@@ -93,7 +86,7 @@ Sum_data$Upper = Sum_data$Y+Sum_data$Sd
 Sum_data$Lower = Sum_data$Y-Sum_data$Sd
 
 library(ggplot2)
-pdf("9_clusters.pdf",width=9)
+pdf("5_clusters.pdf",width=9)
 ggplot(Sum_data, aes(X, Y, group = Cluster))+labs(title = "", x = "", y = "")+geom_line(size = 1.3)+facet_wrap(~Cluster,nrow=3)+geom_errorbar(aes(ymax = Upper, ymin=Lower),colour = "black")
 dev.off()
 ##-----------------------------------------------------------
@@ -110,10 +103,11 @@ write.csv(Final, "Final_Yeast.csv")
 Final2 <- read.csv("Final_Yeast.csv")
 Final2$Gene <-as.character(Final2$Gene)
 Final2$Process <-as.character(Final2$Process )
- 
+
+library(plyr)
 reference_table <- ddply(Final2,.(Process),summarise, Total = length(Gene))
 
-SIZE <- c(514,583,682,563,603)
+SIZE <- c(550,590,654,634,517)
 
 for(k in 1:5){
  	subset = Final2[Final2$Cluster==k,]

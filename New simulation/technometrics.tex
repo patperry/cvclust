@@ -1101,9 +1101,9 @@ cdc28-13 cells were synchronized in late G1 phase by heat treatment, and the cel
 
 \cite{dortet2008model} performed model-based clustering on the preprocessed data of \cite{tavazoie1999systematic} and  found $27$ clusters. They classified the $27$ clusters into $3$ major types: cyclic gene clusters, stress gene clusters and the clusters neither cyclically nor sensitive to the induced stress. 
 
-We also applied our proposed Gabriel method on the preprocessed data of \cite{tavazoie1999systematic}. The algorithm finds $9$ clusters. Since the dimensions (time points) are likely to be correlated, we also applied the correlation-corrected version of Gabriel method on the data and find $5$ clusters. Both numbers are much smaller compare to those of \cite{tavazoie1999systematic} and \cite{dortet2008model}. We will focus our analysis on the $5$ clusters case, whose result is summarized in Figure \ref{fig:5_clusters}, where each cluster is presented by the mean expression level of all the genes within that cluster over $15$ time points. Similar as \cite{tavazoie1999systematic}, we found the members of each cluster to be significantly enriched for genes function in similar biological process. Each gene is mapped with the Gene Ontology Annotation in SGD database, which categorizes the genes into $103$ groups in terms of biological process. The $p$-value of observing $k$ genes from a particular category group within a cluster of size $m$ is given by:
+We also applied our proposed Gabriel method on the preprocessed data of \cite{tavazoie1999systematic}. The algorithm found $5$ clusters. Since the dimensions (time points) are likely to be correlated, we also applied the correlation-corrected version of Gabriel method on the data which also result $5$ clusters. This numbers is much smaller compare to those of \cite{tavazoie1999systematic} and \cite{dortet2008model}. We will focus our analysis on this $5$ clusters found by the proposed method, whose result is summarized in Figure \ref{fig:5_clusters}, where each cluster is presented by the mean expression level of all the genes within that cluster over $15$ time points. Similar as \cite{tavazoie1999systematic}, we found the members of each cluster to be significantly enriched for genes function in similar biological process. Each gene is mapped with the Gene Ontology Annotation in SGD database, which categorizes the genes into $103$ groups in terms of biological process. The $p$-value of observing $k$ genes from a particular category group within a cluster of size $m$ is given by:
 \[	P = 1-\sum^{k-1}_{i=1} \frac{{{2945-n}\choose{m-i}}{{n}\choose{i}} }{ {{2945} \choose{m}} }\] 
-where $n$ is the total ORFs in that group. The result is shown in Table \ref{table:enrich}.
+where $n$ is the total ORFs in that group. The enrichment of each category is shown in Table \ref{table:enrich}.
 
 \begin{table}
 \begin{center}
@@ -1113,20 +1113,25 @@ where $n$ is the total ORFs in that group. The result is shown in Table \ref{tab
 \begin{tabular}{cclcl}
 \hline
    Cluster & Cluster size($m$) & Biological process category(total ORFs) & ORFs within category($k$) &$p$-value \\ \hline
-  $1$& $514$ &  DNA repair ($115$)  &  $54$  & $7.5\times10^{-14}$     \\                 
- 	 &     &  cellular response to DNA damage stimulus ($141$)  &  $61$  & $1.7\times10^{-13}$     \\  
- 	 &     &  DNA replication ($77$)  & $41$   &  $4.7\times10^{-13}$   \\  
-  	 &     &  mitotic cell cycle ($169$)  &  $65$  &  $1.8\times10^{-11}$   \\  
- $2$ & $583$ &  transcription from RNA polymerase II promoter ($209$) & $74$ &  $3.0\times10^{-8}$    \\  
-  	 &     & chromatin organization ($147$) & $52$ 	& $4.2\times10^{-6}$    \\  
-  	 &     & mitotic cell cycle ($169$)  & $57$ 	& $7.9\times10^{-6}$  \\  
-  $3$& $682$  &  mitochondrion organization ($193$) & $119$ &  $1.0\times10^{-32}$  \\  
-  	 &     &  mitochondrial translation ($73$) & $57$ 	&  $1.0\times10^{-23}$  \\  
-  	 &     &  generation of precursor metabolites and energy ($104$) &  $45$ & $3.0\times10^{-6}$   \\  
-  $5$& $603$  & cytoplasmic translation ($107$)  &  $93$ &  $1.6\times10^{-51}$   \\  
-     &     &  ribosomal subunit biogenesis $(115)$ & $59$ 	&  $6.1\times10^{-14}$  \\  
-  	 &     &  rRNA processing ($110$) &  $51$	&  $4.3\times10^{-10}$  \\  
-  	 &     &  cellular amino acid metabolic process $121$ &  $52$	&  $8.2\times10^{-9}$  \\  
+ $1$ & $550$  &  response to oxidative stress ($55$)  &    $24$  & $1.5\times10^{-5}$ \\
+     &     &  response to chemical ($213$)    &    $64$     & $2.2\times10^{-5}$\\
+  $2$& $590$  &  mitochondrion organization ($159$) & $79$ &  $1.1\times10^{-16}$  \\  
+  	 &     &  mitochondrial translation ($51$) & $28$ 	&  $2.9\times10^{-8}$  \\  
+  	 &     &  generation of precursor metabolites and energy ($80$) &  $37$ & $7.3\times10^{-8}$   \\  
+ $3$ & $654$ &  transcription from RNA polymerase II promoter ($214$) & $75$ &  $5.5\times10^{-6}$    \\  
+  	 &     & mRNA processing ($67$) & $30$ 	& $2.7\times10^{-5}$    \\  
+  	 &     & mitotic cell cycle ($183$)  & $63$ 	& $6.2\times10^{-5}$  \\ 
+  $4$& $634$  & cytoplasmic translation ($134$)  &  $105$ &  $3.3\times10^{-47}$   \\  
+     &     &  ribosomal subunit biogenesis $(138)$ & $73$ 	&  $7.7\times10^{-17}$  \\  
+  	 &     &  rRNA processing ($131$) &  $61$	&  $5.7\times10^{-11}$  \\  
+  	 &     &  ribosome assembly ($36$) &  $21$	&  $1.5\times10^{-6}$  \\  
+$5$  &   $517$   &  chromosome segregation($106$) &  $53$      &  $6.0\times10^{-15}$ \\
+     &     &  cellular response to DNA damage stimulus ($172$)  &  $71$  & $3.6\times10^{-14}$     \\  
+  	 &     &  DNA repair ($147$)  &  $64$  & $3.7\times10^{-14}$     \\                 
+ 	 &     &  DNA replication ($78$)  & $42$   &  $1.8\times10^{-13}$   \\  
+  	 &     &  mitotic cell cycle ($183$)  &  $70$  &  $4.8\times10^{-12}$   \\  
+ 
+
 
 \hline
 \end{tabular}
@@ -1135,15 +1140,16 @@ where $n$ is the total ORFs in that group. The result is shown in Table \ref{tab
 \hspace{0.5in} \footnotesize {}
 \end{table} 
 
-It turns out that each cluster contains genes that tend to participate in the common processes. It is easy to see that cluster $1$ and $2$ are periodic from Figure \ref{fig:5_clusters}. Indeed, more than $70\%$ genes which function in mitotic cell cycle process are concentrated in these two clusters. Genes participated in the cell-cycle phase related processes such as DNA replication and DNA repair are highly concentrated in cluster $1$. Genes related to budding and cell polarity, as well as chromatin organization and transcription are commonly found in cluster $2$. These cyclic gene clusters are also reported in \cite{tavazoie1999systematic} and \cite{dortet2008model}. In fact, the mean expression profile plot of cluster $1$ resembles those of cluster $2$, $14$ of \cite{tavazoie1999systematic} and cluster $2$, $3$ of \cite{dortet2008model}, while cluster $2$ resembles cluster $7$ of \cite{tavazoie1999systematic}.
+It turns out that each cluster contains genes that tend to participate in the common processes. It is easy to see that cluster $5$ and $3$ are periodic from Figure \ref{fig:5_clusters}. Indeed, more than $70\%$ genes which function in mitotic cell cycle process are concentrated in these two clusters. Genes participated in the cell-cycle phase related processes such as DNA replication and DNA repair are highly concentrated in cluster $5$. Genes related to budding and cell polarity, as well as chromatin organization and transcription are commonly found in cluster $3$. These cyclic gene clusters are also reported in \cite{tavazoie1999systematic} and \cite{dortet2008model}. In fact, the mean expression profile plot of cluster $5$ resembles those of cluster $2$, $14$ of \cite{tavazoie1999systematic} and cluster $2$, $3$ of \cite{dortet2008model}, while cluster $3$ corresponding to cluster $7$ of \cite{tavazoie1999systematic}.
 
-Our analysis also found genes govern mitochondrial translation and mitochondrion organization are heavily concentrated in cluster $3$, while genes related to cytoplasmic translation are highlighted in cluster $5$. Genes encode ribosomes are also overly presented in cluster $5$. Those results are not reported in previous studies, meaning our analysis leads to new discovery of gene grouping. 
+Cluster $1$ concentrates genes that somatize the cell stress, such as oxidative heat-induce proteins. This cluster corresponding to the cluster $5$ and $11$ in \cite{dortet2008model}.
+Our analysis also found genes govern mitochondrial translation and mitochondrion organization are heavily concentrated in cluster $2$, while genes related to cytoplasmic translation are highlighted in cluster $4$. Genes encode ribosomes are also overly presented in cluster $4$. Those results are not reported in previous studies, meaning our analysis leads to new discovery of gene grouping. 
 
-In conclusion, functional grouping of gene occurred in the $5$ clusters found by our proposed method. In particular, the periodic cell cycle related genes are concentrated in cluster 1 and cluster 2, which broadly consistent with the findings in \cite{tavazoie1999systematic} and \cite{dortet2008model}. The number of clusters found by our method is much smaller than the number of clusters used in \cite{tavazoie1999systematic} and \cite{dortet2008model}. However, both studies found that most of their clusters have no characteristics, suggesting overestimate of the underlying diversity of biological expression classes in the data set \citep{tavazoie1999systematic}. Our result is more compact, while still able to identify the functional grouping of genes in clusters highlighted in previous studies.
+In conclusion, functional grouping of gene occurred in the $5$ clusters found by our proposed method. In particular, the periodic cell cycle related genes are concentrated in cluster $5$ and cluster $3$, which broadly consistent with the findings in \cite{tavazoie1999systematic} and \cite{dortet2008model}. The number of clusters found by our method is much smaller than the number of clusters used in \cite{tavazoie1999systematic} and \cite{dortet2008model}. However, both studies found that most of their clusters have no characteristics, suggesting overestimate of the underlying diversity of biological expression classes in the data set \citep{tavazoie1999systematic}. Our result is more compact, while still able to identify the functional grouping of genes in clusters highlighted in previous studies.
 
 	\begin{figure}[H]
 		\centering
-	\includegraphics[width=5.5in, height=3.3in]{wei/5_clusters.pdf}
+	\includegraphics[width=5.5in, height=4in]{wei/5_clusters.pdf}
 	\caption{Yeast data set--mean expression profiles of the 5 clusters found by correlation-corrected Gabriel method}
 	\label{fig:5_clusters}
 	\end{figure}
