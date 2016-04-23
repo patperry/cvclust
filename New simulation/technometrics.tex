@@ -9,6 +9,7 @@
 \usepackage{hyperref}
 %\usepackage{graphicx}
 \usepackage{subfigure}
+\usepackage{threeparttable}
 %\usepackage[margin=2.5cm]{geometry}
 %\usepackage{amsmath}
 \usepackage{footnote}
@@ -1142,12 +1143,17 @@ $5$  &   $517$   &  chromosome segregation($106$) &  $53$      &  $6.0\times10^{
 \hspace{0.5in} \footnotesize {}
 \end{table} 
 
-It turns out that each cluster contains genes that tend to participate in the common processes. It is easy to see that cluster $5$ and $3$ are periodic from Figure \ref{fig:5_clusters}. Indeed, more than $70\%$ genes which function in mitotic cell cycle process are concentrated in these two clusters. Genes participated in the cell-cycle phase related processes such as DNA replication and DNA repair are highly concentrated in cluster $5$. Genes related to budding and cell polarity, as well as chromatin organization and transcription are commonly found in cluster $3$. These cyclic gene clusters are also reported in \cite{tavazoie1999systematic} and \cite{dortet2008model}. In fact, the mean expression profile plot of cluster $5$ resembles those of cluster $2$, $14$ of \cite{tavazoie1999systematic} and cluster $2$, $3$ of \cite{dortet2008model}, while cluster $3$ corresponding to cluster $7$ of \cite{tavazoie1999systematic}.
+It turns out that each cluster contains genes that tend to participate in the common processes. It is easy to see that cluster $5$ and $3$ are periodic from Figure \ref{fig:5_clusters}. Indeed, more than $70\%$ genes which function in mitotic cell cycle process are concentrated in these two clusters. Genes participated in the cell-cycle phase related processes such as DNA replication and DNA repair are highly concentrated in cluster $5$. Genes related to budding and cell polarity, as well as chromatin organization and transcription are commonly found in cluster $3$. These cyclic gene clusters are also reported in \cite{tavazoie1999systematic} and \cite{dortet2008model}.
 
 Cluster $1$ concentrates genes that somatize the cell stress, such as oxidative heat-induce proteins. This cluster corresponding to the cluster $5$ and $11$ in \cite{dortet2008model}.
-Our analysis also found genes govern mitochondrial translation and mitochondrion organization are heavily concentrated in cluster $2$, while genes related to cytoplasmic translation are highlighted in cluster $4$. Genes encode ribosomes are also overly presented in cluster $4$. Those results are not reported in previous studies, meaning our analysis leads to new discovery of gene grouping. 
+Our analysis also found genes govern mitochondrial translation and mitochondrion organization are heavily concentrated in cluster $2$, while genes related to cytoplasmic translation are highlighted in cluster $4$. Genes encode ribosomes are also overly presented in cluster $4$. 
 
-In conclusion, functional grouping of gene occurred in the $5$ clusters found by our proposed method. In particular, the periodic cell cycle related genes are concentrated in cluster $5$ and cluster $3$, which broadly consistent with the findings in \cite{tavazoie1999systematic} and \cite{dortet2008model}. The number of clusters found by our method is much smaller than the number of clusters used in \cite{tavazoie1999systematic} and \cite{dortet2008model}. However, both studies found that most of their clusters have no characteristics, suggesting overestimate of the underlying diversity of biological expression classes in the data set \citep{tavazoie1999systematic}. Our result is more compact, while still able to identify the functional grouping of genes in clusters highlighted in previous studies.
+Our results are well align with the results in \cite{tavazoie1999systematic}, which clustered the data with $k=30$. We prepared a confusion matrix (Table \ref{table:confusion}) to compare our results with those in \cite{tavazoie1999systematic}. In specific, \cite{tavazoie1999systematic} profiled three periodic clusters: cluster $2$, cluster $7$ and cluster $14$, which corresponding to our cluster $3$ and $5$. Indeed, we can easily see from Table \ref{table:confusion} that their cluster $2$ is entirely contained in our cluster $5$, their cluster $7$ is contained in our cluster $3$ and the periodic cluster $14$ is divided into our cluster $3$ and $5$. So their periodic clusters coincide with ours. 
+
+In addition, they also profiled several non-periodic clusters. Among those, their most notable functional grouping cluster $1$ is well contained inside our cluster $4$, their cluster $3$ is also in our cluster $3$ and their cluster $8$ is contained in our cluster $2$
+
+
+In conclusion, functional grouping of gene occurred in the $5$ clusters found by our proposed method. In particular, the periodic cell cycle related genes are concentrated in cluster $5$ and cluster $3$, which consistent with the findings in \cite{tavazoie1999systematic} and \cite{dortet2008model}. The number of clusters found by our method is much smaller than the number of clusters used in \cite{tavazoie1999systematic} and \cite{dortet2008model}. However, both studies found that most of their clusters have no characteristics, suggesting overestimate of the underlying diversity of biological expression classes in the data set \citep{tavazoie1999systematic}. Our result is more compact, while still able to identify the functional grouping of genes in clusters highlighted in previous studies.
 
 	\begin{figure}[H]
 		\centering
@@ -1155,6 +1161,27 @@ In conclusion, functional grouping of gene occurred in the $5$ clusters found by
 	\caption{Yeast data set--mean expression profiles of the 5 clusters found by correlation-corrected Gabriel method}
 	\label{fig:5_clusters}
 	\end{figure}
+
+\begin{table}[H]
+\begin{center}
+\captionsetup{justification=centering}
+\caption{\label{table:confusion} Confusion matrix comparing $5$ clusters to $30$ clusters }
+\begin{threeparttable}
+\begin{tabular}{lccccccc}
+\hline
+   &  Cluster $1$  & Cluster $2$   &  Cluster $3$  &  Cluster $4$ &  Cluster $7$  & Cluster $8$  & Cluster $14$ \\ \hline 
+ Cluster $1$  & $0$  &  $1$  & $0$  &  $0$  & $1$  & $3$  & $0$ \\
+ Cluster $2$  & $0$  &  $0$  & $0$  & $102$ & $10$ & $145$& $1$ \\
+ Cluster $3$  & $1$  &  $0$  & $91$ &  $2$  & $83$ & $0$  & $29$ \\
+ Cluster $4$  & $161$&  $0$  & $11$ &  $66$ & $7$  & $0$  & $6$ \\
+ Cluster $5$  & $2$  & $185$ & $2$  &  $0$  & $0$  & $0$  & $38$ \\ \hline      
+\end{tabular}
+ \begin{tablenotes}[para,flushleft]
+\footnotesize {Only the profiled clusters in \cite{tavazoie1999systematic} are listed here}.
+  \end{tablenotes}
+\end{threeparttable}
+\end{center}
+\end{table} 	
 	
 \section{Discussion}
 \label{sec:conc}
