@@ -64,6 +64,7 @@
 \newcommand{\muY}{\mu^{Y}}
 \newcommand{\bmuX}{\bar \mu^{X}}
 \newcommand{\bmuY}{\bar \mu^{Y}}
+\newcommand{\hmuY}{\hat \mu^{Y}}
 
 % matrices
 \newcommand{\dataX}{\mathfrak{X}}
@@ -463,102 +464,139 @@ for all $i = 1, \dotsc, m+n$.  In particular, this implies that $\bmuY(\hGX_i)
 
 
 
-\section{Analysis of Gabriel cross-validation with Gaussian noise}
+\section{Analysis under Gaussian noise}
 
-\subsection{Single Cluster in two dimensions}
+\subsection{Single cluster in two dimensions}
 
-Now we we analyze the asymptotic performance of Gabriel Cross-Validation, in
-the case of Gaussian noise. Our main result is that with single-cluster
-Gaussian data in two-dimensions, if the predictor and response columns of $\dataX$ are weakly
-correlated or independent, then the method will correctly prefer $k = 1$
-clusters. In section~\ref{} we will generalize this result to 
-cases where $\dataX$ has more than two columns.
-
+Theorem~\ref{thm:self-consistency} tells us that the Gabriel cross-validation
+method recovers the true number of clusters then the noise is negligible.
+While this result gives us some assurance that the procedure is well-behaved,
+we can bolster our confidence and gain insight into its workings by analyzing
+its behavior in the presence of noise.  We first study the case of a single
+cluster in two dimensions with correlated Gaussian noise.
 
 \begin{theorem}
 Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
 of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^2$ is an
 independent draw from a mean-zero multivariate normal distribution with unit
 marginal variances and correlation $\rho$.  In this case, the data are drawn
-from a single cluster; the true number of clusters is~$1$.  If $|\rho| < 0.5$,
-then $\CV(1) < \CV(k)$, $k > 1$ with probability tending to one as $m$ and $n$ increase.
+from a single cluster; the true number of clusters is~$1$.  If $|\rho| < 1/2$,
+and $k > 1$, then $\CV(1) < \CV(k)$ with probability tending to one as $m$
+and $n$ increase.
 \end{theorem}
 
 \begin{proof}
-Given $(X_1, Y_1), \dotsc, (X_n, Y_n)$, let $A_k = \{a_1,a_2,...,a_k\}$
-denotes the set of cluster centers from applying $k$-means to $\{
-Y_i\}_{i=1}^{n}$ with parameter $k$. Because $\{ Y_i\}_{i=1}^{n}$ is
-symmetric, it's easy to see that the cluster centers are symmetric around $0$,
-i.e. if $a^* \in A_k$ then $-a^* \in A_k$. The $k$ clusters are symmetric in
-the same sense. Also, if $k$ is odd, then only one cluster contains both
-negative and positive $Y$ and it's symmetric with center $0$. The rest have
-pure positive or negative intervals; if $k$ is even, then all clusters have
-pure positive or negative intervals. 
+
+Throughout the proof we will assume that $\rho \geq 0$; a similar argument
+holds with minor modification when $\rho < 0$.
 
 
-Let $a_i$ denotes a cluster center with interval $[b_i, c_i]$. By above
-argument, either $0 \leq b_i < c_i$ ($b_i < c_i \leq 0$) or $b_i = -c_i$ which
-corresponding to $a_i=0$ with $k$ be odd. By symmetry, it's sufficient to only
-consider case $0 \leq b_i < c_i$ (with $a_i > 0 $) and $b_i = -c_i$ (with $a_i
-= 0 $) with $\rho \geq 0$. 
+Set $\hGY_1, \dotsc, \hGY_n$ to be the cluster labels gotten from applying
+$k$-means to $Y_1, \dotsc, Y_n$. Denote the cluster means by $\bmuY_1 \leq
+\bmuY_2 \leq \dotsb \leq \bmuY_k$.  Pollard's \citeyearpar{pollard1981strong}
+strong consistency theorem for $k$-means implies that for large $n$, the
+cluster centers are close to population clusters centers $a_1 < a_2 < \dotsb <
+a_k$. Specifically, $\bmuY_j = a_j + \OhP(n^{-1/2})$.  Since the distribution
+of $Y$ is symmetric, the population centers $a_1, a_2, \dotsc, a_k$ are
+symmetric about the origin.
 
 
-From joint normality of $X$ and $Y$, it follows that $X \mid Y$ is normal with
-mean $\rho Y$. Therefore, the mean value $\bar{X}_i$ of $X$ in cluster with
-$Y$ center $a_i$ is  
-
+For $j$ in $1, \dotsc, k$, set
+\[
+  \bmuX_j = \frac{\sum_{i=1}^{n} 1\{ \hGY_i = j \} X_i}
+                 {\sum_{i=1}^{n} 1\{ \hGY_i = j \}}.
+\]
+The classification rule $\hGX$ is defined by
+\(
+  \hGX(X) = \argmin_j \| \bmuX_j - X \|.
+\)
+Denote the boundaries between the population clusters as
+$b_j = (a_j + a_{j+1})/2$ for $j = 1, \dotsc, k-1$.
+Set $b_0 = -\infty$ and $b_k = +\infty$. 
+Then, $\bmuX_j$ is within $\OhP(n^{-1/2})$ of the following expectation:
 \begin{align*}
-	\bar{X}_i &= E[X \mid b_i \leq Y \leq c_i] \\
-			&= E[ E(X \mid Y) \mid b_i \leq Y \leq c_i] \\
-			&= E[\rho Y \mid b_i \leq Y \leq c_i] \\
-			&= \rho E[ Y \mid b_i \leq Y \leq c_i] \\
-			&= \rho a_i
+  \E(X \mid b_j \leq Y \leq b_{j+1})
+    &= \E\{ E(X \mid Y) \mid b_j \leq Y \leq b_{j+1}\} \\
+    &= \E\{ \rho Y \mid b_j \leq Y \leq b_{j+1}\} \\
+    &= \rho \E\{ Y \mid b_j \leq Y \leq b_{j+1}\} \\
+    &= \rho a_j.
 \end{align*}
+That is, $\bmuX_j = \rho a_j + \OhP(n^{-1/2})$. For $j = 1, \dotsc, k-1$,
+the boundary between sample the classification based on $X$ to
+labels $j$ and $j+1$ is
+$(\bmuX_j + \bmuX_{j+1}) /2 = \rho b_j + \OhP(n^{-1/2})$.
 
 
-That is, the mean values of $X$ in the $k$ clusters is $\{\rho a_1,\rho
-a_2,...,\rho a_k\}$. Because we assign each observation to the closest
-$\bar{X}_i$, $i=1,2,...,k$, it's easy to see the corresponding interval on $X$
-for $\bar{X}_i = \rho a_i$ is $[\frac{\rho \left( a_{i-1}+a_i\right)}{2},
-\frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$, where $a_{i-1}$ and $a_{i+1}$
-are the two adjacent centers to $a_i$ on $Y$. Note that $[\frac{ \left(
-a_{i-1}+a_i\right)}{2}, \frac{\left( a_{i}+a_{i+1}\right)}{2}] = [b_i, c_i]$
-by the algorithm definition of $k$-means. The $Y$ center for such interval on
-$X$ is
-
-
+Set $\hGX_i = \hGX(X_i)$.
+The cross-validation error is
 \begin{align*}
-	\hat{\mu}^Y_i &= E[Y \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
-	 &= E[ E(Y \mid X) \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
-	 &= E[ \rho X \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
-	 & =  \rho E[X \mid \frac{\rho \left( a_{i-1}+a_i\right)}{2} \leq X \leq \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}] \\
-	  & =  \rho E[X \mid \rho b_i \leq X \leq \rho c_i] \\
-	  &\leq \rho a_i
+  \CV(k)
+  &= \frac{1}{m} \sum_{i=n+1}^{n+m} \|Y_i - \hat Y_i\|^2
+  \\
+  &= \frac{1}{m} \sum_{i=n+1}^{n+m}
+  \sum_{j=1}^{k} \|Y_i - \bmuY_j\|^2 1\{ \hGX_i = j \}
+  \\
+  &=
+  \sum_{j=1}^{k}
+    \pi_j
+    \E[ \|Y - a_j\|^2 \mid \rho b_j < X < \rho b_{j+1}]
+  + \OhP(n^{-1/2})
+  + \OhP(m^{-1/2}),
 \end{align*}
+where $\pi_j = \Pr(\rho b_j < X < \rho b_{j+1}).$
 
-where the equality holds if $b_i = -c_i$ or $\rho = 1$ on the last step. This is because 
 
+
+For $j = 1, \dotsc, k$,
+set
+\(
+  \hmuY_j =
+  \E[ Y  \mid \rho b_j < X < \rho b_{j+1}].
+\)
+Note that
+\[
+  \CV(1)
+    = 
+  \sum_{j=1}^{k}
+    \pi_j
+    \E[ \|Y - 0\|^2 \mid \rho b_j < X < \rho b_{j+1}]
+  + \OhP(n^{-1/2})
+  + \OhP(m^{-1/2}).
+\]
+Thus, the difference in cross-validation errors is
 \begin{align*}
-	 E[X \mid \rho b_i \leq X \leq \rho c_i] &= E[Y \mid \rho b_i \leq Y \leq \rho c_i] \\
-	\mathtt{0 \leq b_i < c_i}, \hspace{0.05in} \mathtt{0 \leq \rho \leq 1} \hspace{0.1in} & \leq E[Y \mid b_i \leq Y \leq c_i] \\
-	&= a_i
+\CV(k) - \CV(1)
+  &=
+  \sum_{j=1}^{k}
+    \pi_j
+    a_j
+    (a_j - 2 \hmuY_j)
+  + \OhP(n^{-1/2})
+  + \OhP(m^{-1/2}).
 \end{align*}
-
-The first equation above is because the same marginal distribution of $X$ and $Y$.  
-
-Note that Gabriel CV method predicts $Y$ to be $a_i$ for $X \in [\frac{\rho
-\left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left( a_{i}+a_{i+1}\right)}{2}]$,
-and if $k=1$ the predicted $Y = 0$ for all $X$. Hence, to see if $CV(k) >
-CV(1)$ for  $X \in [\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho
-\left( a_{i}+a_{i+1}\right)}{2}]$, one only need to see if $ a_i-\hat{\mu}^Y_i
-> \hat{\mu}^Y_i - 0$. Since $ \hat{\mu}^Y_i \leq \rho a_i$, it's clear that
-$CV(k) > CV(1)$ whenever $\rho < 0.5$. This is true to all segment
-$[\frac{\rho \left( a_{i-1}+a_i\right)}{2}, \frac{\rho \left(
-a_{i}+a_{i+1}\right)}{2}] = [\rho b_i, \rho c_i]$ except the one with $b_i =
--c_i$, in which $CV(k) = CV(1)$. Since $k>1$ and at most one segment has
-$CV(k) = CV(1)$ while the rest have $CV(k) > CV(1)$ if $\rho < 0.5$, it is
-clear that the overall prediction error $CV(k) > CV(1)$. By symmetry, we can
-see $CV(k) > CV(1)$ if $|\rho| < 0.5$. The proof is complete.
+For arbitrary $j$,
+\begin{align*}
+  \hmuY_j &=
+  \E[ E(Y\mid X)  \mid \rho b_j < X < \rho b_{j+1}]
+\\
+  &= \rho \E[ X  \mid \rho b_j < X < \rho b_{j+1}].
+\end{align*}
+Since $0 \leq \rho \leq 1$,
+in cases where $0 \leq b_j < b_{j+1}$, we have that
+$\hmuY_j \leq \rho a_j$; similarly, when $b_j < b_{j+1} \leq 0$, it follows
+that $\hmuY_j \geq \rho a_j$. In either of these two situations, if $\rho <
+1/2$, then
+\[
+  a_j (a_j - 2 \hmuY_j) > 0.
+\]
+The last situation to consider is when $b_j < 0 < b_{j+1}$, in which case
+$b_j = - b_{j+1}$; here, $\hmuY_j = a_j = 0$.
+Putting this all together, we have that as $n$ and $m$ tend to infinity,
+the probability that
+\(
+  \CV(k) > \CV(1)
+\)
+tends to one.
 \end{proof}
 
 
