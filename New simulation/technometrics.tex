@@ -1095,20 +1095,19 @@ From table \ref{table2} we can see only our proposed Gabriel method (as well as 
 
 
 \subsection{Application on Yeast data set}
-The yeast Saccharomyces cerevisiae data set was collected by \cite{cho1998genome} to study the genome-wide characterization of mRNA transcript levels during the cell cycles of the budding yeast S. cerevisiae. To obtain data, 
-cdc28-13 cells were synchronized in late G1 phase by heat treatment, and the cell cycle was reinitiated by shifting cells to cooler temperature. Data was collected at $17$ time points at every $10$ minutes intervals covering almost $2$ complete cell cycles. Oligonucleotide microarrays was used to query $6,220$ gene expression profiles at these $17$ time points. This data has been the subject of several studies and is generally accepted as a reference \citep{dortet2008model}.    
+The yeast Saccharomyces cerevisiae data set was collected by \cite{cho1998genome} to study the characterization of the cell cycle related processes of the budding yeast S. cerevisiae. To obtain data, cdc28 cells were synchronized by raising temperature to $37^\circ$C in late G1 phase, and then reinitiated by changing cells to cooler environment ($25^\circ$C). Data was collected at $17$ time points at every $10$ minutes interval covering almost $2$ complete cell cycles. Oligonucleotide microarrays was used to query $6,220$ gene expression profiles at these $17$ time points. Besides the original paper, several other studies have analyzed this data.
 
-\cite{tavazoie1999systematic} applied $k$-means clustering on the preprocessed data with $k=30$ and discovered several periodic clusters. The preprocessing procedure includes choosing the most variable $2,945$ geness among the total $6,220$ by metric of variation based on the normalized dispersion across time points (s.d/mean). Data at time points $90$ and $100$ minutes were removed because of their less efficient labelling of mRNA during the original chip hybridization. It results a $2,945$ by $15$ data matrix. The last step of the preprocessing procedure is to variance normalize each gene across the $15$ time points, which is done by subtracting the mean and then dividing by the standard deviation. The result is each gene has mean zero and standard deviation equal to one across the time points.
+\cite{tavazoie1999systematic} applied $k$-means clustering on the preprocessed data with $k=30$ and discovered several periodic clusters. The preprocessing procedure includes choosing the most variable $2,945$ geness among the total $6,220$. The normalized dispersion across time points (s.d/mean) was used as the metric of variation for selection. Data at time points $90$ and $100$ minutes were removed because they were deemed unreliable. It results a $2,945$ by $15$ data matrix. The last step of the preprocessing procedure was to variance normalize each gene across the $15$ time points, which is done by subtracting the mean and then dividing by the standard deviation. The result is each gene has mean zero and standard deviation equal to one across the time points.
 
 \cite{dortet2008model} performed model-based clustering on the preprocessed data of \cite{tavazoie1999systematic} and  found $27$ clusters. They classified the $27$ clusters into $3$ major types: cyclic gene clusters, stress gene clusters and the clusters neither cyclically nor sensitive to the induced stress. 
 
-We also applied our proposed Gabriel method on the preprocessed data of \cite{tavazoie1999systematic}. The algorithm found $5$ clusters. Since the dimensions (time points) are likely to be correlated, we also applied the correlation-corrected version of Gabriel method on the data which also result $5$ clusters. This numbers is much smaller compare to those of \cite{tavazoie1999systematic} and \cite{dortet2008model}. We will focus our analysis on this $5$ clusters found by the proposed method, whose result is summarized on the top panel of Figure \ref{fig:5_clusters}, where each cluster is presented by the mean expression level of all the genes within that cluster over $15$ time points. Similar as \cite{tavazoie1999systematic}, we found the members of each cluster to be significantly enriched for genes function in similar biological process. Each gene is mapped with the Gene Ontology (GO) Annotation in Saccharomyces Genome Database (SGD) database, which provides Gene Ontology (GO) annotation of the entire genome using GO slims, which are high-level subsets of GO terms that allow grouping of genes into broad categories, such as biological process, molecular function or cellular component. We choose to group genes in terms of biological process, which is a recognized series of events or molecular functions. There are total $103$ categories for biological process.
+We also applied our proposed Gabriel method on the preprocessed data of \cite{tavazoie1999systematic}. The algorithm found $5$ clusters. Note here we cluster the genes as observations into clusters and the $15$ time points are considered attributes of each gene. Since the dimensions (time points) are likely to be correlated, we also applied the correlation-corrected version of Gabriel method on the data which also result $5$ clusters. This numbers is much smaller compare to those of \cite{tavazoie1999systematic} and \cite{dortet2008model}. We will focus our analysis on the $5$ clusters found by the proposed method, whose result is summarized on the bottom panel of Figure \ref{fig:5_clusters}, where each cluster is presented by the mean expression level of all the genes within that cluster over $15$ time points. Similar as \cite{tavazoie1999systematic}, we found the members of each cluster to be significantly enriched for genes function in similar biological process. Each gene is mapped with the Gene Ontology (GO) Annotation in Saccharomyces Genome Database (SGD) database, which provides Gene Ontology (GO) annotation of the entire genome using GO slims. GO slims are subsets of GO terms that give broad overview of ontology content and allow grouping of genes into broad categories, such as biological process, molecular function or cellular component. We choose to group genes in terms of biological process, which is a recognized series of events or molecular functions. There are total $103$ categories for biological process.
 
 To identify biologically meaningful gene clusters from spurious ones, \cite{tavazoie1999systematic} introduced a method, enrichment analysis, to assess the statistical significance of the over-represented gene class in a cluster using hypergeometric distribution. Specifically, the $p$-value of observing $k$ genes from a particular category group within a cluster of size $m$ is given by:
 \[	P = 1-\sum^{k-1}_{i=1} \frac{{{2945-n}\choose{m-i}}{{n}\choose{i}} }{ {{2945} \choose{m}} }\] 
-where $n$ is the total genes in that group. It can be seen as testing the null hypothesis that genes are randomly  distributed among each cluster. The categories with the most significant grouping of gene inside each of the $5$ clusters are shown in Table \ref{table:enrich}.
+where $n$ is the total genes in that group. It can be seen as testing the null hypothesis that genes are randomly  distributed among each cluster. The categories with the most significant grouping of gene inside each of the $5$ clusters are shown in Table \ref{table:enrich}. Only $p$-values less than $4.8\times10^{-4}$ ($0.05/103$) are reported here. 
 
-To better compare our results with those of \cite{tavazoie1999systematic}, we also prepared confusion Table \ref{table:confusion} and Figure \ref{fig:5_clusters}. The number in cell $(i,j)$ of Table \ref{table:confusion} shows the number of observations that belong to both the $i$th cluster of ours and the $j$th cluster of \cite{tavazoie1999systematic}. The plots in Figure \ref{fig:5_clusters} have similar meaning -- the mini plot on first row and the $4$th column is the mean gene expression level of observations belong to both the first cluster of \cite{tavazoie1999systematic} and the $4$th cluster of ours. We only plot the mean expression level if the number of observations in that cell is greater than $20$. Although \cite{tavazoie1999systematic} found $30$ clusters, not all of them were discussed in \cite{tavazoie1999systematic}. We only compare our results with those clusters that were profiled in \cite{tavazoie1999systematic}. The complete confusion matrix is in Appendix \ref{app:confusion}. The original result of \cite{tavazoie1999systematic} is obtained from site \url{http://arep.med.harvard.edu/network_discovery/}.
+To better compare our results with those of \cite{tavazoie1999systematic}, we also prepared confusion Table \ref{table:confusion} and Figure \ref{fig:5_clusters}. The number in cell $(i,j)$ of Table \ref{table:confusion} shows the number of observations that belong to both the $i$th cluster of \cite{tavazoie1999systematic}'s and the $j$th cluster of ours. The plots in Figure \ref{fig:5_clusters} have similar meaning -- the mini plot on first row and the $4$th column is the mean gene expression level of observations belong to both the first cluster of \cite{tavazoie1999systematic}'s and the $4$th cluster of ours. We only plot the mean expression level if the number of observations in that cell is greater than $20$. Although \cite{tavazoie1999systematic} found $30$ clusters, not all of them were discussed in \cite{tavazoie1999systematic}. We only compare our results with those clusters that were profiled in \cite{tavazoie1999systematic}. The complete confusion matrix is in Appendix \ref{app:confusion}. The original result of \cite{tavazoie1999systematic} is obtained from site \url{http://arep.med.harvard.edu/network_discovery/}.
 
 
 \begin{table}
@@ -1161,31 +1160,30 @@ In conclusion, our clusters group together genes that participate in the common 
 
 	\begin{figure}[H]
 		\centering
-	\includegraphics[width=6.2in, height=6.2in]{wei/split_plots.pdf}
-	\caption{Yeast data set mean expression profiles. The $5$ clusters found by Gabriel method are on the top; Clusters profiled in \cite{tavazoie1999systematic} are on the right.}
+	\includegraphics[width=5.7in, height=5.7in]{wei/split_plots.pdf}
+	\caption{Yeast data set mean expression profiles. The $5$ clusters found by Gabriel method are on the bottom; Clusters profiled in \cite{tavazoie1999systematic} are on the right.}
 	\label{fig:5_clusters}
-	\end{figure}
+	\end{figure}	
 
-\begin{table}[t]
-\begin{center}
-\captionsetup{justification=centering}
-\caption{\label{table:confusion} Confusion matrix comparing $5$ clusters to $30$ clusters }
-\begin{threeparttable}
-\begin{tabular}{lccccccc}
-\hline
-   &  Cluster $1$  & Cluster $2$   &  Cluster $3$  &  Cluster $4$ &  Cluster $7$  & Cluster $8$  & Cluster $14$ \\ \hline 
- Cluster $1$  & $0$  &  $1$  & $0$  &  $0$  & $1$  & $3$  & $0$ \\
- Cluster $2$  & $0$  &  $0$  & $0$  & $102$ & $10$ & $145$& $1$ \\
- Cluster $3$  & $1$  &  $0$  & $91$ &  $2$  & $83$ & $0$  & $29$ \\
- Cluster $4$  & $161$&  $0$  & $11$ &  $66$ & $7$  & $0$  & $6$ \\
- Cluster $5$  & $2$  & $185$ & $2$  &  $0$  & $0$  & $0$  & $38$ \\ \hline      
+\begin{table}[H]
+\caption{\label{table:confusion} \small{Confusion matrix comparing $5$ clusters to clusters profiled in \cite{tavazoie1999systematic}}}
+\centering
+\begin{tabular}{lcccccr}
+  \hline
+ & Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 & Cluster 5 & Total \\ 
+  \hline
+Cluster 1 & 0 & 0 & 1 & 161 & 2 & 164 \\ 
+  Cluster 2 & 1 & 0 & 0 & 0 & 185 & 186 \\ 
+  Cluster 3 & 0 & 0 & 91 & 11 & 2 & 104 \\ 
+  Cluster 4 & 0 & 102 & 2 & 66 & 0 & 170 \\ 
+  Cluster 7 & 1 & 10 & 83 & 7 & 0 & 101 \\ 
+  Cluster 8 & 3 & 145 & 0 & 0 & 0 & 148 \\ 
+  Cluster 14 & 0 & 1 & 29 & 6 & 38 & 74 \\ 
+  Other & 545 & 332 & 448 & 383 & 290 & 1998 \\ 
+  Total & 550 & 590 & 654 & 634 & 517 & 2945 \\ 
+   \hline
 \end{tabular}
- \begin{tablenotes}[para,flushleft]
-\footnotesize {Only the profiled clusters in \cite{tavazoie1999systematic} are listed here}.
-  \end{tablenotes}
-\end{threeparttable}
-\end{center}
-\end{table} 	
+\end{table}
 
 \section{Discussion}
 \label{sec:conc}
@@ -1298,22 +1296,48 @@ Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
 \end{align*}
 
 \section{Confusion matrix} \label{app:confusion}
-\begin{sidewaystable}
-\captionsetup{justification=centering}
+
+\begin{table}
+%\captionsetup{justification=centering}
 \caption{\label{table:confusion-complete} Complete confusion matrix comparing $5$ clusters to $30$ clusters }
-\scalebox{0.67}{%
-\begin{tabular}{lcccccccccccccccccccccccccccccc|r}
-\hline
-   &  C$1$  & C$2$   &  C$3$  &  C$4$ & C$5$ &  C$6$ &  C$7$  & C$8$ & C$9$ & C$10$ &  C$11$& C$12$ & C$13$ & C$14$ & C$15$ & C$16$& C$17$& C$18$& C$19$& C$20$& C$21$& C$22$& C$23$& C$24$& C$25$& C$26$& C$27$& C$28$& C$29$& C$30$& Total \\ \hline 
- Cluster $1$  & $0$  &  $1$  & $0$  &  $0$  & $152$& $1$  & $1$  & $3$  & $142$& $12$ & $0$  & $3$  & $0$ & $0$ & $60$ & $7$& $9$& $3$& $62$& $11$& $1$& $33$& $2$& $1$& $2$& $5$& $9$& $0$& $27$& $3$& $550$\\
- Cluster $2$  & $0$  &  $0$  & $0$  & $102$ & $0$  & $2$  & $10$ & $145$& $0$ & $27$  & $5$  & $68$ & $1$ & $1$ & $53$ & $0$& $0$& $16$& $2$& $0$& $13$& $15$& $18$& $38$& $57$& $3$& $0$& $7$& $2$& $5$& $590$\\
- Cluster $3$  & $1$  &  $0$  & $91$ &  $2$  & $0$  & $12$  & $83$ & $0$ & $0$ & $24$  & $81$ & $5$  & $12$ & $29$& $2$ & $0$& $72$& $10$& $0$& $6$& $6$& $28$& $2$& $45$& $16$& $23$& $30$& $23$& $10$& $41$& $654$\\
- Cluster $4$  & $161$&  $0$  & $11$ &  $66$ & $0$  & $85$  & $7$  & $0$ & $0$ & $20$  & $8$  & $3$  & $81$ & $6$ & $0$ & $9$& $1$& $67$& $1$& $2$& $44$& $9$& $25$& $1$& $1$& $19$& $5$& $0$& $1$& $1$& $634$\\
- Cluster $5$  & $2$  & $185$ & $2$  &  $0$  & $0$  & $4$  & $0$  & $0$  & $5$ & $6$   & $0$  & $1$  & $5$  & $38$& $0$ & $83$& $1$& $5$& $8$& $65$& $6$& $0$& $22$& $0$& $0$& $0$& $20$& $38$& $11$& $10$& $517$ \\ \hline  
- Total   & $164$& $186$ & $104$ & $170$ & $152$ & $104$ & $101$ & $148$ & $147$&$89$ & $94$ & $80$  & $99$ & $74$& $115$ & $99$& $83$& $101$& $73$& $84$& $70$& $85$& $69$& $85$& $76$& $50$& $64$& $68$& $51$& $60$& $2945$    \\ \hline      
+\begin{tabular}{lccccc|c}
+  \hline
+ & Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 & Cluster 5 & Total \\ 
+  \hline
+  Cluster 1 & 0 & 0 & 1 & 161 & 2 & 164 \\ 
+  Cluster 2 & 1 & 0 & 0 & 0 & 185 & 186 \\ 
+  Cluster 3 & 0 & 0 & 91 & 11 & 2 & 104 \\ 
+  Cluster 4 & 0 & 102 & 2 & 66 & 0 & 170 \\ 
+  Cluster 5 & 152 & 0 & 0 & 0 & 0 & 152 \\ 
+  Cluster 6 & 1 & 2 & 12 & 85 & 4 & 104 \\ 
+  Cluster 7 & 1 & 10 & 83 & 7 & 0 & 101 \\ 
+  Cluster 8 & 3 & 145 & 0 & 0 & 0 & 148 \\ 
+  Cluster 9 & 142 & 0 & 0 & 0 & 5 & 147 \\ 
+  Cluster 10 & 12 & 27 & 24 & 20 & 6 & 89 \\ 
+  Cluster 11 & 0 & 5 & 81 & 8 & 0 & 94 \\ 
+  Cluster 12 & 3 & 68 & 5 & 3 & 1 & 80 \\ 
+  Cluster 13 & 0 & 1 & 12 & 81 & 5 & 99 \\ 
+  Cluster 14 & 0 & 1 & 29 & 6 & 38 & 74 \\ 
+  Cluster 15 & 60 & 53 & 2 & 0 & 0 & 115 \\ 
+  Cluster 16 & 7 & 0 & 0 & 9 & 83 & 99 \\ 
+  Cluster 17 & 9 & 0 & 72 & 1 & 1 & 83 \\ 
+  Cluster 18 & 3 & 16 & 10 & 67 & 5 & 101 \\ 
+  Cluster 19 & 62 & 2 & 0 & 1 & 8 & 73 \\ 
+  Cluster 20 & 11 & 0 & 6 & 2 & 65 & 84 \\ 
+  Cluster 21 & 1 & 13 & 6 & 44 & 6 & 70 \\ 
+  Cluster 22 & 33 & 15 & 28 & 9 & 0 & 85 \\ 
+  Cluster 23 & 2 & 18 & 2 & 25 & 22 & 69 \\ 
+  Cluster 24 & 1 & 38 & 45 & 1 & 0 & 85 \\ 
+  Cluster 25 & 2 & 57 & 16 & 1 & 0 & 76 \\ 
+  Cluster 26 & 5 & 3 & 23 & 19 & 0 & 50 \\ 
+  Cluster 27 & 9 & 0 & 30 & 5 & 20 & 64 \\ 
+  Cluster 28 & 0 & 7 & 23 & 0 & 38 & 68 \\ 
+  Cluster 29 & 27 & 2 & 10 & 1 & 11 & 51 \\ 
+  Cluster 30 & 3 & 5 & 41 & 1 & 10 & 60 \\ \hline
+  Total & 550 & 590 & 654 & 634 & 517 & 2945 \\ \hline
 \end{tabular}
-}
-\end{sidewaystable}	
+\end{table}
+
 \clearpage
 
 \bibliography{references}
