@@ -896,13 +896,24 @@ times (out of $10$ replicates) when $k=2$ is selected by the algorithm in stead 
 
 \subsection{Correlation adjustment for Gabriel method}
 When the correlation between dimensions are high, the proposed Gabriel CV method tends to overestimate the number $k$. A simply remedy for the high correlation is available if we assume common covariance structure among the $k$ clusters. 
+The procedure consists of four steps as follows:
 \begin{enumerate}
 	\item Apply Gabriel CV method on the original data $\dataX$, get estimated number of cluster $\hat{k}$
 	\item Estimate the pooled covariance matrix $\hat{\Sigma}$ from the $\hat{k}$ clusters.
 	\item Let $\hat{\Sigma} = \Gamma\Lambda\Gamma'$ be the Eigendecomposition of $\hat{\Sigma}$, we rescale and rotate the original data $\dataX$ to get $ \widetilde{\dataX} = \dataX\Gamma\Lambda^{-1/2}Q$, where $Q$ is a random  orthonormal rotation matrix. 
 	\item Apply Gabriel CV method again on the transformed data $ \widetilde{\dataX}$ to estimate $k$. 
 \end{enumerate}
- 
+Such correlation-correction idea is based on the assumption that each observation $x_i$ in $\dataX$ can be expressed as
+\[	x_i = \mu(G_i)+\varepsilon_i \]
+where $\mu(G_i)$ is the true cluster center for $x_i$ and $\varepsilon_i$ is noise with covariance matrix $\Sigma$. To reduce correlation between dimensions, we would like to transform $\Sigma$ into a diagonal matrix. A simple way to achieve this goal is multiplying $\dataX$ by $\Sigma^{-1/2}$, so the transformed $x_i$
+
+\[	\Sigma^{-1/2} x_i = \Sigma^{-1/2} \mu(G_i)+\Sigma^{-1/2} \varepsilon_i \]
+has identity covariance matrix $\mathbf{I}$. This is exactly what step $3$ does. However, before we can transform the data, we need to estimate the covariance matrix $\Sigma$. Step $1$ and $2$ estimate the covariance matrix by first applying Gabriel CV method on $\dataX$ to get preliminary estimate $\hat{k}$ and then estimate $\Sigma$ through
+
+\[	\hat{\Sigma} = \frac{1}{n-\hat{k}} \sum^n_{i=1} (x_i-\hat{\mu}_i)(x_i-\hat{\mu}_i)^T	\]
+where $\hat{\mu}_i$ is the center of the cluster which contains $x_i$ when applying $k$-means on $\dataX$ with parameter $\hat{k}$.  
+
+In practice, $\hat{\Sigma}$ wouldn't be the efficient estimator of $\Sigma$ since step $1$ may yield $\hat{k} > k$. Nevertheless, above procedure works well with correlated noise as we shall see in the simulation section. 
 
 \section{Simulation}
 In this section, simulation is performed to evaluate the performance of our
