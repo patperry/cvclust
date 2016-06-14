@@ -78,11 +78,6 @@ Owen, A.~B. and Perry, P.~O. (2009).
   factorization.
 \newblock {\em Ann. Appl. Stat.}, 3(2):564--594.
 
-\bibitem[Perry, 2009]{perry2009cross}
-Perry, P.~O. (2009).
-\newblock {\em Cross-Validation for Unsupervised Learning}.
-\newblock PhD thesis, Stanford University.
-
 \bibitem[Pollard, 1981]{pollard1981strong}
 Pollard, D. (1981).
 \newblock Strong consistency of $k$-means clustering.
@@ -104,6 +99,11 @@ Schlimmer, J.~C. (1987).
 Sugar, C.~A. and James, G.~M. (2003).
 \newblock Finding the number of clusters in a dataset.
 \newblock {\em Journal of the American Statistical Association}, 98(463).
+
+\bibitem[Tarpey and Flury, 1996]{tarpey96}
+Tarpey, T. and Flury, B. (1996).
+\newblock Self-consistency: A fundamental concept in statistics.
+\newblock {\em Statist. Sci.}, 11(3):229--243.
 
 \bibitem[Tibshirani and Walther, 2005]{tibshirani2005cluster}
 Tibshirani, R. and Walther, G. (2005).
