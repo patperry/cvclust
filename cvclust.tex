@@ -920,123 +920,142 @@ demonstrate the effectiveness of our ad-hoc adjustment procedure.
 \section{Performance in simulations}
 \label{sec:simulations}
 
-In this section, simulation is performed to evaluate the performance of our
-proposed methods in locating the ``correct'' number of clusters. We compare
-with a basket of existing methods including Gap statistics
+\subsection{Overview}
+
+In this section, we perform a set of simulations to evaluate the performance of our
+proposed method and the associated correlation correction described in
+Section~\ref{sec:corr-correct}.
+We compare our method
+with a basket of competing methods including the Gap statistic
 \citep{tibshirani2001estimating}, Gaussian mixture model-based clustering
-\citep{fraley2002model}, CH-index \citep{calinski1974dendrite}, Hartigan
-statistics \citep{hartigan1975clustering}, Jump method
+\citep{fraley2002model}, the CH-index \citep{calinski1974dendrite}, Hartigan's
+statistic \citep{hartigan1975clustering}, the Jump method
 \citep{sugar2003finding}, Prediction strength \citep{tibshirani2005cluster},
-Bootstrap stability \citep{fang2012selection} in following simulation
-settings. All methods are executed with their default parameter settings. 
-We select $p=q$ and $5-$fold cross-validation in row
-($m=\frac{1}{4}n$) as default parameter setting for our proposed Gabriel
-method. Note that set $p=q$ corresponding to $2-$fold cross-validation in
-column. Wold method (detailed in Appendix $A$) and correlation-corrected 
-Gabriel method (section $4.3$) are also included for comparison. 
+and Bootstrap stability \citep{fang2012selection}.
+We use the default parameter settings for all competing methods. For Gabriel
+cross-validation, we perform $2$-fold cross-validation on the columns~($p=q$)
+and $5$-fold cross-validation on the rows~($m=n/4$).
+We also compare with Wold cross-validation, which we describe in
+Appendix~\ref{sec:wold-cv}.
 
-Note that in all settings, cluster centers are randomly generated from 
-multivariate normal distribution $\mathcal{N}\left(\mathbf{0},\varsigma \mathbf{I}\right)$. 
-All clusters are well-separated, i.e. no overlapping. In fact, any simulated 
-clusters with minimum distance less than one unit was discarded, so there is
-clear definition of true number of clusters. The parameters $\varsigma$ is chosen 
-such that about half of the random realization were discarded. The idea is borrowed from
-\cite{tibshirani2001estimating}. The proportion of each method successfully picks the correct
-$k$ out of $100$ simulation trials is reported, along with its corresponding confident interval
-by Wilson's method \citep{wilson1927probable}.
 
-\begin{enumerate}
+In all simulation settings, we randomly generate cluster centers by drawing
+from a multivariate normal distribution with covariance matrix $\tau I$,
+conditional on the cluster centers being well-separated (if the distance
+between any two cluster centers is less than $1$, then we re-draw a new set of
+cluster centers). We choose $\tau$ to make the probability the cluster
+centers being well-separated on the first draw to be equal to approximately
+50\%. Many of our simulation settings are chosen to mimic the settings used by
+\cite{tibshirani2001estimating}. 
 
-  \item \textbf{Correlation between dimensions} -- Six clusters in $10$ dimensions. 
-  	Each cluster has $100$ or $50$
-    multivariate normal observations with common covariance matrix $\Sigma$ 
-    which has compound symmetric structure with $1$ in diagonal and $\rho$ 
-    off diagonal. $\rho$ takes value in $\{0,0.1,...,0.9\}$.
+
+For each setting, we perform $100$ replicates. We report the number of times
+that each method finds the correct number~$k$ of clusters. We also report 95\%
+confidence intervals for the proportions, using Wilson's
+method~\citep{wilson1927probable}.  The simulations demonstrate that overall,
+the proposed Gabriel cross-validation method and its correlation-corrected
+version compare well with the competing methods, and they are robust to
+variance heterogeneity, high dimensional data, and heavy-tail data.
+
+
+\subsection{Setting 1: Correlation between dimensions}
+
+We generate six clusters in $10$ dimensions.  Each cluster has $100$ or $50$
+multivariate normal observations with common covariance matrix $\Sigma$ which
+has compound symmetric structure with $1$ in diagonal and $\rho$ off diagonal.
+$\rho$ takes value in $\{0,0.1,...,0.9\}$.
 	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting1/Facet.pdf}
-	\label{fig:setting1}
-	\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting1/Facet.pdf}
+\label{fig:setting1}
+\end{figure}
 	
-  \item \textbf{Noise dimensions} --- Three clusters in $6$ dimensions. Each cluster has $1000$ or $500$
-    mean zero multivariate normal observations with identity covariance matrix. 
-    We add $P$ dimensions of noise to the data, which is randomly generated from uniform$[0,1]$. The noise
-    dimension $P$ takes values in $\{0,6,...,54\}$. 
+We can see that high correlation between dimensions causes problem for most
+existing methods, including Gabriel cross-validation method without the
+correlation correction.  The only two methods that work well in the presence
+of high correlation are the Gaussian model-based BIC method
+\citep{fraley2002model} and the correlation-corrected Gabriel method. 
+
+
+\subsection{Setting 2: Noise dimensions}
+
+We generate three clusters in $6$ dimensions. Each cluster has $1000$ or $500$
+mean zero multivariate normal observations with identity covariance matrix.
+We add $r$ dimensions of noise to the data, randomly generated from a uniform
+distribution on $[0,1]$. The noise dimension $r$ takes values in
+$\{0,6,...,54\}$. 
 	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting2/Facet.pdf}
-	\label{fig:setting2}
-	\end{figure}
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting2/Facet.pdf}
+\label{fig:setting2}
+\end{figure}
+
+Most methods are relatively insensitive to adding more noise dimensions; the
+one exception to this is the Jump method, which deteriorates significantly in
+the presence of extra noise dimensions.
+
+
+\subsection{Setting 3: High dimension}
+
+We generate eight clusters in $P$ dimensions, with $P$ taking values in
+$\{10,20,...,100\}$.  Each cluster has $100$ or $50$ mean zero multivariate
+normal observations with identity covariance matrix. 
 	
-  \item \textbf{High dimension} --- Eight clusters in $p$ dimensions, $p$ takes values 
-  	in $\{10,20,...,100\}$. Each cluster has $100$ or $50$ mean zero multivariate normal 
-  	observations with identity covariance matrix. 
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting3/Facet.pdf}
+\label{fig:setting3}
+\end{figure}
+
+Some methods, like Jump and Gap, are insensitive to higher dimensions while
+other methods deteriorate quickly with increasing dimension, most notably the
+Gaussian model-based BIC method.  Gabriel cross-validation and its
+correlation-corrected version tend to work better in higher dimensions.
 	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting3/Facet.pdf}
-	\label{fig:setting3}
-	\end{figure}
+
+\subsection{Setting 4: Variance heterogeneity}
+
+We generate three clusters in $20$ dimensions. Each cluster has $60$
+observations.  Observations are generated from
+$\mathcal{N}\left(\mathbf{0},\sigma_1^2\mathbf{I}\right)$,
+$\mathcal{N}\left(\mathbf{0},\sigma_2^2\mathbf{I}\right)$ and
+$\mathcal{N}\left(\mathbf{0},\sigma_3^2\mathbf{I}\right)$ where $\sigma_1^2 :
+\sigma_2^2: \sigma_3^2 = 1:\frac{1+R}{2}:R$. The maximum ratio $R$ takes
+values in $\{1,5,10,...,45\}$
 	
-     \item \textbf{Variance heterogeneity} --- Three clusters in $20$ dimensions, each has
-     $60$ observations in it. Observations are generated from 
-     $\mathcal{N}\left(\mathbf{0},\sigma_1^2\mathbf{I}\right)$,
-      $\mathcal{N}\left(\mathbf{0},\sigma_2^2\mathbf{I}\right)$ and
-       $\mathcal{N}\left(\mathbf{0},\sigma_3^2\mathbf{I}\right)$ where 
-       $\sigma_1^2 : \sigma_2^2: \sigma_3^2 = 1:\frac{1+R}{2}:R$. The maximum ratio $R$
-       takes values in $\{1,5,10,...,45\}$
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting4/Facet.pdf}
+\label{fig:setting4}
+\end{figure}
+
+This setting demonstrates that most existing methods are sensitive to variance
+heterogeneity, most notably the Gap method and the model-based BIC method. The
+proposed Gabriel cross-validation method and its correlation-corrected version
+consistently perform well in estimating $k$ and they are insensitive to
+variance heterogeneity.
 	
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting4/Facet.pdf}
-	\label{fig:setting4}
-	\end{figure}
-	
-	\item \textbf{Heavy tail data} --- Five clusters in $15$ dimensions, each has
-     $80$ observations in it. Observations have independent $t$ distribution in each dimension  
-     with degree of freedom $\nu$, which takes value in $\{11,10,...,2\}$
+
+\subsection{Setting 5: Heavy tail data}
+
+We generate five clusters in $15$ dimensions. Each cluster has $80$
+observations.  Observations have independent $t$ distributions in each
+dimension, with degrees of freedom $\nu$ taking values in $\{11,10,...,2\}$
      
-	\begin{figure}[H]
-	\centering
-	\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting5/Facet.pdf}
-	\label{fig:setting4}
-	\end{figure}
-\end{enumerate}
+\begin{figure}[H]
+\centering
+\includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting5/Facet.pdf}
+\label{fig:setting5}
+\end{figure}
 
-From the graph of setting $1$, we can see high correlation between dimensions cause problem for most 
-existing methods as well as the proposed Gabriel cross-validation method and Wold method. Higher correlation clearly 
-degenerate most algorithms' ability to find the correct $k$ as data no longer spherical in $p$-dimension.
-And the recent proposed methods (Gabriel cross-validation method, Gap statistic, Jump method) seem to be more sensitive to
-high correlation than those old methods such as CH-index and Hartigan statistics. The only two methods 
-work well in high correlation are the Gaussian model-based BIC method \citep{fraley2002model} and the 
-correlation-corrected Gabriel method. 
-
-Plot of setting $3$ shows some methods are insensitive to higher dimension such as Jump method and Gap 
-statistics, while others deteriorate quickly with increasing dimension, most notably the Gaussian 
-model-based BIC method. Note here the data are still generated from mixture of Gaussian. In contrast, our 
-proposed Gabriel cross-validation method as well as its correlation-corrected version actually working better in higher 
-dimension. 
-
-Result of setting $4$ indicates most previously methods are sensitive to variance heterogeneity among 
-clusters, most notably the Gap statistics and model-based BIC method. The
-proposed Gabriel cross-validation method
-and its correlation-corrected version consistently perform well in estimating $k$ and quite insensitive
-to variance heterogeneity. The Wold method also performs well in this setting.   
-
-The last non-Gaussian setting examines methods' performance in heavy-tail data. With degree of freedom 
-decreases, the tail becomes more flat and the Gaussian assumption becomes more inappropriate. It explains
-the sharp plunge of Gaussian model-based BIC method in the plot. For most methods, their performances are 
-relatively stable until the tail gets very heavy. In case where degree of freedom is $2$, Gap statistics 
-and Jump method dived considerably compare to the Gabriel method and Wold method. 
-
-In conclusion, the proposed Gabriel cross-validation method compares well with current state-of-the-art methods and 
-is very robust against variance heterogeneity, high dimension and heavy-tail data. One weakness of the 
-Gabriel cross-validation method is that it's sensitive to the high correlation among dimensions. In such case, its 
-correlation-corrected version will perform well under the assumption of common covariance structure. 
-
-
+This setting investigates performance in the presence of heavy-tailed data.
+When the degrees of freedom decreases, the tail becomes more flat and the
+Gaussian assumption becomes more appropriate.  For most methods, their
+performances are relatively stable until the tail gets very heavy. In the case
+where there are $2$ degrees of freedom, the Gap and Jump methods' performances
+deteriorate considerably relative to the Gabriel method.
 
 
 \section{Empirical validation}
@@ -1522,7 +1541,9 @@ Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
 \end{align*}
 
 
-\section{Wold cross-validation estimation} \label{app:foobar}
+\section{Wold cross-validation}
+\label{sec:wold-cv}
+
 \begin{itemize}
 	\item For each $k = 1,2,...,k_{max}$
 	\begin{enumerate}
