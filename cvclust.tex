@@ -45,6 +45,7 @@
 % convergence
 \newcommand{\toas}{\overset{\mathit{a.s.}}{\to}}
 
+\newcommand{\Oh}{O}
 \newcommand{\OhP}{O_p}
 
 % sets
@@ -393,7 +394,7 @@ gives conditions for Gabriel CV to recover the true number of clusters in the
 absence of noise.
 
 
-\begin{theorem}\label{thm:self-consistency}
+\begin{proposition}\label{prop:self-consistency}
 
 Let $\{ (X_i, Y_i) \}_{i=1}^{n+m}$ be the data from a single fold of Gabriel
 cross-validation.  For any $k$, let $CV(k)$ be the cross-validation error for
@@ -421,14 +422,14 @@ the $g$th cluster center partitioned as $\mu(g) = \bigl(\muX(g),
 \end{enumerate}
 Then $CV(k) < CV(K)$ for $k < K$, and $CV(k) = CV(K)$ for $k > K$, so that
 Gabriel CV correctly chooses $k = K$.
-\end{theorem}
+\end{proposition}
 
-The result statement of Theorem~\ref{thm:self-consistency} follows from 
+The result statement of Proposition~\ref{prop:self-consistency} follows from 
 Lemmas~\ref{lem:self-consistency1} and~\ref{lem:self-consistency2}, which we
 will now state and prove.
 
 \begin{lemma}\label{lem:self-consistency1}
-Suppose that the assumptions of Theorem~\ref{thm:self-consistency} are in
+Suppose that the assumptions of Proposition~\ref{prop:self-consistency} are in
 force.  If $k < K$, then $\CV(k) > 0$.
 \end{lemma}
 \begin{proof}
@@ -457,7 +458,7 @@ is nonzero.  Therefore,
 \end{proof}
 
 \begin{lemma}\label{lem:self-consistency2}
-Suppose that the assumptions of Theorem~\ref{thm:self-consistency} are in
+Suppose that the assumptions of Proposition~\ref{prop:self-consistency} are in
 force.  If $k \geq K$, then $\CV(k) = 0$.
 \end{lemma}
 \begin{proof}
@@ -485,14 +486,14 @@ for all $i = 1, \dotsc, m+n$.  In particular, this implies that $\bmuY(\hGX_i)
 
 \subsection{Single cluster in two dimensions}
 
-Theorem~\ref{thm:self-consistency} tells us that the Gabriel cross-validation
+Proposition~\ref{prop:self-consistency} tells us that the Gabriel cross-validation
 method recovers the true number of clusters when the noise is negligible.
 While this result gives us some assurance that the procedure is well-behaved,
 we can bolster our confidence and gain insight into its workings by analyzing
 its behavior in the presence of noise.  We first study the case of a single
 cluster in two dimensions with correlated Gaussian noise.
 
-\begin{theorem}
+\begin{proposition}\label{prop:single-2d}
 Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
 of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^2$ is an
 independent draw from a mean-zero multivariate normal distribution with unit
@@ -500,7 +501,7 @@ marginal variances and correlation $\rho$.  In this case, the data are drawn
 from a single cluster; the true number of clusters is~$1$.  If $|\rho| < 1/2$,
 and $k > 1$, then $\CV(1) < \CV(k)$ with probability tending to one as $m$
 and $n$ increase.
-\end{theorem}
+\end{proposition}
 
 \begin{proof}
 
@@ -643,137 +644,118 @@ Intuitively, when the correlation is high, the response feature, $Y$, looks
 similar to the predictor feature, $X$. Prediction error on $X$ always
 decreases with larger $k$. Thus, when the correlation is high, the prediction
 error for $Y$ will also decrease with larger $k$. This explains why
-cross-validation breaks down in the presense of strong correlation.
+cross-validation breaks down in the presence of strong correlation.
 
 
-\subsection{Single Cluster in higher dimensions}
-
-
-\begin{proposition}
-Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
-of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^{p+q}$ is an
-independent draw from a mean-zero multivariate normal distribution with 
-covariance matrix $\Sigma_{XY}= \left( \begin{smallmatrix} \Sigma_{XX} & \Sigma_{XY} \\ 
- \Sigma_{YX} & \Sigma_{YY} \end{smallmatrix}\right)$, with $\Sigma_{YY}$ has leading 
-eigenvalue $\lambda_1$ and corresponding eigenvector $u_1$. In this case, the data are drawn
-from a single cluster; the true number of clusters is~$1$.  If  $\frac{\sqrt{\lambda_1}}{2}
- > \frac{u^T_1\Sigma_{YX}\Sigma_{XY}u_1}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}}$,
-then $\CV(1) < \CV(2)$ with probability tending to one as $m$ and $n$ increase.
-\end{proposition}
-
-\begin{proof}
-Let $X$ and $Y$ be jointly multivariate normal distributed with mean $\mathbf{0}$ and covariance matrix $\Sigma_{XY}$, i.e.
-\[	(X,Y) \sim \mathcal{N} \left( \mathbf{0}, \Sigma_{XY}\right)	\]
-where $\Sigma_{XY}=\begin{bmatrix} \Sigma_{XX} & \Sigma_{XY} \\  \Sigma_{YX} & \Sigma_{YY} \end{bmatrix}$.
-
-Let $\Sigma_{YY} = U \Lambda U^T$  be the eigendecomposition of $\Sigma_{YY}$, with leading eigenvalue $\lambda_1$ and corresponding eigenvector $u_1$. Then the centroid of $k$-means applying on $(y_1,..,y_n)$ is on the first PC 
-of $Y$,\[	E(u^T_1 Y|u^T_1 Y>0) = \bar{\mu}^Y_1 =\sqrt{2 \lambda_1/\pi}u_1\] and 
-\[	E(u^T_1 Y|u^T_1 Y<0) = \bar{\mu}^Y_2 =-\sqrt{2 \lambda_1/\pi}u_1\]
- where $u^T_1 Y \sim \mathcal{N}(0,\lambda_1)$.
-
-To compute $\bar{\mu}^X_1 = E(X|u^T_1 Y>0)$, we need to know the conditional distribution $X|u^T_1 Y$. Since $(X,Y)$ has multivariate normal distribution, $(X,u^T_1 Y)$ also has a multivariate normal distribution with mean $\mathbf{0}$ and covariance matrix
-$$\Sigma_{X,u^T_1 Y}=\begin{bmatrix} \Sigma_{XX} & \Sigma_{XY} u_1 \\  u^T_1 \Sigma_{YX} & \lambda_1 \end{bmatrix}$$
-The conditional distribution $X|u^T_1 Y$ is hence normal with mean
- $$\mu_{X|u^T_1 Y} = \Sigma_{XY} u_1 \lambda^{-1}_1 u^T_1 Y $$
-Therefore, 
-\begin{align}
-\bar{\mu}^X_1 &= E(X \mid u^T_1 Y>0) \nonumber \\ \nonumber
- 			  &= E\left(E[X \mid u^T_1 Y] \mid u^T_1 Y>0\right) \\ \nonumber
- 			  &=  E\left(\Sigma_{XY} u_1 \lambda^{-1}_1 u^T_1 Y \mid u^T_1 Y>0\right)\\ \nonumber
- 			  &= \lambda^{-1}_1 \Sigma_{XY}u_1 E(u^T_1 Y \mid u^T_1 Y>0) \\ \nonumber
- 			  &= \lambda^{-1}_1 \Sigma_{XY}u_1 \sqrt{2 \lambda_1/\pi} \\ \nonumber
- 			  &= \sqrt{2 / \lambda_1 \pi} \Sigma_{XY}u_1
-\end{align}
-Similar calculation yields $\bar{\mu}^X_2 = -\sqrt{2 / \lambda_1 \pi} \Sigma_{XY}u_1$.
-The decision rule to classify any observed value of $X$ to $\bar{\mu}^X_1$ is therefore
-\[	(\bar{\mu}^X_1)^T X >0	\hspace{0.2in}\text{or} \hspace{0.2in} u^T_1\Sigma_{YX}X>0\] 
-Since $u^T_1\Sigma_{YX}X$ is a linear combination of $X$, it also has normal distribution 
-\[	\mathcal{N} \left( 0, u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1\right)	\]
-And $(Y,u^T_1\Sigma_{YX}X)$ also have multivariate normal distribution with mean $\mathbf{0}$ 
-and covariance matrix
-\[
-\begin{bmatrix}
-\Sigma_{YY} & \Sigma_{YX}\Sigma_{XY}u_1  \\
-u^T_1\Sigma_{YX}\Sigma_{XY} &  u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1
-\end{bmatrix}
-\]
-The conditional distribution of $Y|u^T_1\Sigma_{YX}X$ is also multivariate normal with mean 
-\[	
-\mu_{Y|u^T_1\Sigma_{YX}X } = \Sigma_{YX}\Sigma_{XY}u_1 (u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1)^{-1}u^T_1\Sigma_{YX}X	
-\]
-The $Y$ center for $u^T_1\Sigma_{YX}X>0$ is
-\begin{align}
-\hat{\mu}^Y_1 &= E(Y|u^T_1\Sigma_{YX}X>0) \nonumber \\ \nonumber
- 		      & =  \Sigma_{YX}\Sigma_{XY}u_1 (u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1)^{-1} E(u^T_1\Sigma_{YX}X \mid u^T_1\Sigma_{YX}X>0) \\ \nonumber
-\end{align}
-Note that $u^T_1\Sigma_{YX}X$ has normal distribution $\mathcal{N} \left( 0, u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1\right)$, so
-\[
-E(u^T_1\Sigma_{YX}X \mid u^T_1\Sigma_{YX}X>0) = \sqrt{2/\pi}\cdot\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}
-\]
-Therefore, we have the $Y$ center for $u^T_1\Sigma_{YX}X>0$ be
-\begin{align*}
-\hat{\mu}^Y_1 &= \sqrt{2/\pi}\cdot\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1} \hspace{0.1in} \Sigma_{YX}\Sigma_{XY}u_1 (u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1)^{-1} \\
-&=\frac{\sqrt{2/\pi}}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}} \Sigma_{YX}\Sigma_{XY}u_1
-\end{align*} 
- 
-Recall that $\bar{\mu}^Y_1 =\sqrt{2 \lambda_1/\pi}u_1$, to judge if $CV(2) > CV(1)$, one only need to compare the distance between  $\hat{\mu}^Y_1$  and  $\bar{\mu}^Y_1$ with distance between  $\hat{\mu}^Y_1$ and grand mean $0$. By variance and bias decomposition of prediction MSE, when variance is the same, only bias influence the MSE. 
-
-After some linear algebra manipulation, we get
-$||\hat{\mu}^Y_1 - \bar{\mu}^Y_1||^2 > ||\hat{\mu}^Y_1||^2$ or $CV(2) > CV(1)$ iff
-\[
- \frac{\sqrt{\lambda_1}}{2} > \frac{u^T_1\Sigma_{YX}\Sigma_{XY}u_1}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}} 
-\]
-\end{proof}
+In Appendix~\ref{sec:single-general-dim}, using similar techniques to those used
+to prove Proposition~\ref{prop:single-2d}, we derive an analogous result for correlated
+Gaussian noise in more than two dimensions. A similar phenomenon holds:
+the Gabriel cross-validation method fails when the first principal component
+of the $Y$ variables is strongly correlated with a linear combination of the
+$X$ variables.
 
 
 \subsection{Two clusters in two dimensions}
 
 
 We will now analyze a simple two-cluster setting, and derive conditions for
-Gabriel cross-validation to correctly prefer $k=2$ clusters to $k=1$.
+Gabriel cross-validation to correctly prefer $k=2$ clusters to $k=1$. In the
+statement of the result, $\Phi(\cdot)$ and $\varphi(\cdot)$ denote the
+standard normal cumulative distribution function and density, respectively.  
 
-\begin{proposition}
+\begin{proposition}\label{prop:twoclust}
 Suppose that $\{(X_i,Y_i)\}_{i=1}^{n+m}$ is data from a single fold of Gabriel
 cross-validation, where each $(X,Y)$ pair in $\R^2$ is an independent draw
 from an equiprobable mixture of two multivariate normal distributions with
-identity covariance. Suppose that the first mixture component has mean $(\muX,
-\muY)$, and the second has mean $(-\muX, -\muY)$, where $\muX > 0$ and
-$\muY > 0$.  If $1 + 2\Phi(\mu^Y)+ \frac{2\varphi(\mu^Y)}{\mu^Y} < 4\Phi(\mu^X)$, then $\CV(2) < \CV(1)$ with
-probability tending to one as $m$ and $n$ increase.
+identity covariance. Suppose that the first mixture component has mean
+$\mu = (\muX, \muY)$ and the second has mean $-\mu = (-\muX, -\muY)$,
+where $\muX \geq 0$ and $\muY \geq 0$. 
+If 
+\(
+  2 \varphi(\muY) + \muY + 2 \muY \Phi(\muY) < 4 \muY \Phi(\muX),
+\)
+then $\CV(2) < \CV(1)$ with probability tending to one as $m$ and $n$ increase.
 \end{proposition}
 
 \begin{proof}
-There are two clusters $G_1$ and $G_2$, where observations from $G_1$ are distributed as
-\[	\mathcal{N}\left( \begin{pmatrix} 
-    \mu^X \\
-    \mu^Y \\
-  \end{pmatrix}, \mathbf{I} \right)	\]
-and observations from $G_2$ are distributed as
-\[	\mathcal{N}\left( \begin{pmatrix} 
-    -\mu^X \\
-    -\mu^Y \\
-  \end{pmatrix}, \mathbf{I} \right)	\]
-where $\mu^X_1 > 0$ and $\mu^Y_1 > 0$. Let $G_i$ be the true cluster where observation $i$ is generated from, by assumption
-\[	P(G_i=G_1) = P(G_i=G_2) = 1/2	\]
-After applying $k$-means on $\{ Y_i\}_{i=1}^{n}$ with $k=2$, if $n$ is large enough, we have the estimated centroids $\bar{\mu}^Y_1$ and $\bar{\mu}^Y_2$ be close to $E(Y \mid Y>0)$ and $\E(Y \mid Y < 0)$,
-with errors will be of size $\OhP(n^{-1/2})$. Here
-\begin{align}
-E(Y \mid Y>0) &= E(Y_1 \mid Y_1 > 0) \cdot P(Y_1>0) + E(Y_2 \mid Y_2 > 0) \cdot P(Y_2>0) \nonumber \\ 
-   &= 2\varphi(\mu^Y)+2\mu^Y\Phi(\mu^Y)-\mu^Y  \\  \nonumber 
-\end{align}
-where $Y_1 \sim N(\mu^Y, 1)$ and $Y_2 \sim N(-\mu^Y, 1)$, and we used Lemma~\ref{lem:truncated-normal-moments}
-(Appendix~\ref{app:technical-lemmas}). Similarly, we have
-\begin{align}
-E(Y \mid Y<0) &= E(Y_1 \mid Y_1 < 0) \cdot P(Y_1<0) + E(Y_2 \mid Y_2 < 0) \cdot P(Y_2<0) \nonumber \\ 
-   &= -2\varphi(\mu^Y)-2\mu^Y\Phi(\mu^Y)+\mu^Y  \\  \nonumber 
-\end{align}
- where $\varphi()$ and $\Phi()$ are the standard normal probability and cumulative distribution function respectively.  
+There are two clusters: observations from cluster~$1$ are distributed as
+\(
+  \mathcal{N}(\mu, I)
+\)
+and observations from cluster~$2$ are distributed as
+\(
+\mathcal{N}(-\mu, I)
+\)
+where $\mu = (\muX, \muY)$.  Without loss of generality, $\muX \geq 0$ and
+$\muY \geq 0$.  Let $G_i$ be the true cluster of observation~$i$
+where, by assumption,
+\[
+  \Pr(G_i=1) = \Pr(G_i=2) = 1/2.
+\]
+After applying $k$-means to $\{ Y_i\}_{i=1}^{n}$ with $k=2$, if $n$ is large
+enough, then the estimated cluster means $\bar{\mu}^Y_1$ and $\bar{\mu}^Y_2$
+will be close to $\E(Y \mid Y>0)$ and $\E(Y \mid Y < 0)$, with errors of
+size $\OhP(n^{-1/2})$. To compute these quantities, let
+$(X_1, Y_1) \sim \mathcal{N}(\mu, I)$ and $(X_2, Y_2) \sim \mathcal{N}(-\mu, I)$
+be draws from the mixture components, and let $(X,Y)$ be defined such that
+$\Pr(X= X_1, Y = Y_1) = \Pr(X= X_2, Y = Y_2) = 1/2$. Then,
+\begin{align*}
+  \E(Y \mid Y>0)
+  &= \E(Y_1 \mid Y_1 > 0) \cdot \Pr(Y = Y_1 \mid Y >0)
+   + \E(Y_2 \mid Y_2 > 0) \cdot \Pr(Y = Y_2 \mid Y > 0)
+\\
+&=  \{ \muY + \varphi(\muY) / \Phi(\muY) \} \cdot \Phi(\muY)
++ [-\muY + \varphi(\muY) / \{ 1 - \Phi(\muY) \}] \cdot \{ 1 - \Phi(\muY) \}
+\\
+  &= 2\varphi(\muY)+ 2\muY\Phi(\muY)- \muY. 
+\end{align*}
+In the second line, we have used
+Lemma~\ref{lem:truncated-normal-moments} from
+Appendix~\ref{app:technical-lemmas} to compute the conditional expectations;
+$\varphi()$ and $\Phi()$ are the standard normal density and
+cumulative distribution function, respectively. By symmetry,
+\begin{align*}
+  \E(Y \mid Y<0) &= -\E(Y \mid Y > 0).
+\end{align*}
 
-Same as in single cluster case, the classification rule learned from
-$\{(X_i, \hGY_i)\}_{i=1}^{n}$ variables will be determined according to
-whether $X > 0$, with the decision boundary be at $0 + \OhP(n^{-1/2})$.
-By symmetry, the CV error for points from $G_1$ is same as the points from $G_2$. Because $P(G=G_1) = P(G=G_2) =1/2$, the CV error can be calculated solely from $G_2$, that is
 
+The classification rule learned from the training data
+$\{(X_i, \hGY_i)\}_{i=1}^{n}$ will have its decision boundary at $0 + \OhP(n^{-1/2})$;
+that is, in the limit,
+observations will get classified as coming from cluster~1 when $X > 0$. 
+Set $a = \E(Y \mid Y > 0)$.
+Up to terms of order $\OhP(n^{-1/2})$,
+the cross-validation error from a single observation is distributed as
+\[
+  (Y - a)^2 1\{ X > 0 \} + (Y + a)^2 1\{X < 0\}.
+\]
+Using the fact that conditional on the mixture component, the $X$ and $Y$
+coordinates are independent, we can compute the expectation of the first
+summand as
+\begin{align*}
+  \E[(Y - a)^2 1\{ X > 0 \}]
+  &= (1/2) \E[(Y_1 - a)^2] \Pr(X_1 > 0)
+  + (1/2) \E[(Y_2 - a)^2] \Pr(X_2 > 0)
+\\
+&= (1/2) \Phi(\muX) \E(Y_1 - a)^2  + (1/2) \{ 1 - \Phi(\muX) \} \E(Y_2 - a)^2
+\\
+&=
+(1/2) [ 1  + \Phi(\muX) (\muY - a)^2 + \{ 1 - \Phi(\muX) \} (-\muY - a)^2 ].
+\end{align*}
+By a similar calculation, the expectation of the second summand is
+\[
+  \E[(Y + a)^2 1\{ X < 0 \}]
+  =
+  (1/2)[ 1 + \{ 1 - \Phi(\muX) \} (\muY + a)^2 + \Phi(\muX) (-\muY + a)^2 ].
+\]
+Adding the two terms, we get that the expected cross-validation error from a
+single observation is
+\[
+  1 + \Phi(\muX) (\muY - a)^2 + \{ 1 - \Phi(\muX) \} (\muY + a)^2
+    =
+  1 + (\muY)^2 + a \, \{  a + 2 \muY - 4 \muY \Phi(\muX) \}.
+\]
+Thus, the $k = 2$ cross-validation error on the test set is
 \begin{align*}
   \CV(2)
   &=
@@ -781,41 +763,57 @@ By symmetry, the CV error for points from $G_1$ is same as the points from $G_2$
     \sum_{i=n+1}^{n+m}
       \| (Y_i - \bmuY_1) 1\{\hGX_i = 1\} \|^2
       +
-      \| (Y_i - \bmuY_2) 1\{\hGX_i = 2\} \|^2, \hspace{0.2in}Y\sim N(-\mu^Y,1)
+      \| (Y_i - \bmuY_2) 1\{\hGX_i = 2\} \|^2
 \\
-  &=
-    \E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]
-      + \OhP(m^{-1/2}) + \OhP(n^{-1/2})\\
-   \end{align*}
-   With 
-   \begin{align}
- \E[(Y - a)^2 1\{ X > 0\}] + \E[(Y + a)^2 1\{X < 0\}]  =& P(\hGX_i = 1)\cdot E[(Y - a)^2] + P(\hGX_i = 2)\cdot E[(Y + a)^2] \nonumber \\  \nonumber
- =& [1-\Phi(\mu^X)][var(Y)+(-\mu^Y - a)^2]+\\ \nonumber
-  & \Phi(\mu^X)[var(Y)+(-\mu^Y + a)^2]\\  \nonumber
-  =& [1-\Phi(\mu^X)][1+(\mu^Y + a)^2]+\Phi(\mu^X)[1+(\mu^Y -a )^2]   \\  \nonumber
-  =& 1+(\mu^Y + a)^2 -4a\Phi(\mu^X)\mu^Y  \nonumber
-\end{align}
-where $a$ is given by $(1)$.
+&=
+1 + (\muY)^2 +  a \, \{ a + 2 \muY - 4 \muY \Phi(\muX) \}
++ \OhP(n^{-1/2}) + \OhP(m^{-1/2}).
+\end{align*}
 
-When $k=1$, the result is straight forward since the estimated centroid will approximately equal to
-$0$, with error of size $\OhP(n^{-1/2})$. The cross-validation error
-will be
+
+When $k=1$, the $k$-means centroid is equal to the sample mean $\bar Y_n = (1/n)
+\sum_{i=1}^{n} Y_i$, approximately equal to 
+$\E(Y) = 0$, with error of size $\OhP(n^{-1/2})$. The cross-validation error is
 \[
   \CV(1) = \frac{1}{m} \sum_{i=n+1}^{n+m} \| Y_i - \bar Y_n \|^2
          = 1 + (\mu^Y)^2 + \OhP(m^{-1/2}) + \OhP(n^{-1/2}).
 \]
-So if we have $1 + 2\Phi(\mu^Y)+ \frac{2\varphi(\mu^Y)}{\mu^Y} < 4\Phi(\mu^X)$, we have $\CV(2) < \CV(1)$
+Thus, if $a + 2 \muY - 4 \muY \Phi(\muX) < 0$, then $\CV(2) < \CV(1)$ with
+probability tending to one as $m$ and $n$ increase. Substituting the
+expression for $\E(Y \mid Y > 0)$ in place of $a$, the inequality holds
+precisely when
+\(
+  2 \varphi(\muY) + \muY + 2 \muY \Phi(\muY) < 4 \muY \Phi(\muX).
+\)
 \end{proof}
 
-We confirm this result with a simulation.  We perform $10$ replicates for each pair of $(\mu^X, \mu^Y)$, where both $\mu^X$ and $\mu^Y$ take value on grid of $[0,3]$ with step $0.1$.  In each
-replicate, we generate $20000$ observations from two multivariate normal distributions with identity covariance, where one has mean $(\muX, \muY)$ and the other one has mean $(-\muX, -\muY)$.
-We perform a single $2 \times 2$ fold of Gabriel cross-validation and report the
-times (out of $10$ replicates) when $k=2$ is selected by the algorithm in stead of $k=1$. Figure~\ref{fig:overlap-color_plot} shows the frequency $k=2$ is selected by the algorithm for each pair of $(\mu^X, \mu^Y)$. The dark spot means high number (close to $10$) is selected by the algorithm, which means algorithm very likely will pick $k=2$ over $k=1$ for the corresponding $(\mu^X, \mu^Y)$. While light spot means algorithm prefer $k=1$ for the corresponding value of $(\mu^X, \mu^Y)$. We can see the simulation result perfectly align with the theoretical curve (the black line), which separates the $k=2$ zone from the $k=1$ zone. It demonstrates that the Gabriel cross-validation works exactly as it suppose to under such setting. The position of dark spots shows that when the two clusters are reasonably apart (not overlapping too heavily) in both dimensions, the Gabriel cross-validation is asymptotically consistent.
+We confirm the result of Proposition~\ref{prop:twoclust} with a simulation.
+We perform $10$ replicates for each $(\mu^X, \mu^Y)$ pair, sweeping over
+a two-dimensional grid of values in the domain $[0,3] \times [0,3]$, with step
+size $0.1$ in each dimension.  In each
+replicate, we generate $N=20000$ observations from an equiprobably mixture
+of multivariate normal distributions with identity covariance, with one
+component having mean $(\muX, \muY)$ and
+the other component having mean $(-\muX, -\muY)$. We perform a single $2 \times 2$
+fold of Gabriel cross-validation and report the number of times
+(out of $10$ replicates) where $k=2$ is selected by the algorithm instead of $k=1$.
+Figure~\ref{fig:overlap-color_plot} shows the frequency with which $k=2$ is selected by
+the algorithm for each $(\mu^X, \mu^Y)$ pair. Darker (red) colors indicate
+higher numbers (close to $10$), situations where $k = 2$ is selected more
+often than $k = 1$. Ligher (blue) colors indicate that $k = 1$ is preferred.
+We can see the simulation result perfectly align with the
+theoretical curve (the black line), which separates the $k=2$ zone from the
+$k=1$ zone.
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=3in]{demo/overlap/color_plot.pdf}
-\caption{Number of times $k=2$ is selected out of $10$ replicates for each pair of $(\muX, \muY)$. The heat map shows the frequency $k=2$ is selected by the algorithm, with light means low number (of $k=2$) is selected and dark color means high number is selected. The black line is the theoretical curve, above which the algorithm suppose to pick $k=2$ and below which algorithm select $k=1$.  }
+\caption{Number of times $k=2$ is selected out of $10$ replicates for each
+pair of $(\muX, \muY)$. The heat map shows the frequency $k=2$ is selected by
+the algorithm, with light (blue) means $k = 1$ is preferred to $k = 2$, and
+dark (red) indicates $k = 2$ is preferred to $k = 1$.
+The black line is the theoretical boundary determined from
+Proposition~\ref{prop:twoclust}.}
 \label{fig:overlap-color_plot}
 \end{figure}
 
@@ -1307,6 +1305,147 @@ possible $k$, instead of the number of components in mixture model or
 well-separated compact regions commonly seen in literature. Therefore, their
 consistent result actually is convergent result, i.e. the selected $k$
 converges to its limit $k_0$ given such limit exists.
+
+
+
+\section{Analysis of Gabriel method: Single cluster in more than two dimensions}
+\label{sec:single-general-dim}
+
+\begin{proposition}
+Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
+of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^{p+q}$ is an
+independent draw from a mean-zero multivariate normal distribution with 
+covariance matrix $\Sigma_{XY}= \left( \begin{smallmatrix} \Sigma_{XX} & \Sigma_{XY} \\ 
+ \Sigma_{YX} & \Sigma_{YY} \end{smallmatrix}\right)$, with $\Sigma_{YY}$ has leading 
+eigenvalue $\lambda_1$ and corresponding eigenvector $u_1$. In this case, the data are drawn
+from a single cluster; the true number of clusters is~$1$.  If  $\frac{\sqrt{\lambda_1}}{2}
+ > \frac{u^T_1\Sigma_{YX}\Sigma_{XY}u_1}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}}$,
+then $\CV(1) < \CV(2)$ with probability tending to one as $m$ and $n$ increase.
+\end{proposition}
+
+\begin{proof}
+Let $X$ and $Y$ be jointly multivariate normal distributed with mean $\mathbf{0}$ and covariance matrix $\Sigma_{XY}$, i.e.
+\[	(X,Y) \sim \mathcal{N} \left( \mathbf{0}, \Sigma_{XY}\right)	\]
+where $\Sigma_{XY}=\begin{bmatrix} \Sigma_{XX} & \Sigma_{XY} \\  \Sigma_{YX} & \Sigma_{YY} \end{bmatrix}$.
+
+Let $\Sigma_{YY} = U \Lambda U^T$  be the eigendecomposition of $\Sigma_{YY}$,
+with leading eigenvalue $\lambda_1$ and corresponding eigenvector $u_1$. Then
+the centroid of $k$-means applying on $(y_1,..,y_n)$ is on the first principal
+component
+of $Y$,\[	E(u^T_1 Y|u^T_1 Y>0) = \bar{\mu}^Y_1 =\sqrt{2 \lambda_1/\pi}u_1\] and 
+\[	E(u^T_1 Y|u^T_1 Y<0) = \bar{\mu}^Y_2 =-\sqrt{2 \lambda_1/\pi}u_1\]
+ where $u^T_1 Y \sim \mathcal{N}(0,\lambda_1)$.
+
+To compute $\bar{\mu}^X_1 = E(X|u^T_1 Y>0)$, we need to know the conditional distribution $X|u^T_1 Y$. Since $(X,Y)$ has multivariate normal distribution, $(X,u^T_1 Y)$ also has a multivariate normal distribution with mean $\mathbf{0}$ and covariance matrix
+$$\Sigma_{X,u^T_1 Y}=\begin{bmatrix} \Sigma_{XX} & \Sigma_{XY} u_1 \\  u^T_1 \Sigma_{YX} & \lambda_1 \end{bmatrix}$$
+The conditional distribution $X|u^T_1 Y$ is hence normal with mean
+ $$\mu_{X|u^T_1 Y} = \Sigma_{XY} u_1 \lambda^{-1}_1 u^T_1 Y $$
+Therefore, 
+\begin{align}
+\bar{\mu}^X_1 &= E(X \mid u^T_1 Y>0) \nonumber \\ \nonumber
+ 			  &= E\left(E[X \mid u^T_1 Y] \mid u^T_1 Y>0\right) \\ \nonumber
+ 			  &=  E\left(\Sigma_{XY} u_1 \lambda^{-1}_1 u^T_1 Y \mid u^T_1 Y>0\right)\\ \nonumber
+ 			  &= \lambda^{-1}_1 \Sigma_{XY}u_1 E(u^T_1 Y \mid u^T_1 Y>0) \\ \nonumber
+ 			  &= \lambda^{-1}_1 \Sigma_{XY}u_1 \sqrt{2 \lambda_1/\pi} \\ \nonumber
+      &= \sqrt{2 / (\lambda_1 \pi)} \Sigma_{XY}u_1
+\end{align}
+Similar calculation yields $\bar{\mu}^X_2 = -\sqrt{2 / (\lambda_1 \pi)} \Sigma_{XY}u_1$.
+The decision rule to classify any observed value of $X$ to $\bar{\mu}^X_1$ is therefore
+\[	(\bar{\mu}^X_1)^T X >0	\hspace{0.2in}\text{or} \hspace{0.2in} u^T_1\Sigma_{YX}X>0\] 
+Since $u^T_1\Sigma_{YX}X$ is a linear combination of $X$, it also has normal distribution 
+\[	\mathcal{N} \left( 0, u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1\right)	\]
+And $(Y,u^T_1\Sigma_{YX}X)$ also have multivariate normal distribution with mean $\mathbf{0}$ 
+and covariance matrix
+\[
+\begin{bmatrix}
+\Sigma_{YY} & \Sigma_{YX}\Sigma_{XY}u_1  \\
+u^T_1\Sigma_{YX}\Sigma_{XY} &  u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1
+\end{bmatrix}
+\]
+The conditional distribution of $Y|u^T_1\Sigma_{YX}X$ is also multivariate normal with mean 
+\[	
+\mu_{Y|u^T_1\Sigma_{YX}X } = \Sigma_{YX}\Sigma_{XY}u_1 (u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1)^{-1}u^T_1\Sigma_{YX}X	
+\]
+The $Y$ center for $u^T_1\Sigma_{YX}X>0$ is
+\begin{align}
+\hat{\mu}^Y_1 &= E(Y|u^T_1\Sigma_{YX}X>0) \nonumber \\ \nonumber
+ 		      & =  \Sigma_{YX}\Sigma_{XY}u_1 (u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1)^{-1} E(u^T_1\Sigma_{YX}X \mid u^T_1\Sigma_{YX}X>0) \\ \nonumber
+\end{align}
+Note that $u^T_1\Sigma_{YX}X$ has normal distribution $\mathcal{N} \left( 0, u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1\right)$, so
+\[
+E(u^T_1\Sigma_{YX}X \mid u^T_1\Sigma_{YX}X>0) = \sqrt{2/\pi}\cdot\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}
+\]
+Therefore, we have the $Y$ center for $u^T_1\Sigma_{YX}X>0$ be
+\begin{align*}
+\hat{\mu}^Y_1 &= \sqrt{2/\pi}\cdot\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1} \hspace{0.1in} \Sigma_{YX}\Sigma_{XY}u_1 (u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1)^{-1} \\
+&=\frac{\sqrt{2/\pi}}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}} \Sigma_{YX}\Sigma_{XY}u_1
+\end{align*} 
+ 
+Recall that $\bar{\mu}^Y_1 =\sqrt{2 \lambda_1/\pi}u_1$, to judge if $CV(2) >
+CV(1)$, one only need to compare the distance between  $\hat{\mu}^Y_1$  and
+$\bar{\mu}^Y_1$ with distance between  $\hat{\mu}^Y_1$ and grand mean $0$. By
+the variance and bias decomposition of prediction MSE, when variance is the
+same, only bias influences the MSE. 
+
+After some linear algebra manipulation, we get
+$\|\hat{\mu}^Y_1 - \bar{\mu}^Y_1\|^2 > \|\hat{\mu}^Y_1\|^2$ or $\CV(2) >
+\CV(1)$ if and only if
+\[
+ \frac{\sqrt{\lambda_1}}{2} > \frac{u^T_1\Sigma_{YX}\Sigma_{XY}u_1}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}} 
+\]
+\end{proof}
+
+
+\section{Technical Lemmas}
+\label{app:technical-lemmas}
+
+\begin{lemma}\label{lem:truncated-normal-moments}
+
+If $Z$ is a standard normal random variable, then
+\[
+  \E(Z \mid a < Z < b)
+    = - \frac{\varphi(b) - \varphi(a)}
+             {\Phi(b) - \Phi(a)}
+\]
+and
+\[
+  \E\{(Z - \delta)^2 \mid a < Z < b\}
+    = \delta^2 + 1
+    - \frac{  (b - 2 \delta) \varphi(b)
+            - (a - 2 \delta) \varphi(a)}
+           {\Phi(b) - \Phi(a)}
+\]
+for all constants $a$, $b$, and $\delta$, where $\varphi(z)$ and $\Phi(z)$ are
+the standard normal probability density and cumulative distribution functions.
+These expressions are valid for $a = -\infty$ or $b = \infty$ by taking
+limits.
+
+\end{lemma}
+\begin{proof}
+We will derive the expression for the second moment.  Integrate to get
+\begin{align*}
+  \E[ (Z - \delta)^2 1\{Z < b\}]
+    &= \int_{-\infty}^b (z - \delta)^2 \varphi(z) \, dz \\
+    &= (\delta^2 + 1) \Phi(b) - (b - 2 \delta) \varphi(b).
+\end{align*}
+Now,
+\[
+  \E\{(Z - \delta)^2 \mid a < Z < b\}
+    =
+    \frac{  \E[ (Z - \delta)^2 1\{Z < b\}]
+          - \E[ (Z - \delta)^2 1\{Z < a\}]}
+         { \Phi(b) - \Phi(a) }.
+\]
+\end{proof}
+
+Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
+\begin{align*}
+  \E\{Z \mid Z > 0\} &= 2 \varphi(0) = \sqrt{2 / \pi}, \\
+  \E\{(Z - \delta)^2 \mid Z > 0 \}
+    &= \delta^2 + 1 - 4 \delta \varphi(0), \\
+  \E\{(Z - \delta)^2 \mid Z < 0 \}
+    &= \delta^2 + 1 + 4 \delta \varphi(0).
+\end{align*}
 
 
 \section{Wold CV estimation} \label{app:foobar}
