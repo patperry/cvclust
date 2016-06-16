@@ -2,6 +2,7 @@
 \usepackage{amsmath}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{booktabs}
 \usepackage{enumerate}
 \usepackage{enumitem}
 \usepackage{float}
@@ -635,7 +636,7 @@ replicates.  The simulation demonstrates that in the Gabriel cross-validation
 criterion chooses the correct answer $k = 1$ whenever $\rho < 0.5$; the
 criterion chooses $k \geq 2$ clusters whenever $|\rho| > 0.5$.
 
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=3in]{demo/nullcorr/equal.pdf}
 \caption{Cross-validation error on $10$ replicates, with the number of
@@ -1061,115 +1062,132 @@ deteriorate considerably relative to the Gabriel method.
 \section{Empirical validation}
 \label{sec:empirical-validation}
 
-We also applied our proposed method to three real world data sets, two were
-obtained from the University of California Irvine machine learning repository.
-The first and third data sets are selected because there are clear number of
-clusters in those two data sets. The second data set is used as a benchmark
-data set since it was widely used in literature.
+To further validate our method, we applied it to three real world data sets
+with known clustering structure.
 
 
-The first one is congress voting data which consists of voting records of
-$98$th United States Congress, $2$nd session \citep{schlimmer1987concept}.
-This data set includes votes for each of the U.S. House of Representatives
-Congressmen on the $16$ key votes identified by the \textit{CQA}
-(Congressional Quarterly Almanac). For each vote, each Congressman either vote
-positively ``yea" (voted for/paired for/announced for),  negatively ``nay''
-(voted against/paired against/announced against) or position unknown ``?". We
-took out those records contain ``?" before comparing each algorithm. It
-results in $232$ remaining records, with $124$ democrat and $108$ republican. 
+The first data set is congressional voting data consisting of voting records
+of the second session of the $98$th United States Congress,
+\citep{schlimmer1987concept}.  This data set includes votes for legislators on
+the $P = 16$ key votes.  For each vote, each legislator either votes
+positively (``yea'') negatively (``nay''). We removed legislators with missing
+votes.  This results in $N = 232$ remaining records, with $124$ democrat and
+$108$ republican. There are $k = 2$ clusters of legislators, corresponding to
+political party.
 
 
-The second data set is the well-known Wisconsin breast cancer data set
-\citep{mangasarian1990pattern}. After excluding the records with missing data,
-this data set consists records of $683$ patients, each with measurements of
-nine attributes of their biopsy specimens. It is known that there exist at
-least two groups of patients: $444$ patients with benign specimens and $239$
-patients with malignant specimens.
+The second benchmark is the \citet{mangasarian1990pattern} Wisconsin breast
+cancer data set.  After excluding the records with missing data, this data set
+consists records of $N = 683$ patients, each with measurements of $P = 9$
+attributes of their biopsy specimens. It is known that there are $k = 2$
+groups of patients: $444$ patients with benign specimens and $239$ patients
+with malignant specimens. There is some disagreement as to what the ``true''
+value of $k$ should be for this data set; \citet{fujita2014non} have argued
+that the malign group is heterogeneous, and should be split into two smaller
+clusters, yielding $k = 3$.
 
 
-The third data set is gene expression data of $5$ types of brain tumours from
-\cite{de2008clustering}, which contains $42$ observations including $10$
-medulloblastomas, $10$ malignant gliomas, $10$ atypical teratoid/rhabdoid
-tumours (AT/RTs), $8$ primitive neuroectodermal tumours (PNETs) and $4$ normal
-cerebella. It was originally used by \cite{pomeroy2002prediction} to show that
-medulloblastomas are molecularly distinct from other types of brain tumours.
+The third data set is gene expression data of $k = 5$ types of brain tumors
+from \citet{pomeroy2002prediction}, which contains $N = 42$ observations
+including $10$ medulloblastomas, $10$ malignant gliomas, $10$ atypical
+teratoid/rhabdoid tumors, $8$ primitive neuroectodermal tumours and $4$ normal
+cerebella. After preprocessing and feature selection, there are $P = 1379$
+variables, corresponding to log activation levels for 1379 genes.
 
 
-Data was collected with Affymetrix microarrays, which estimates the number of
-RNA copies found in the cell sample (frozen specimens). Data was preprocessed
-as following: as a common procedure, all genes with expression level below
-$10$ are set to a minimum level threshold of $10$. The maximum threshold is
-set at $16,000$. Values below or above these thresholds are often unreliable.
-To remove uninformative genes, for each gene $j$ (attribute), the mean $m_j$
-among the samples was calculated. The $10\%$ largest and smallest values are
-discarded in order to remove extreme values. Based on the mean, following
-transformation is applied on every value $x_{ij}$ of sample $i$ and gene j \[
-y_{ij} = \log_2 (x_{ij}/m_j)	\] 
-
-Genes with expression levels differing by at least $l$-flod in at least $c$
-samples from their mean expression level across the sample were selected. The
-parameter $l$ and $c$ were chosen so as to produce a filtered data set with at
-least $10\%$ of the original number of genes \citep{de2008clustering}. Such
-preprocessing procedure results in $1379$ genes selected. After filtering
-step, data is restored in the original scale (i.e. $x_{ij}$). So the data set
-is $42 \times 1379$, which serves as a high dimensional example.
 
 
-\begin{table}[H]
-\begin{center}
+%% Data was collected with Affymetrix microarrays, which estimates the number of
+%% RNA copies found in the cell sample (frozen specimens). Data was preprocessed
+%% as following: as a common procedure, all genes with expression level below
+%% $10$ are set to a minimum level threshold of $10$. The maximum threshold is
+%% set at $16,000$. Values below or above these thresholds are often unreliable.
+%% To remove uninformative genes, for each gene $j$ (attribute), the mean $m_j$
+%% among the samples was calculated. The $10\%$ largest and smallest values are
+%% discarded in order to remove extreme values. Based on the mean, following
+%% transformation is applied on every value $x_{ij}$ of sample $i$ and gene j \[
+%% y_{ij} = \log_2 (x_{ij}/m_j)	\] 
+%% 
+%% Genes with expression levels differing by at least $l$-flod in at least $c$
+%% samples from their mean expression level across the sample were selected. The
+%% parameter $l$ and $c$ were chosen so as to produce a filtered data set with at
+%% least $10\%$ of the original number of genes \citep{de2008clustering}. Such
+%% preprocessing procedure results in $1379$ genes selected. After filtering
+%% step, data is restored in the original scale (i.e. $x_{ij}$). So the data set
+%% is $42 \times 1379$, which serves as a high dimensional example.
+
+
+
+\begin{table}
+\centering
 \captionsetup{justification=centering}
-\caption{\label{table2} Number of clusters selected by each algorithm}
-\begin{tabular}{lccccc}
-    \hline                  
- & Congress Voting && Breast Cancer && Brain Tumours \\ \hline                    
-CH-index & $2$ && $2$  && $2$    \\
-Hartigan & $3$ && $3$  &&  $4$   \\
-Jump & $10$ && $9$ && $1$  \\   
-Prediction strength & $2$ &&  $2$ && $1$    \\
-Bootstrap stability & $2$ &&  $2$ &&  $7$   \\ 
-Gap & $8$ && $10$ && $10$  \\   
-Gaussian-BIC & $2$ && $5$ && $2$  \\   
-Gabriel & $2$  && $3$  && $5$  \\    
-Gabriel-corr-correct & $2$  && $2$  && $5$  \\  
-Wold & $2$ && $3$ && $4$ \\  \hline 
-
+\caption{\label{tab:benchmark} Number of clusters selected on benchmark datasets}
+\begin{tabular}{lccc}
+\toprule                  
+         & \multicolumn{3}{c}{Dataset} \\
+\cmidrule(l){2-4}
+Method   & Congress Voting & Breast Cancer & Brain Tumours \\
+\midrule                    
+Gabriel  & $2$             & $3$           & $5$  \\    
+Gabriel (corr.~correct) & $2$ & $2$           & $5$  \\  
+Wold     & $2$             & $3$           & $4$  \\
+Gap      & $8$             & $10$          & $10$ \\   
+BIC      & $2$         & $5$           & $2$  \\   
+CH       & $2$             & $2$           & $2$  \\
+Hartigan & $3$             & $3$           & $4$  \\
+Jump     & $10$            & $9$           & $1$  \\   
+PS       & $2$  & $2$           & $1$  \\
+Stab.    & $2$  & $2$           & $7$  \\ 
+\midrule 
+Ground Truth & $2$         & $2$ or $3$    & $5$  \\
+\bottomrule
 \end{tabular}
-\end{center}
-\hspace{0.5in} \footnotesize {All the algorithms executed with their default parameter settings with $k$ ranges from $1$ to $10$}
 \end{table} 
 
 
-Since most congressmen vote based on their parties' interest, two parties
-(Democratic and Republican) represent two clusters in this data set. So the
-optimal number should be two. Close inspection shows $k$-means with $k=2$
-separates the two parties very well with the lowest miss-classification error
-$10.43\%$ ($k=3$ has $14.78\%$). Our proposed Gabriel cross-validation method, along with
-several other algorithms correctly pick $k=2$ for this data set. Note that
-CH-index and Bootstrap stability also return $k=2$, but $2$ is the lower bound
-those methods can select for $k$. So it's not clear they actually choose $k=2$
-or they hit the lower bound (they would pick $k=1$ if allowed). 
-
-For the breast cancer data, it's known to have $2$ clusters based on whether
-it's benign specimens or malignant specimens. Although the proposed Gabriel
-method picks $k=3$, its correlation-corrected version correctly picks $k=2$.
-It shows the necessity to correct for the high correlation among data
-features. However, for this data $k=3$ is also an acceptable answer, as
-\cite{fujita2014non} noticed that the malign group is quite heterogeneous and
-can be further clustered into at least two subgroups.
 
 
-The brain tumours gene expression data is a typical high-dimension data with
-$p > n$. It is clear that the correct number of clusters should be $5$, the
-number of brain tumour types. Indeed, $k$-means results with $k=5$ show that
-the $4$ normal human cerebella are well separated from brain tumours as they
-form a single cluster.  Medulloblastomas, malignant gliomas and AT/RT tumours
-also form $3$ respective clusters, which means they can be separated from each
-other. Such results are similar to those found in
-\cite{pomeroy2002prediction}, whose analysis is based on the first $3$
-principle components of the original data.    From table \ref{table2} we can
-see only our proposed Gabriel method (as well as its correlation-corrected
-version) correctly selects $k=5$, underline how difficult it was to pick the
-right $k$ when dimension is high. 
+We applied the Gabriel cross-validation method, the correlation-corrected
+version, and the competing methods described in Section~\ref{sec:simulations}
+to each of the three benchmark datasets.  In each dataset, we allowed the
+number of clusters, $k$, to range from $1$ to $10$.  Table~\ref{tab:benchmark}
+displays the results.  Both versions of the Gabriel method perform well on all
+three benchmark datasets. In fact, Gabriel cross-validation is the only method
+that correctly identifies the number of clusters in all three benchmark
+datasets.
+
+
+%% Since most congressmen vote based on their parties' interest, two parties
+%% (Democratic and Republican) represent two clusters in this data set. So the
+%% optimal number should be two. Close inspection shows $k$-means with $k=2$
+%% separates the two parties very well with the lowest miss-classification error
+%% $10.43\%$ ($k=3$ has $14.78\%$). Our proposed Gabriel cross-validation method, along with
+%% several other algorithms correctly pick $k=2$ for this data set. Note that
+%% CH-index and Bootstrap stability also return $k=2$, but $2$ is the lower bound
+%% those methods can select for $k$. So it's not clear they actually choose $k=2$
+%% or they hit the lower bound (they would pick $k=1$ if allowed). 
+%% 
+%% For the breast cancer data, it's known to have $2$ clusters based on whether
+%% it's benign specimens or malignant specimens. Although the proposed Gabriel
+%% method picks $k=3$, its correlation-corrected version correctly picks $k=2$.
+%% It shows the necessity to correct for the high correlation among data
+%% features. However, for this data $k=3$ is also an acceptable answer, as
+%% \cite{fujita2014non} noticed that the malign group is quite heterogeneous and
+%% can be further clustered into at least two subgroups.
+%% 
+%% 
+%% The brain tumours gene expression data is a typical high-dimension data with
+%% $p > n$. It is clear that the correct number of clusters should be $5$, the
+%% number of brain tumour types. Indeed, $k$-means results with $k=5$ show that
+%% the $4$ normal human cerebella are well separated from brain tumours as they
+%% form a single cluster.  Medulloblastomas, malignant gliomas and AT/RT tumours
+%% also form $3$ respective clusters, which means they can be separated from each
+%% other. Such results are similar to those found in
+%% \cite{pomeroy2002prediction}, whose analysis is based on the first $3$
+%% principle components of the original data.    From table \ref{table2} we can
+%% see only our proposed Gabriel method (as well as its correlation-corrected
+%% version) correctly selects $k=5$, underline how difficult it was to pick the
+%% right $k$ when dimension is high. 
 
 
 
