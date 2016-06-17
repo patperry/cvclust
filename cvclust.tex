@@ -1338,9 +1338,10 @@ $k$-means clustering with $k = 30$; they found 23 of the clusters to be
 uninterpretable, and they found 7 clusters to be meaningful. To compare our
 clusters with the Tavazoie et al.\ clusters, we prepared a confusion matrix
 comparing our clusters with the 7 interpretable Tavazoie clusters in
-Table~\ref{table:confusion}.  (Appendix~\ref{app:confusion} contains a
-confusion matrix for all 30 Tavazoie clusters, including the non-interpretable
-ones.) Entry $(i,j)$ of the confusion matrix gives the number of genes in
+Table~\ref{table:confusion}.
+%%(Appendix~\ref{app:confusion} contains a confusion matrix for all 30
+%% Tavazoie clusters, including the non-interpretable ones.)
+Entry $(i,j)$ of the confusion matrix gives the number of genes in
 Tavazoie's Cluster~$i$ and our Cluster~$j$. 
 
 
@@ -1403,45 +1404,65 @@ found by our analysis.
 \label{sec:discussion}
 
 
-In this paper, we proposed a novel approach to estimate the number of
-clusters. The intuition behind our proposed methods is to transfer the
-unsupervised learning problem into supervised learning problem via novel form
-of cross validation. Such approach is quite different from previous methods which 
-utilize the within/between cluster dispersion or stability criterion for selecting the 
-optimal $k$. Our method utilizes the connection between different dimensions (columns)
-of data through the uniqueness of each cluster center. We proved the self-consistency 
-for our proposed Gabriel cross-validation method as well as its asymptotic property with Gaussian noise,
-and showed the robustness of our method by simulation. Our method has very good performance
-in our limited simulation settings and real data application, and clearly the superior
-one when data has heterogeneous variance or is heavy-tailed.
+In this paper, we proposed a new approach to estimate the number of clusters
+to be used in $k$-means clustering. The intuition behind our proposed method
+is to transform the unsupervised learning problem into a supervised learning
+problem via a form of Gabriel cross validation.  We proved that our method is
+self-consistent, and we analyzed its behavior in some special cases of
+Gaussian mixture models.  Using simulations and real data examples, we
+demonstrated that our method has good performance, competitive with existing
+approaches. The simulations and empirical benchmarks demonstrate the
+advantages of our method. In the yeast cell cycle application, our method
+was able to identify meaningful gene groups with a small number of clusters.
 
-Besides no strong modeling assumption is required, our proposed method is robust against data set 
-with variance heterogeneity, unequal number of observations, non-Gaussian noise and high-dimension. 
-Such robustness is important in practice because for any given data, it's hard to tell whether
-its clusters have different number of observations, is the variance equal for each cluster,
-or what underlying noise distribution it has. The weakness of our proposed method is 
-that its theory assumes only week correlation between ``predictor'' columns and ``response'' 
-columns. In practice, many data sets don't exhibit high correlations between columns, where
-our proposed method can be safely applied. In case the high correlation does exist, 
-the correlation-corrected version of Gabriel cross-validation method in section $4.3$ can be used if we can 
-assume common covariance structure. Other procedure such as leave out most columns for clustering 
-may also be used to reduce its effect. However, the theory for such procedure has not
-been fully developed and it could be the future research topic. 
 
-Another situation where our proposed method cannot be directly used is when the clusters 
-are non-convex. In such situation, $k$-means itself doesn't work well, for example two 
-concentric circles share the same cluster center \citep{hastie2009elements}. However, it's 
-possible that our proposed Gabriel cross-validation method can be used on the transformed data set. In the
-concentric circles case where spectral clustering is appropriate, our proposed method can be applied 
-on the eigenvector subspace of the graph Laplacian matrix inside the spectral clustering algorithm
-to find the optimal $k$. This can also be the future research topic. 
+There are many other clustering algorithms that get used in practice besides
+$k$-means. We suspect that it should be possible to apply our method in the
+context of a spectral clustering procedure, after transforming by the
+eigenvectors of the Laplacian matrix. For other clustering schemes, including
+versions of hierarchical clustering, we are less certain about the viability
+of Gabriel cross-validation.  It is an open question as to whether Gabriel
+cross-validation can be extended to other clustering methods, and whether such
+extensions will perform well in practice.
+
+
+For $k$-means clustering, Gabriel cross-validation is competitive with
+other model selection methods, especially in the presence of high-dimensional,
+heterogeneous, or heavy-tailed data.
+
+
+%% Besides no strong modeling assumption is required, our proposed method is
+%% robust against data set with variance heterogeneity, unequal number of
+%% observations, non-Gaussian noise and high-dimension.  Such robustness is
+%% important in practice because for any given data, it's hard to tell whether
+%% its clusters have different number of observations, is the variance equal for
+%% each cluster, or what underlying noise distribution it has. The weakness of
+%% our proposed method is that its theory assumes only week correlation between
+%% ``predictor'' columns and ``response'' columns. In practice, many data sets
+%% don't exhibit high correlations between columns, where our proposed method can
+%% be safely applied. In case the high correlation does exist, the
+%% correlation-corrected version of Gabriel cross-validation method in section
+%% $4.3$ can be used if we can assume common covariance structure. Other
+%% procedure such as leave out most columns for clustering may also be used to
+%% reduce its effect. However, the theory for such procedure has not been fully
+%% developed and it could be the future research topic. 
+%% 
+%% 
+%% Another situation where our proposed method cannot be directly used is when
+%% the clusters are non-convex. In such situation, $k$-means itself doesn't work
+%% well, for example two concentric circles share the same cluster center
+%% \citep{hastie2009elements}. However, it's possible that our proposed Gabriel
+%% cross-validation method can be used on the transformed data set. In the
+%% concentric circles case where spectral clustering is appropriate, our proposed
+%% method can be applied on the eigenvector subspace of the graph Laplacian
+%% matrix inside the spectral clustering algorithm to find the optimal $k$. This
+%% can also be the future research topic. 
 
 
 
 \appendix
 
-\section{Clustering scree plot}
-  
+\section{Clustering scree plot examples}
 
 \label{sec:elbow-fail}
 
@@ -1480,55 +1501,54 @@ plotted against the number of clusters, $k$.}
 
 
 
-\section{Review of consistency results for clustering}
-
-
-Some proposed methods provide theoretical consistency result for choosing $k$.
-Assume data is a mixture of $G$ $p$-dimension clusters with equal prior,
-identically distributed with common covariance matrix and finite fourth
-moments in each dimension, \citet{sugar2003finding} shows the Jump method will
-pick the correct $k$ under the conditions that cluster centers are
-sufficiently separated and an appropriate transformation is used.
-Specifically, let $\Delta\sqrt{p}$ denotes the minimum Euclidean distance
-between cluster centers, \citet{sugar2003finding} shows that the jump will be
-maximized at $k=G$ given that $\Delta > 6$ and the existence of a positive $Y$
-such that
-\[
-  \left(\frac{p\Delta^2W}{9G}\right)^{-Y}
-    + \left(
-        W \left[\frac{2^{2H^*(X)}}{K^2_{max}2\pi e}\right]
-        - (\frac{\Delta}{6})^2(1-W)
-      \right)^{-Y} < 2
-\]
-and $\left(\frac{p\Delta^2W}{9G}\right)^{-Y} <1/2$, where $H^*(X)$ is the
-minimum entropy of the cluster membership over each dimension and $W =1-
-\frac{6^4V_{\mathbf{X}}}{(\Delta^2-36)^2}$ with $V_{\mathbf{X}} = \var\left(
-  1/p ||\mathbf{X}-\mu_j||^2_{\Gamma^{-1}} \mid \mathbf{X}
-\hspace{0.05in}\text{in jth cluster}\right)$
-
-\cite{tibshirani2005cluster} proved that the prediction strength method is
-consistent under the setting that the observations in $p$-dimension are
-uniformly distributed within one unit from their respective cluster centers,
-with minimum distance between the $G$ cluster centers is four unit. Under such
-well-separated setting, they show that 
-\[ ps(G) = 1+ o_p(1), \hspace{0.5in} \underset{k \geq G+1}{\text{sup}} ps(k)\leq \frac{2}{3}+ o_p(1) \]
-therefore $\hat{k}$ is consistent in estimating $G$.  When data does come from
-mixture of Gaussian distribution, the model-based method of
-\citet{fraley2002model} is consistent in estimating $k$ in low dimension.
-
-Let $\Psi$ denotes any given base-clustering algorithm (e.g $k$-means), and
-$\Psi(Z,k)$ the clustering obtained by applying $\Psi$ on data $Z$ with
-parameter $k$. Also let $k_0$ be the optimal number of cluster and
-$d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ be the measure of distance between clustering
-$\Psi(Z_1,k)$ and $\Psi(Z_2,k)$ where $Z_1$ and $Z_2$ are two independent
-samples from population. \citet{wang2010consistent} shows that their proposed
-method will consistently select $k = k_0$, given such $k_0$ exists and
-$d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ converges to zero at proper rate $r_k$.
-However, $k_0$ is defined as the most stable number for $\Psi$ among all the
-possible $k$, instead of the number of components in mixture model or
-well-separated compact regions commonly seen in literature. Therefore, their
-consistent result actually is convergent result, i.e. the selected $k$
-converges to its limit $k_0$ given such limit exists.
+%% \section{Review of consistency results for clustering}
+%% 
+%% Some proposed methods provide theoretical consistency result for choosing $k$.
+%% Assume data is a mixture of $G$ $p$-dimension clusters with equal prior,
+%% identically distributed with common covariance matrix and finite fourth
+%% moments in each dimension, \citet{sugar2003finding} shows the Jump method will
+%% pick the correct $k$ under the conditions that cluster centers are
+%% sufficiently separated and an appropriate transformation is used.
+%% Specifically, let $\Delta\sqrt{p}$ denotes the minimum Euclidean distance
+%% between cluster centers, \citet{sugar2003finding} shows that the jump will be
+%% maximized at $k=G$ given that $\Delta > 6$ and the existence of a positive $Y$
+%% such that
+%% \[
+%%   \left(\frac{p\Delta^2W}{9G}\right)^{-Y}
+%%     + \left(
+%%         W \left[\frac{2^{2H^*(X)}}{K^2_{max}2\pi e}\right]
+%%         - (\frac{\Delta}{6})^2(1-W)
+%%       \right)^{-Y} < 2
+%% \]
+%% and $\left(\frac{p\Delta^2W}{9G}\right)^{-Y} <1/2$, where $H^*(X)$ is the
+%% minimum entropy of the cluster membership over each dimension and $W =1-
+%% \frac{6^4V_{\mathbf{X}}}{(\Delta^2-36)^2}$ with $V_{\mathbf{X}} = \var\left(
+%%   1/p ||\mathbf{X}-\mu_j||^2_{\Gamma^{-1}} \mid \mathbf{X}
+%% \hspace{0.05in}\text{in jth cluster}\right)$
+%% 
+%% \cite{tibshirani2005cluster} proved that the prediction strength method is
+%% consistent under the setting that the observations in $p$-dimension are
+%% uniformly distributed within one unit from their respective cluster centers,
+%% with minimum distance between the $G$ cluster centers is four unit. Under such
+%% well-separated setting, they show that 
+%% \[ ps(G) = 1+ o_p(1), \hspace{0.5in} \underset{k \geq G+1}{\text{sup}} ps(k)\leq \frac{2}{3}+ o_p(1) \]
+%% therefore $\hat{k}$ is consistent in estimating $G$.  When data does come from
+%% mixture of Gaussian distribution, the model-based method of
+%% \citet{fraley2002model} is consistent in estimating $k$ in low dimension.
+%% 
+%% Let $\Psi$ denotes any given base-clustering algorithm (e.g $k$-means), and
+%% $\Psi(Z,k)$ the clustering obtained by applying $\Psi$ on data $Z$ with
+%% parameter $k$. Also let $k_0$ be the optimal number of cluster and
+%% $d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ be the measure of distance between clustering
+%% $\Psi(Z_1,k)$ and $\Psi(Z_2,k)$ where $Z_1$ and $Z_2$ are two independent
+%% samples from population. \citet{wang2010consistent} shows that their proposed
+%% method will consistently select $k = k_0$, given such $k_0$ exists and
+%% $d\{\Psi(Z_1,k),\Psi(Z_2,k)\}$ converges to zero at proper rate $r_k$.
+%% However, $k_0$ is defined as the most stable number for $\Psi$ among all the
+%% possible $k$, instead of the number of components in mixture model or
+%% well-separated compact regions commonly seen in literature. Therefore, their
+%% consistent result actually is convergent result, i.e. the selected $k$
+%% converges to its limit $k_0$ given such limit exists.
 
 
 
@@ -1696,48 +1716,50 @@ Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
 
 
 
-\section{Confusion matrix} \label{app:confusion}
-
-\begin{table}
-%\captionsetup{justification=centering}
-\caption{\label{table:confusion-complete} Complete confusion matrix comparing $5$ clusters to $30$ clusters }
-\begin{tabular}{lccccc|c}
-  \hline
- & Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 & Cluster 5 & Total \\ 
-  \hline
-  Cluster 1 & 0 & 0 & 1 & 161 & 2 & 164 \\ 
-  Cluster 2 & 1 & 0 & 0 & 0 & 185 & 186 \\ 
-  Cluster 3 & 0 & 0 & 91 & 11 & 2 & 104 \\ 
-  Cluster 4 & 0 & 102 & 2 & 66 & 0 & 170 \\ 
-  Cluster 5 & 152 & 0 & 0 & 0 & 0 & 152 \\ 
-  Cluster 6 & 1 & 2 & 12 & 85 & 4 & 104 \\ 
-  Cluster 7 & 1 & 10 & 83 & 7 & 0 & 101 \\ 
-  Cluster 8 & 3 & 145 & 0 & 0 & 0 & 148 \\ 
-  Cluster 9 & 142 & 0 & 0 & 0 & 5 & 147 \\ 
-  Cluster 10 & 12 & 27 & 24 & 20 & 6 & 89 \\ 
-  Cluster 11 & 0 & 5 & 81 & 8 & 0 & 94 \\ 
-  Cluster 12 & 3 & 68 & 5 & 3 & 1 & 80 \\ 
-  Cluster 13 & 0 & 1 & 12 & 81 & 5 & 99 \\ 
-  Cluster 14 & 0 & 1 & 29 & 6 & 38 & 74 \\ 
-  Cluster 15 & 60 & 53 & 2 & 0 & 0 & 115 \\ 
-  Cluster 16 & 7 & 0 & 0 & 9 & 83 & 99 \\ 
-  Cluster 17 & 9 & 0 & 72 & 1 & 1 & 83 \\ 
-  Cluster 18 & 3 & 16 & 10 & 67 & 5 & 101 \\ 
-  Cluster 19 & 62 & 2 & 0 & 1 & 8 & 73 \\ 
-  Cluster 20 & 11 & 0 & 6 & 2 & 65 & 84 \\ 
-  Cluster 21 & 1 & 13 & 6 & 44 & 6 & 70 \\ 
-  Cluster 22 & 33 & 15 & 28 & 9 & 0 & 85 \\ 
-  Cluster 23 & 2 & 18 & 2 & 25 & 22 & 69 \\ 
-  Cluster 24 & 1 & 38 & 45 & 1 & 0 & 85 \\ 
-  Cluster 25 & 2 & 57 & 16 & 1 & 0 & 76 \\ 
-  Cluster 26 & 5 & 3 & 23 & 19 & 0 & 50 \\ 
-  Cluster 27 & 9 & 0 & 30 & 5 & 20 & 64 \\ 
-  Cluster 28 & 0 & 7 & 23 & 0 & 38 & 68 \\ 
-  Cluster 29 & 27 & 2 & 10 & 1 & 11 & 51 \\ 
-  Cluster 30 & 3 & 5 & 41 & 1 & 10 & 60 \\ \hline
-  Total & 550 & 590 & 654 & 634 & 517 & 2945 \\ \hline
-\end{tabular}
-\end{table}
+%% \section{Confusion matrix} \label{app:confusion}
+%% 
+%% \begin{table}
+%%   \footnotesize
+%% %\captionsetup{justification=centering}
+%% \caption{\label{table:confusion-complete} Complete confusion matrix comparing
+%% $5$ clusters to $30$ clusters }
+%% \begin{tabular}{lccccc|c}
+%%   \toprule
+%%  & Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 & Cluster 5 & Total \\ 
+%%   \midrule
+%%   Cluster 1 & 0 & 0 & 1 & 161 & 2 & 164 \\ 
+%%   Cluster 2 & 1 & 0 & 0 & 0 & 185 & 186 \\ 
+%%   Cluster 3 & 0 & 0 & 91 & 11 & 2 & 104 \\ 
+%%   Cluster 4 & 0 & 102 & 2 & 66 & 0 & 170 \\ 
+%%   Cluster 5 & 152 & 0 & 0 & 0 & 0 & 152 \\ 
+%%   Cluster 6 & 1 & 2 & 12 & 85 & 4 & 104 \\ 
+%%   Cluster 7 & 1 & 10 & 83 & 7 & 0 & 101 \\ 
+%%   Cluster 8 & 3 & 145 & 0 & 0 & 0 & 148 \\ 
+%%   Cluster 9 & 142 & 0 & 0 & 0 & 5 & 147 \\ 
+%%   Cluster 10 & 12 & 27 & 24 & 20 & 6 & 89 \\ 
+%%   Cluster 11 & 0 & 5 & 81 & 8 & 0 & 94 \\ 
+%%   Cluster 12 & 3 & 68 & 5 & 3 & 1 & 80 \\ 
+%%   Cluster 13 & 0 & 1 & 12 & 81 & 5 & 99 \\ 
+%%   Cluster 14 & 0 & 1 & 29 & 6 & 38 & 74 \\ 
+%%   Cluster 15 & 60 & 53 & 2 & 0 & 0 & 115 \\ 
+%%   Cluster 16 & 7 & 0 & 0 & 9 & 83 & 99 \\ 
+%%   Cluster 17 & 9 & 0 & 72 & 1 & 1 & 83 \\ 
+%%   Cluster 18 & 3 & 16 & 10 & 67 & 5 & 101 \\ 
+%%   Cluster 19 & 62 & 2 & 0 & 1 & 8 & 73 \\ 
+%%   Cluster 20 & 11 & 0 & 6 & 2 & 65 & 84 \\ 
+%%   Cluster 21 & 1 & 13 & 6 & 44 & 6 & 70 \\ 
+%%   Cluster 22 & 33 & 15 & 28 & 9 & 0 & 85 \\ 
+%%   Cluster 23 & 2 & 18 & 2 & 25 & 22 & 69 \\ 
+%%   Cluster 24 & 1 & 38 & 45 & 1 & 0 & 85 \\ 
+%%   Cluster 25 & 2 & 57 & 16 & 1 & 0 & 76 \\ 
+%%   Cluster 26 & 5 & 3 & 23 & 19 & 0 & 50 \\ 
+%%   Cluster 27 & 9 & 0 & 30 & 5 & 20 & 64 \\ 
+%%   Cluster 28 & 0 & 7 & 23 & 0 & 38 & 68 \\ 
+%%   Cluster 29 & 27 & 2 & 10 & 1 & 11 & 51 \\ 
+%%   Cluster 30 & 3 & 5 & 41 & 1 & 10 & 60 \\ \midrule
+%%   Total & 550 & 590 & 654 & 634 & 517 & 2945 \\ \bottomrule
+%% \end{tabular}
+%% \end{table}
 
 
 
