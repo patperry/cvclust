@@ -1191,71 +1191,204 @@ datasets.
 
 
 
-\section{Application on Yeast data set}
+\section{Application to yeast cell cycle data}
 \label{sec:application-yeast}
 
+\subsection{Motivation}
 
-The yeast Saccharomyces cerevisiae data set was collected by \cite{cho1998genome} to study the characterization of the cell cycle related processes of the budding yeast S. cerevisiae. To obtain data, cdc28 cells were synchronized by raising temperature to $37^\circ$C in late G1 phase, and then reinitiated by changing cells to cooler environment ($25^\circ$C). Data was collected at $17$ time points at every $10$ minutes interval covering almost $2$ complete cell cycles. Oligonucleotide microarrays was used to query $6,220$ gene expression profiles at these $17$ time points. Besides the original paper, several other studies have analyzed this data.
+Now that we have established that Gabriel cross-validation can effectively
+estimate the number of clusters, we apply our method to a yeast cell cycle
+dataset. This dataset was collected by \cite{cho1998genome} to study the cell
+cycle of budding yeast Saccharomyces cerevisiae. Other authors, including
+\citet{tavazoie1999systematic} and \citet{dortet2008model} have used $k$-means
+and related methods to cluster the genes in the dataset, with $k$
+approximately equal to~30. In both of these analyses, the authors discard the
+majority of their clusters as uninterpretable or noise, focusing instead on a
+small number of clusters. In contrast to these previous analyses, Gabriel
+cross-validation finds a small number, $k = 5$ clusters, all of which are
+interpretable.
 
-\cite{tavazoie1999systematic} applied $k$-means clustering on the preprocessed data with $k=30$ and discovered several periodic clusters. The preprocessing procedure includes choosing the most variable $2,945$ geness among the total $6,220$. The normalized dispersion across time points (s.d/mean) was used as the metric of variation for selection. Data at time points $90$ and $100$ minutes were removed because they were deemed unreliable. It results a $2,945$ by $15$ data matrix. The last step of the preprocessing procedure was to variance normalize each gene across the $15$ time points, which is done by subtracting the mean and then dividing by the standard deviation. The result is each gene has mean zero and standard deviation equal to one across the time points.
 
-\cite{dortet2008model} performed model-based clustering on the preprocessed data of \cite{tavazoie1999systematic} and  found $27$ clusters. They classified the $27$ clusters into $3$ major types: cyclic gene clusters, stress gene clusters and the clusters neither cyclically nor sensitive to the induced stress. 
+\subsection{Data collection and preprocessing}
 
-We also applied our proposed Gabriel method on the preprocessed data of \cite{tavazoie1999systematic}. The algorithm found $5$ clusters. Note here we cluster the genes as observations into clusters and the $15$ time points are considered attributes of each gene. Since the dimensions (time points) are likely to be correlated, we also applied the correlation-corrected version of Gabriel method on the data which also result $5$ clusters. This numbers is much smaller compare to those of \cite{tavazoie1999systematic} and \cite{dortet2008model}. We will focus our analysis on the $5$ clusters found by the proposed method, whose result is summarized on the bottom panel of Figure \ref{fig:5_clusters}, where each cluster is presented by the mean expression level of all the genes within that cluster over $15$ time points. Similar as \cite{tavazoie1999systematic}, we found the members of each cluster to be significantly enriched for genes function in similar biological process. Each gene is mapped with the Gene Ontology (GO) Annotation in Saccharomyces Genome Database (SGD) database, which provides Gene Ontology (GO) annotation of the entire genome using GO slims. GO slims are subsets of GO terms that give broad overview of ontology content and allow grouping of genes into broad categories, such as biological process, molecular function or cellular component. We choose to group genes in terms of biological process, which is a recognized series of events or molecular functions. There are total $103$ categories for biological process.
+To obtain the raw data, \citet{cho1998genome} first synchronized a collection
+of CDC28 yeast cells by raising their temperature to $37^\circ$C in the late
+G1 cell cycle phase, then they reinitiated the cell cycle by switching them to
+a cooler environment ($25^\circ$C). The authors collected data at $17$ time
+points spaced evenly at $10$-minute intervals, covering almost $2$ complete
+cell cycles. At each of the $17$ time points, they used
+oligonucleotide microarrays to measure $6220$ gene expression profiles.
 
-To identify biologically meaningful gene clusters from spurious ones, \cite{tavazoie1999systematic} introduced a method, enrichment analysis, to assess the statistical significance of the over-represented gene class in a cluster using hypergeometric distribution. Specifically, the $p$-value of observing $k$ genes from a particular category group within a cluster of size $m$ is given by:
-\[	P = 1-\sum^{k-1}_{i=1} \frac{{{2945-n}\choose{m-i}}{{n}\choose{i}} }{ {{2945} \choose{m}} }\] 
-where $n$ is the total genes in that group. It can be seen as testing the null hypothesis that genes are randomly  distributed among each cluster. The categories with the most significant grouping of gene inside each of the $5$ clusters are shown in Table \ref{table:enrich}. Only $p$-values less than $4.8\times10^{-4}$ ($0.05/103$) are reported here. 
 
-To better compare our results with those of \cite{tavazoie1999systematic}, we also prepared confusion Table \ref{table:confusion} and Figure \ref{fig:5_clusters}. The number in cell $(i,j)$ of Table \ref{table:confusion} shows the number of observations that belong to both the $i$th cluster of \cite{tavazoie1999systematic}'s and the $j$th cluster of ours. The plots in Figure \ref{fig:5_clusters} have similar meaning -- the mini plot on first row and the $4$th column is the mean gene expression level of observations belong to both the first cluster of \cite{tavazoie1999systematic}'s and the $4$th cluster of ours. We only plot the mean expression level if the number of observations in that cell is greater than $20$. Although \cite{tavazoie1999systematic} found $30$ clusters, not all of them were discussed in \cite{tavazoie1999systematic}. We only compare our results with those clusters that were profiled in \cite{tavazoie1999systematic}. The complete confusion matrix is in Appendix \ref{app:confusion}. The original result of \cite{tavazoie1999systematic} is obtained from site \url{http://arep.med.harvard.edu/network_discovery/}.
+\citet{tavazoie1999systematic} preprocessed the raw data in an attempt to
+normalize the gene responses and remove noise. They reduced the original
+$6220$ gene expression profiles to just the $2945$ genes with the highest
+variances. Then, they removed the time points at $90$ and $100$ minutes,
+because they deemed the measurements at these time points to be unreliable.
+Finally, they centered and scaled the genes by subtracting the means and
+dividing by the standard deviations, as computed from the remaining $15$ time
+points.  After the preprocessing, the data matrix $\dataX$ has $N = 2945$
+genes and $P = 15$ time points.
+
+We obtained the preprocessed data and the \citet{tavazoie1999systematic}
+cluster analysis from \url{http://arep.med.harvard.edu/network_discovery/}.
+
+
+\subsection{Clustering}
+
+Following \citet{tavazoie1999systematic} and \citet{dortet2008model}, we
+treat the $N = 2945$ gene expression profiles as draws from a mixture
+distribution, and we perform $k$-means clustering to segment the genes
+according to their expression profiles across the $P = 15$ time points. 
+Both the original and the correlation-corrected version of Gabriel
+cross-validation find $k = 5$ clusters.
+
+
+The lower-left panel of Figure~\ref{fig:5_clusters} shows the average
+expression level for each cluster across the 15 time points, with error bars
+showing standard deviations. Cluster~$1$ has decreasing expression level with
+time. The mean gene expression level in Cluster~$2$ decreases at the beginning
+and then increases. Cluster~$3$ is a periodic cluster where one can see two
+periods corresponding to the two cell cycles. Cluster~$4$ has increasing
+expression level with time.  Cluster~$5$ is another periodic cluster. 
+
+
+
+\subsection{Enrichment analysis}
+
+To further validate our clusters, we follow \citet{tavazoie1999systematic},
+performing an enrichment analysis to discover which functional gene groups are
+significantly over-represented in each cluster. In the Saccharomyces Genome
+Database, each gene is mapped to a set of Gene Ontology categories. We focus
+on the $103$ biological process categories.
+
+
+For each category and each cluster, we compute a $p$-value for the null
+hypothesis that genes from the category are distributed across all clusters
+without any bias towards the particular cluster in question. Under the null
+hypothesis, the number of genes from the category that end up in the cluster
+is distributed as a hypergeometric random variable. For each cluster, we
+compute $p$-values for all $103$ biological process categories, and we report
+those that are significantly enrigched in Table~\ref{table:enrich}.  Using a
+Bonferroni correction to control the family-wise error rate at level 5\%, we
+only report $p$-values that are less than $0.05 / 103 = 4.8\times10^{-4}$.
+
 
 
 \begin{table}
 \begin{center}
 \captionsetup{justification=centering}
-\caption{\label{table:enrich} Enrichment of clusters for genes within biological process categories}
-\scalebox{0.8}{%
-\begin{tabular}{cclcl}
-\hline
-   Cluster & Cluster size($m$) & Biological process category(total genes) & genes within category($k$) &$p$-value \\ \hline
- $1$ & $550$  &  response to oxidative stress ($55$)  &    $24$  & $1.5\times10^{-5}$ \\
-     &     &  response to chemical ($213$)    &    $64$     & $2.2\times10^{-5}$\\
-  $2$& $590$  &  mitochondrion organization ($159$) & $79$ &  $1.1\times10^{-16}$  \\  
-  	 &     &  mitochondrial translation ($51$) & $28$ 	&  $2.9\times10^{-8}$  \\  
-  	 &     &  generation of precursor metabolites and energy ($80$) &  $37$ & $7.3\times10^{-8}$   \\  
- $3$ & $654$ &  transcription from RNA polymerase II promoter ($214$) & $75$ &  $5.5\times10^{-6}$    \\  
-  	 &     & mRNA processing ($67$) & $30$ 	& $2.7\times10^{-5}$    \\  
-  	 &     & mitotic cell cycle ($183$)  & $63$ 	& $6.2\times10^{-5}$  \\ 
-  $4$& $634$  & cytoplasmic translation ($134$)  &  $105$ &  $3.3\times10^{-47}$   \\  
-     &     &  ribosomal subunit biogenesis $(138)$ & $73$ 	&  $7.7\times10^{-17}$  \\  
-  	 &     &  rRNA processing ($131$) &  $61$	&  $5.7\times10^{-11}$  \\  
-  	 &     &  ribosome assembly ($36$) &  $21$	&  $1.5\times10^{-6}$  \\  
-$5$  &   $517$   &  chromosome segregation($106$) &  $53$      &  $6.0\times10^{-15}$ \\
-     &     &  cellular response to DNA damage stimulus ($172$)  &  $71$  & $3.6\times10^{-14}$     \\  
-  	 &     &  DNA repair ($147$)  &  $64$  & $3.7\times10^{-14}$     \\                 
- 	 &     &  DNA replication ($78$)  & $42$   &  $1.8\times10^{-13}$   \\  
-  	 &     &  mitotic cell cycle ($183$)  &  $70$  &  $4.8\times10^{-12}$   \\  
- 
-
-
-\hline
+\caption{\label{table:enrich} Biological process enrichment within gene clusters}
+\footnotesize
+\begin{tabular}{ccll}
+\toprule
+Cluster & Cluster Size & Process Category (In Cluster/Total Genes) & $p$-value \\
+\midrule
+$1$ & $550$ & response to oxidative stress ($24/55$)  & $1.5\times10^{-5}$  \\
+    &       & response to chemical ($64/213$)         & $2.2\times10^{-5}$  \\
+$2$ & $590$ & mitochondrion organization ($79/159$)   & $1.1\times10^{-16}$ \\
+    &       & mitochondrial translation ($28/51$)     & $2.9\times10^{-8}$  \\
+    &       & generation of precursor metabolites and energy ($37/80$) & $7.3\times10^{-8}$ \\
+$3$ & $654$ & transcription from RNA polymerase II promoter ($75/214$) & $5.5\times10^{-6}$ \\
+    &       & mRNA processing ($30/67$)               & $2.7\times10^{-5}$  \\
+    &       & mitotic cell cycle ($63/183$)           & $6.2\times10^{-5}$  \\
+$4$ & $634$ & cytoplasmic translation ($105/134$)     & $3.3\times10^{-47}$ \\
+    &       & ribosomal subunit biogenesis $(73/138)$ & $7.7\times10^{-17}$ \\
+    &       & rRNA processing ($61/131$)              & $5.7\times10^{-11}$ \\
+    &       & ribosome assembly ($21/36$)             & $1.5\times10^{-6}$  \\
+$5$ & $517$ & chromosome segregation($53/106$)        & $6.0\times10^{-15}$ \\
+    &       & cellular response to DNA damage stimulus ($71/172$)      & $3.6\times10^{-14}$ \\
+    &       & DNA repair ($64/147$)                   & $3.7\times10^{-14}$ \\
+    &       & DNA replication ($42/78$)               & $1.8\times10^{-13}$ \\
+    &       & mitotic cell cycle ($70/183$)           & $4.8\times10^{-12}$ \\
+\bottomrule
 \end{tabular}
-}
 \end{center}
 \hspace{0.5in} \footnotesize {}
 \end{table} 
 
-It turns out that each cluster has unique trend of expression level and contains genes that tend to participate in the common processes. Cluster $1$ has decreasing expression level with time. From Table \ref{table:enrich}, we can see it concentrates genes that somatize the cell stress, such as oxidative heat-induce proteins. It mainly consists of observations that did not get profiled in \cite{tavazoie1999systematic}, as we can see from Table \ref{table:confusion} and Figure \ref{fig:5_clusters}.
 
-The mean gene expression level in Cluster $2$ decreases at the beginning and then increase. Our analysis found genes govern mitochondrial translation and mitochondrion organization are heavily concentrated in cluster $2$. Genes in \cite{tavazoie1999systematic}'s cluster $4$ and $8$ are heavily concentrated in this cluster, which also explains the coincidence between the enriched categories in our cluster $2$ and the functional groups in cluster $4$ and $8$ of    \cite{tavazoie1999systematic}.
+From Table \ref{table:enrich}, we can see that Cluster~1 is enriched with
+genes that somatize cell stress, such as oxidative heat-induce proteins.
+Cluster~2 contains genes that govern mitochondrial translation and
+mitochondrion organization.  Cluster~3, the first period cluster, contains
+cell cycle genes related to budding and cell polarity, along with genes that
+govern RNA processing and transcription.  Cluster~4 contains genes related to
+cytoplasmic translation and genes encoding ribosomes.  Cluster~5, the second
+periodic cluster, contains genes that participate cell-cycle processes, along
+with DNA replication and DNA repair.
 
-Our cluster $3$ is a periodic cluster where one can see two gene expression cycles from Figure \ref{fig:5_clusters}. Indeed, cell cycle genes that related to budding and cell polarity are commonly found in cluster $3$. In addition, one can see from Table \ref{table:enrich} that genes govern RNA processing and transcription are highly represented in this cluster. Comparing cluster $3$ to the clusters found in \cite{tavazoie1999systematic} from Table \ref{table:confusion} and Figure \ref{fig:5_clusters}, one can see that it mainly consists of genes from cluster $3$, $7$ and $14$ of \cite{tavazoie1999systematic}. Note that the cluster $7$ and $14$ are both periodic clusters highlighted in \cite{tavazoie1999systematic}.
 
-Cluster $4$ has increasing expression level with time. From Table \ref{table:enrich}, we can see genes related to cytoplasmic translation are highlighted in this cluster. Genes encode ribosomes are also overly presented in cluster $4$. This cluster corresponding to cluster $1$, the most notable functional grouping cluster of \cite{tavazoie1999systematic}. Indeed, one can see from Table \ref{table:confusion} that almost entire cluster $1$ of  \cite{tavazoie1999systematic} is contained in our cluster $4$.
 
-One can easily see from Figure \ref{fig:5_clusters} that our cluster $5$ is also a periodic cluster. Enrichment analysis shows that genes participated in the cell-cycle phase related processes such as DNA replication and DNA repair are highly concentrated in this cluster. Table \ref{table:confusion} shows that the entire cluster $2$ of \cite{tavazoie1999systematic} is contained in our cluster $5$, along with some genes from cluster $14$. Note that both cluster $2$ and $14$ are profiled periodic clusters in \cite{tavazoie1999systematic}. We can also see from Figure \ref{fig:5_clusters} that our cluster $5$ groups together genes with similar cycle phase in \cite{tavazoie1999systematic}'s cluster $2$ and $14$. 
+\subsection{Comparison with Tavazoie~clusters}
 
-In conclusion, our clusters group together genes that participate in the common biological processes. Our results are broadly align with the results in \cite{tavazoie1999systematic}, which clustered the data with $k=30$. In particular, the periodic cell cycle related genes are concentrated in cluster $5$ and cluster $3$, which consistent with the findings in \cite{tavazoie1999systematic} (cluster $2$, $7$ and $14$). Indeed, more than $70\%$ genes which function in mitotic cell cycle process are concentrated in these two clusters. The number of clusters found by our method is much smaller than the number of clusters used in \cite{tavazoie1999systematic} and \cite{dortet2008model}. However, both studies found that most of their clusters have no characteristics, suggesting overestimate of the underlying diversity of biological expression classes in the data set \citep{tavazoie1999systematic}. From Figure \ref{fig:5_clusters}, one can see clusters in \cite{tavazoie1999systematic} with similar behavior are merged in our cluster, which leads to smaller number of clusters. Our result is more parsimonious, while still able to identify the functional grouping of genes in clusters highlighted in previous studies.
+To better compare our results with those of \cite{tavazoie1999systematic}, we
+also prepared confusion Table \ref{table:confusion} and Figure
+\ref{fig:5_clusters}. The number in cell $(i,j)$ of Table
+\ref{table:confusion} shows the number of observations that belong to both the
+$i$th cluster of \cite{tavazoie1999systematic}'s and the $j$th cluster of
+ours. The plots in Figure \ref{fig:5_clusters} have similar meaning -- the
+mini plot on first row and the $4$th column is the mean gene expression level
+of observations belong to both the first cluster of
+\cite{tavazoie1999systematic}'s and the $4$th cluster of ours. We only plot
+the mean expression level if the number of observations in that cell is
+greater than $20$. Although \cite{tavazoie1999systematic} found $30$ clusters,
+not all of them were discussed in \cite{tavazoie1999systematic}. We only
+compare our results with those clusters that were profiled in
+\cite{tavazoie1999systematic}. The complete confusion matrix is in Appendix
+\ref{app:confusion}.
+
+
+Cluster~1 mainly consists of observations that did not get profiled in
+\cite{tavazoie1999systematic}, as we can see from Table \ref{table:confusion}
+and Figure \ref{fig:5_clusters}.
+
+
+Genes in \cite{tavazoie1999systematic}'s cluster $4$ and $8$ are heavily
+concentrated in this our Cluster~2, which also explains the coincidence between the
+enriched categories in our cluster $2$ and the functional groups in cluster
+$4$ and $8$ of    \cite{tavazoie1999systematic}.
+
+
+Comparing cluster $3$ to the clusters
+found in \cite{tavazoie1999systematic} from Table \ref{table:confusion} and
+Figure \ref{fig:5_clusters}, one can see that it mainly consists of genes from
+cluster $3$, $7$ and $14$ of \cite{tavazoie1999systematic}. Note that the
+cluster $7$ and $14$ are both periodic clusters highlighted in
+\cite{tavazoie1999systematic}.
+
+Our Cluster~4 corresponds to Tavazoie's cluster $1$, the most notable functional grouping cluster of
+\cite{tavazoie1999systematic}. Indeed, one can see from Table
+\ref{table:confusion} that almost entire cluster $1$ of
+\cite{tavazoie1999systematic} is contained in our cluster $4$.
+
+Table \ref{table:confusion} shows
+that the entire cluster $2$ of \cite{tavazoie1999systematic} is contained in
+our cluster $5$, along with some genes from cluster $14$. Note that both
+cluster $2$ and $14$ are profiled periodic clusters in
+\cite{tavazoie1999systematic}. We can also see from Figure
+\ref{fig:5_clusters} that our cluster $5$ groups together genes with similar
+cycle phase in \cite{tavazoie1999systematic}'s cluster $2$ and $14$. 
+
+
+
+In conclusion, our clusters group together genes that participate in the
+common biological processes. Our results are broadly align with the results in
+\cite{tavazoie1999systematic}, which clustered the data with $k=30$. In
+particular, the periodic cell cycle related genes are concentrated in cluster
+$5$ and cluster $3$, which consistent with the findings in
+\cite{tavazoie1999systematic} (cluster $2$, $7$ and $14$). Indeed, more than
+$70\%$ genes which function in mitotic cell cycle process are concentrated in
+these two clusters. The number of clusters found by our method is much smaller
+than the number of clusters used in \cite{tavazoie1999systematic} and
+\cite{dortet2008model}. However, both studies found that most of their
+clusters have no characteristics, suggesting overestimate of the underlying
+diversity of biological expression classes in the data set
+\citep{tavazoie1999systematic}. From Figure \ref{fig:5_clusters}, one can see
+clusters in \cite{tavazoie1999systematic} with similar behavior are merged in
+our cluster, which leads to smaller number of clusters. Our result is more
+parsimonious, while still able to identify the functional grouping of genes in
+clusters highlighted in previous studies.
 
 
 	\begin{figure}[H]
