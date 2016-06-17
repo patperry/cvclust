@@ -1236,13 +1236,22 @@ cluster analysis from \url{http://arep.med.harvard.edu/network_discovery/}.
 
 \subsection{Clustering}
 
+
+\begin{figure}
+		\centering
+	\includegraphics[width=5.7in, height=5.7in]{wei/split_plots.pdf}
+	\caption{Yeast data set mean expression profiles. The $5$ clusters found by
+  the Gabriel method are on the bottom; Clusters profiled in
+  \cite{tavazoie1999systematic} are on the right.}
+	\label{fig:5_clusters}
+\end{figure}	
+
 Following \citet{tavazoie1999systematic} and \citet{dortet2008model}, we
 treat the $N = 2945$ gene expression profiles as draws from a mixture
 distribution, and we perform $k$-means clustering to segment the genes
 according to their expression profiles across the $P = 15$ time points. 
 Both the original and the correlation-corrected version of Gabriel
 cross-validation find $k = 5$ clusters.
-
 
 The lower-left panel of Figure~\ref{fig:5_clusters} shows the average
 expression level for each cluster across the 15 time points, with error bars
@@ -1261,17 +1270,6 @@ performing an enrichment analysis to discover which functional gene groups are
 significantly over-represented in each cluster. In the Saccharomyces Genome
 Database, each gene is mapped to a set of Gene Ontology categories. We focus
 on the $103$ biological process categories.
-
-
-For each category and each cluster, we compute a $p$-value for the null
-hypothesis that genes from the category are distributed across all clusters
-without any bias towards the particular cluster in question. Under the null
-hypothesis, the number of genes from the category that end up in the cluster
-is distributed as a hypergeometric random variable. For each cluster, we
-compute $p$-values for all $103$ biological process categories, and we report
-those that are significantly enrigched in Table~\ref{table:enrich}.  Using a
-Bonferroni correction to control the family-wise error rate at level 5\%, we
-only report $p$-values that are less than $0.05 / 103 = 4.8\times10^{-4}$.
 
 
 
@@ -1293,10 +1291,10 @@ $3$ & $654$ & transcription from RNA polymerase II promoter ($75/214$) & $5.5\ti
     &       & mRNA processing ($30/67$)               & $2.7\times10^{-5}$  \\
     &       & mitotic cell cycle ($63/183$)           & $6.2\times10^{-5}$  \\
 $4$ & $634$ & cytoplasmic translation ($105/134$)     & $3.3\times10^{-47}$ \\
-    &       & ribosomal subunit biogenesis $(73/138)$ & $7.7\times10^{-17}$ \\
+    &       & ribosomal subunit biogenesis ($73/138$) & $7.7\times10^{-17}$ \\
     &       & rRNA processing ($61/131$)              & $5.7\times10^{-11}$ \\
     &       & ribosome assembly ($21/36$)             & $1.5\times10^{-6}$  \\
-$5$ & $517$ & chromosome segregation($53/106$)        & $6.0\times10^{-15}$ \\
+$5$ & $517$ & chromosome segregation ($53/106$)       & $6.0\times10^{-15}$ \\
     &       & cellular response to DNA damage stimulus ($71/172$)      & $3.6\times10^{-14}$ \\
     &       & DNA repair ($64/147$)                   & $3.7\times10^{-14}$ \\
     &       & DNA replication ($42/78$)               & $1.8\times10^{-13}$ \\
@@ -1308,13 +1306,26 @@ $5$ & $517$ & chromosome segregation($53/106$)        & $6.0\times10^{-15}$ \\
 \end{table} 
 
 
+For each category and each cluster, we compute a $p$-value for the null
+hypothesis that genes from the category are distributed across all clusters
+without any bias towards the particular cluster in question. Under the null
+hypothesis, the number of genes from the category that end up in the cluster
+is distributed as a hypergeometric random variable. For each cluster, we
+compute $p$-values for all $103$ biological process categories, and we report
+those that are significantly enrigched in Table~\ref{table:enrich}.  Using a
+Bonferroni correction to control the family-wise error rate at level 5\%, we
+only report $p$-values that are less than $0.05 / 103 = 4.8\times10^{-4}$.
+
+
+
+
 From Table \ref{table:enrich}, we can see that Cluster~1 is enriched with
 genes that somatize cell stress, such as oxidative heat-induce proteins.
 Cluster~2 contains genes that govern mitochondrial translation and
-mitochondrion organization.  Cluster~3, the first period cluster, contains
-cell cycle genes related to budding and cell polarity, along with genes that
-govern RNA processing and transcription.  Cluster~4 contains genes related to
-cytoplasmic translation and genes encoding ribosomes.  Cluster~5, the second
+mitochondrion organization. Cluster~3, the first period cluster, contains cell
+cycle genes related to budding and cell polarity, along with genes that govern
+RNA processing and transcription. Cluster~4 contains genes related to
+cytoplasmic translation and genes encoding ribosomes. Cluster~5, the second
 periodic cluster, contains genes that participate cell-cycle processes, along
 with DNA replication and DNA repair.
 
@@ -1322,89 +1333,26 @@ with DNA replication and DNA repair.
 
 \subsection{Comparison with Tavazoie~clusters}
 
-To better compare our results with those of \cite{tavazoie1999systematic}, we
-also prepared confusion Table \ref{table:confusion} and Figure
-\ref{fig:5_clusters}. The number in cell $(i,j)$ of Table
-\ref{table:confusion} shows the number of observations that belong to both the
-$i$th cluster of \cite{tavazoie1999systematic}'s and the $j$th cluster of
-ours. The plots in Figure \ref{fig:5_clusters} have similar meaning -- the
-mini plot on first row and the $4$th column is the mean gene expression level
-of observations belong to both the first cluster of
-\cite{tavazoie1999systematic}'s and the $4$th cluster of ours. We only plot
-the mean expression level if the number of observations in that cell is
-greater than $20$. Although \cite{tavazoie1999systematic} found $30$ clusters,
-not all of them were discussed in \cite{tavazoie1999systematic}. We only
-compare our results with those clusters that were profiled in
-\cite{tavazoie1999systematic}. The complete confusion matrix is in Appendix
-\ref{app:confusion}.
+In the \citet{tavazoie1999systematic} analysis, those authors performed
+$k$-means clustering with $k = 30$; they found 23 of the clusters to be
+uninterpretable, and they found 7 clusters to be meaningful. To compare our
+clusters with the Tavazoie et al.\ clusters, we prepared a confusion matrix
+comparing our clusters with the 7 interpretable Tavazoie clusters in
+Table~\ref{table:confusion}.  (Appendix~\ref{app:confusion} contains a
+confusion matrix for all 30 Tavazoie clusters, including the non-interpretable
+ones.) Entry $(i,j)$ of the confusion matrix gives the number of genes in
+Tavazoie's Cluster~$i$ and our Cluster~$j$. 
 
 
-Cluster~1 mainly consists of observations that did not get profiled in
-\cite{tavazoie1999systematic}, as we can see from Table \ref{table:confusion}
-and Figure \ref{fig:5_clusters}.
-
-
-Genes in \cite{tavazoie1999systematic}'s cluster $4$ and $8$ are heavily
-concentrated in this our Cluster~2, which also explains the coincidence between the
-enriched categories in our cluster $2$ and the functional groups in cluster
-$4$ and $8$ of    \cite{tavazoie1999systematic}.
-
-
-Comparing cluster $3$ to the clusters
-found in \cite{tavazoie1999systematic} from Table \ref{table:confusion} and
-Figure \ref{fig:5_clusters}, one can see that it mainly consists of genes from
-cluster $3$, $7$ and $14$ of \cite{tavazoie1999systematic}. Note that the
-cluster $7$ and $14$ are both periodic clusters highlighted in
-\cite{tavazoie1999systematic}.
-
-Our Cluster~4 corresponds to Tavazoie's cluster $1$, the most notable functional grouping cluster of
-\cite{tavazoie1999systematic}. Indeed, one can see from Table
-\ref{table:confusion} that almost entire cluster $1$ of
-\cite{tavazoie1999systematic} is contained in our cluster $4$.
-
-Table \ref{table:confusion} shows
-that the entire cluster $2$ of \cite{tavazoie1999systematic} is contained in
-our cluster $5$, along with some genes from cluster $14$. Note that both
-cluster $2$ and $14$ are profiled periodic clusters in
-\cite{tavazoie1999systematic}. We can also see from Figure
-\ref{fig:5_clusters} that our cluster $5$ groups together genes with similar
-cycle phase in \cite{tavazoie1999systematic}'s cluster $2$ and $14$. 
-
-
-
-In conclusion, our clusters group together genes that participate in the
-common biological processes. Our results are broadly align with the results in
-\cite{tavazoie1999systematic}, which clustered the data with $k=30$. In
-particular, the periodic cell cycle related genes are concentrated in cluster
-$5$ and cluster $3$, which consistent with the findings in
-\cite{tavazoie1999systematic} (cluster $2$, $7$ and $14$). Indeed, more than
-$70\%$ genes which function in mitotic cell cycle process are concentrated in
-these two clusters. The number of clusters found by our method is much smaller
-than the number of clusters used in \cite{tavazoie1999systematic} and
-\cite{dortet2008model}. However, both studies found that most of their
-clusters have no characteristics, suggesting overestimate of the underlying
-diversity of biological expression classes in the data set
-\citep{tavazoie1999systematic}. From Figure \ref{fig:5_clusters}, one can see
-clusters in \cite{tavazoie1999systematic} with similar behavior are merged in
-our cluster, which leads to smaller number of clusters. Our result is more
-parsimonious, while still able to identify the functional grouping of genes in
-clusters highlighted in previous studies.
-
-
-	\begin{figure}[H]
-		\centering
-	\includegraphics[width=5.7in, height=5.7in]{wei/split_plots.pdf}
-	\caption{Yeast data set mean expression profiles. The $5$ clusters found by Gabriel method are on the bottom; Clusters profiled in \cite{tavazoie1999systematic} are on the right.}
-	\label{fig:5_clusters}
-	\end{figure}	
-
-\begin{table}[H]
-\caption{\label{table:confusion} \small{Confusion matrix comparing $5$ clusters to clusters profiled in \cite{tavazoie1999systematic}}}
+\begin{table}
+\caption{\label{table:confusion} Confusion matrix comparing
+    the 5 clusters found by Gabriel cross-validation to the 7 interpretable
+    clusters found by the \cite{tavazoie1999systematic} analysis}
 \centering
 \begin{tabular}{lcccccr}
-  \hline
+  \toprule
  & Cluster 1 & Cluster 2 & Cluster 3 & Cluster 4 & Cluster 5 & Total \\ 
-  \hline
+  \midrule
 Cluster 1 & 0 & 0 & 1 & 161 & 2 & 164 \\ 
   Cluster 2 & 1 & 0 & 0 & 0 & 185 & 186 \\ 
   Cluster 3 & 0 & 0 & 91 & 11 & 2 & 104 \\ 
@@ -1413,10 +1361,42 @@ Cluster 1 & 0 & 0 & 1 & 161 & 2 & 164 \\
   Cluster 8 & 3 & 145 & 0 & 0 & 0 & 148 \\ 
   Cluster 14 & 0 & 1 & 29 & 6 & 38 & 74 \\ 
   Other & 545 & 332 & 448 & 383 & 290 & 1998 \\ 
+  \midrule
   Total & 550 & 590 & 654 & 634 & 517 & 2945 \\ 
-   \hline
+   \bottomrule
 \end{tabular}
 \end{table}
+
+
+Figure~\ref{fig:5_clusters} provides a more in-depth comparison with the
+Tavazoie clusters, using a graphical confusion matrix.  The plot in cell
+$(i,j)$ of the upper left part of this figure gives the mean expression level
+for genes in the intersection of Tavazoie's Cluster~$i$ and our Cluster~$j$;
+the plots in the margins give the mean expression levels for Tavazoie's
+clusters (top right) and our clusters (bottom left). In
+Figure~\ref{fig:5_clusters}, we only include a plot for cell $(i,j)$ if the
+number of genes in that cell is greater than $20$.
+
+
+Our Cluster~1 mainly consists of genes that Tavazoie et al.\ found to be in
+uninterpretable clusters. Our Cluster~2 contains high concentrations of
+Tavazoie's Clusters~4 and~8. Our first periodic cluster, Cluster~3, contains
+high concentrations of Tavazoie's Clulsters~3,~7, and~14; this is notable,
+because Tavazoie et al.\ highlighted their Clusters~7 and~14 as being
+periodic. Our Cluster~4 contains almost all of Tavazoie's Cluster~1, along
+with part of Tavazoie's Cluster~4. Finally, our second periodic cluster,
+Cluster~5, contains almost all of Tavazoie's Cluster~2, along with part of
+Tavazoie's Cluster 14; this, again, is notable, because Tavazoie et al.\
+highlited these clusters as being periodic.
+
+For the clusters that Tavazoie et al.\ were able to characterize, our analysis
+broadly agrees with the earlier clustering. The major difference between our
+analysis and that of \citet{tavazoie1999systematic} is that we are able to
+identify meaningful groups of genes with a much smaller value of $k$ ($k = 5$
+instead of $k = 30$), and we are able to interpret all of the clusters
+found by our analysis.
+
+
 
 
 \section{Discussion}
