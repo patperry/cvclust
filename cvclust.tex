@@ -1695,24 +1695,27 @@ Lemma~\ref{lem:truncated-normal-moments} has some important special cases:
 \section{Wold cross-validation}
 \label{sec:wold-cv}
 
-\begin{itemize}
-	\item For each $k = 1,2,...,k_{max}$
-	\begin{enumerate}
-		\item Randomly draw some entries in $\mathbf{X}$ missing, keep those hold-out values in vector $V_{true}$
-		\item Impute the missing values with column mean or $0$, denote the imputed data as $\mathbf{X}_{new}$
-		\item Apply the iterative procedure below until converge or stopping criteria reached
-		\begin{itemize}
-			\item Apply $K$-mean on data set $\mathbf{X}_{new}$ with parameter $k$
-			\item Substitute each observation in $\mathbf{X}_{new}$ by its nearest center, get new data $\mathbf{X}^c_{new}$ ($\mathbf{X}_{new}$ keep the same)
-			\item Replace (impute) those imputed values in $\mathbf{X}_{new}$ with the corresponding entries in $\mathbf{X}^c_{new}$
-			\item Calculate the difference between the old and newly imputed values, check whether or not they coincide (converge) 
-		\end{itemize}
-		\item Obtain the last imputed entry values of converged $\mathbf{X}_{new}$, denote it by $V_{converge}$
-		\item Calculate the prediction error  $Error_k = ||V_{true} - V_{converge}||^2$ 
-	\end{enumerate}
-	\item For each cross-validation fold, repeat above procedure and obtain the $Error_k$ for each $k$
-	\item Average $Error_k$ across all folders for each $k$, and then select the $k$ corresponding to the minimum average $Error_k$ 
-\end{itemize}
+In Wold cross-validation, we perform ``speckled'' hold-outs in each fold, leaving out a
+random subset of the entries of the data matrix $\dataX \in \R^{N \times P}$. For each value
+of $k$ and each fold, we perform the following set of actions to get an
+estimate of cross-validation error, $\CV(k)$, which we average over all folds.
+
+\begin{enumerate}
+  \item Randomly partition the set of indices $\{ 1, 2, \dotsc, N \} \times \{
+    1, 2, \dotsc, P \}$ into a train set $S_\text{train}$ and a test set
+    $S_\text{test}$.
+
+  \item Apply a $k$-means fitting procedure that can handle missing data to
+    the training data $\{ \dataX_{i,j} : (i,j) \in S_{\text{train}} \}$. This
+    gives a set of cluster means $\mu(1), \dotsc, \mu(k) \in \R^P$ and
+    cluster labels for the rows, $G_1, G_2, \dotsc, G_N$.
+
+  \item Compute the cross-validation error as
+    \[
+      \CV(k) = \sum_{(i,j) \in S_{\text{test}}} \{ \dataX_{i,j} - \mu_j(G_i) \}^2,
+    \]
+    where $\mu_j(G_i)$ denotes the $j$th component of $\mu(G_i)$.
+\end{enumerate}
 
 
 
