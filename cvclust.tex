@@ -140,7 +140,7 @@ with the property that items in the same group are more similar to each other
 than items in different groups \citep{hartigan1975clustering}.  Such
 procedures are used in two main applicaitons: (a) exploratory analysis, where clusters
 reveal homogeneous sub-groups within a large sample; (b) data
-reduction, where high-dimensional item attribute vectors get reduced discrete
+reduction, where high-dimensional item attribute vectors get reduced to discrete
 cluster labels \citep{jain1999data}.
 
 
@@ -161,13 +161,13 @@ been proposed~\citep{chiang2010intelligent,fujita2014non}. The main difficulty
 in choosing $k$ is that clustering is fundamentally an ``unsupervised''
 learning problem, meaning that there is no obvious way to use ``prediction
 ability'' to drive the model selection \citep{hastie2009elements}.  Most
-existing methods for choosing $k$ instead rely on on explicit or implicit
+existing methods for choosing $k$ instead rely on explicit or implicit
 assumptions about the data distribution, including it shape, scale, and
 correlation structure.
 
 
 Several authors advocate choosing $k$ by performing a sequence of hypothesis
-tests will null and alternative hypotheses of the form $H_0 : k = k_0$ and
+tests with null and alternative hypotheses of the form $H_0 : k = k_0$ and
 $H_1: k > k_0$, starting with $k_0 = 1$ and proceeding sequentially with
 higher values of $k_0$ until a test fails to reject $H_0$. The gap statistic
 method typifies this class of methods, with a test statistic that measures the
@@ -1055,7 +1055,7 @@ dimension, with degrees of freedom $\nu$ taking values in $\{11,10,...,2\}$
 
 This setting investigates performance in the presence of heavy-tailed data.
 When the degrees of freedom decreases, the tail becomes more flat and the
-Gaussian assumption becomes more appropriate.  For most methods, their
+Gaussian assumption becomes more inappropriate.  For most methods, their
 performances are relatively stable until the tail gets very heavy. In the case
 where there are $2$ degrees of freedom, the Gap and Jump methods' performances
 deteriorate considerably relative to the Gabriel method.
@@ -1072,7 +1072,7 @@ The first data set is congressional voting data consisting of voting records
 of the second session of the $98$th United States Congress,
 \citep{schlimmer1987concept}.  This data set includes votes for legislators on
 the $P = 16$ key votes.  For each vote, each legislator either votes
-positively (``yea'') negatively (``nay''). We removed legislators with missing
+positively (``yea'') or negatively (``nay''). We removed legislators with missing
 votes.  This results in $N = 232$ remaining records, with $124$ democrat and
 $108$ republican. There are $k = 2$ clusters of legislators, corresponding to
 political party.
