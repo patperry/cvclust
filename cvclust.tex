@@ -395,11 +395,14 @@ Gabriel cross-validation procedure finds the optimal number of clusters.
 
 
 It will suffice to prove self-consistency for a single fold of the
-cross-validation procedure.  As in section~\ref{sec:gabriel-cv-algorithm}
-we assume that the $P$ variables of the data set have been partitioned into
-$p$ predictor variables represented in vector~$X$ and $q$ response variables
+cross-validation procedure.  As in section~\ref{sec:gabriel-cv-algorithm} we
+assume that the $P$ variables of the data set have been partitioned into $p$
+predictor variables represented in vector~$X$ and $q$ response variables
 represented in vector~$Y$.  The $N$ observations have been divided into two
-sets: $n$ train observations and $m$ test observations.  The following theorem
+sets: $n$ train observations and $m$ test observations.  We state the
+assumptions for the self-consistency result in terms of a specific split; for
+the result to hold in general, with high probability, these assumptions would
+have to hold with high probability for a random split. The following theorem
 gives conditions for Gabriel cross-validation to recover the true number of
 clusters in the absence of noise.
 
@@ -434,12 +437,24 @@ Then $\CV(k) < \CV(K)$ for $k < K$, and $\CV(k) = \CV(K)$ for $k > K$, so that
 Gabriel cross-validation correctly chooses $k = K$.
 \end{proposition}
 
-Given $\mu(g) = \bigl(\muX(g),\muY(g)\bigr)$ are distinct for $g = 1, \dotsc, K$,
-~\ref{asn:self-consistency-distinct-mux} and ~\ref{asn:self-consistency-distinct-muy}
-are reasonable given not too small dimension $p$ and $q$.
-The result statement of Proposition~\ref{prop:self-consistency} follows from 
+The proposition states that our method works well in the absence of noise,
+when each observation is equal to its cluster center.  The essential
+assumption here is assumption~\ref{asn:self-consistency-noiseless}, which states
+that there is no noise.  If we are willing to assume, say, that the cluster
+centers~$\mu(g) = \bigl(\muX(g),\muY(g)\bigr)$ for $g = 1, \dotsc, K$ were
+randomly drawn from a distribution with a density over $\R^{p+q}$, then
+assumptions~\ref{asn:self-consistency-distinct-mux}
+and~\ref{asn:self-consistency-distinct-muy} will hold with probability one for
+all splits of the data. Likewise, if the clusters are not too small (relative
+to $n$ and $m$), then assumptions~\ref{asn:self-consistency-train}
+and~\ref{asn:self-consistency-test} will likely hold for a random split of the
+data into test and train.
+
+
+Proposition~\ref{prop:self-consistency} follows from
 Lemmas~\ref{lem:self-consistency1} and~\ref{lem:self-consistency2}, which we
-will now state and prove.
+now state and prove.
+
 
 \begin{lemma}\label{lem:self-consistency1}
 Suppose that the assumptions of Proposition~\ref{prop:self-consistency} are in
@@ -669,13 +684,25 @@ of the $Y$ variables is strongly correlated with a linear combination of the
 $X$ variables.
 
 
+Proposition~\ref{prop:single-2d} tells us that Gabriel cross-validation fails
+when there is strong correlation between the variables. To get around this, in
+practice we will transform the data to reduce correlation before performing
+cross-validation. We detail this approach in Section~\ref{sec:corr-correct}.
+
+
 \subsection{Two clusters in two dimensions}
 
 
 We will now analyze a simple two-cluster setting, and derive conditions for
-Gabriel cross-validation to correctly prefer $k=2$ clusters to $k=1$. In the
-statement of the result, $\Phi(\cdot)$ and $\varphi(\cdot)$ denote the
-standard normal cumulative distribution function and density, respectively.  
+Gabriel cross-validation to correctly prefer $k=2$ clusters to $k=1$.  The
+main assumption of the proposition is that the cluster centers are not too
+close. The precise definition of ``too close'' is stated in terms of
+$\Phi(\cdot)$ and $\varphi(\cdot)$, the standard normal cumulative
+distribution function and density, respectively.  The inequality is hard to
+interpret directly, but we show the boundary between ``too close'' and ``well
+separated'' in Fig.~\ref{fig:overlap-color_plot}, after the proof of the
+proposition.
+
 
 \begin{proposition}\label{prop:twoclust}
 Suppose that $\{(X_i,Y_i)\}_{i=1}^{n+m}$ is data from a single fold of Gabriel
@@ -684,7 +711,7 @@ from an equiprobable mixture of two multivariate normal distributions with
 identity covariance. Suppose that the first mixture component has mean
 $\mu = (\muX, \muY)$ and the second has mean $-\mu = (-\muX, -\muY)$,
 where $\muX \geq 0$ and $\muY \geq 0$. 
-If 
+If the cluster centers are well separated, specifically such that
 \(
   2 \varphi(\muY) + \muY + 2 \muY \Phi(\muY) < 4 \muY \Phi(\muX),
 \)
@@ -800,9 +827,6 @@ precisely when
   2 \varphi(\muY) + \muY + 2 \muY \Phi(\muY) < 4 \muY \Phi(\muX).
 \)
 \end{proof}
-The inequality in Proposition~\ref{prop:twoclust} means that the proposed method
-would correctly pick $k = 2$ given that $(\muX, \muY)$ and 
-$(-\muX, -\muY)$ are not too close. 
 We confirm the result of Proposition~\ref{prop:twoclust} with a simulation.
 We perform $10$ replicates for each $(\mu^X, \mu^Y)$ pair, sweeping over
 a two-dimensional grid of values in the domain $[0,3] \times [0,3]$, with step
