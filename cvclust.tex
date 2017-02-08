@@ -15,9 +15,9 @@
 \usepackage{natbib}
 \usepackage{url} % not crucial - just used below for the URL 
 
-\pdfminorversion=4
+%\pdfminorversion=4
 % NOTE: To produce blinded version, replace "0" with "1" below.
-\newcommand{\blind}{0}
+\newcommand{\blind}{1}
 
 % DON'T change margins - should be 1 inch all around.
 \addtolength{\oddsidemargin}{-.5in}%
@@ -26,8 +26,13 @@
 \addtolength{\textheight}{-.3in}%
 \addtolength{\topmargin}{-.8in}%
 
+
+\newtheorem{theorem}{Theorem}
 \newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
 \newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
 
 % operators
 \DeclareMathOperator*{\argmin}{arg\,min}
@@ -41,6 +46,7 @@
 
 % convergence
 \newcommand{\toas}{\overset{\mathit{a.s.}}{\to}}
+
 \newcommand{\Oh}{O}
 \newcommand{\OhP}{O_p}
 
@@ -78,6 +84,7 @@
 
 \begin{document}
 
+%\bibliographystyle{natbib}
 
 \def\spacingset#1{\renewcommand{\baselinestretch}%
 {#1}\small\normalsize} \spacingset{1}
@@ -85,15 +92,15 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-\if0\blind
+\if1\blind
 {
   \title{\bf Estimating the number of clusters using cross-validation}
-  \author{Wei Fu and Patrick O.\ Perry \hspace{.2cm} \\
+  \author{Wei Fu and Patrick O. Perry \\
   Stern School of Business, New York University}
   \maketitle
 } \fi
 
-\if1\blind
+\if0\blind
 {
   \bigskip
   \bigskip
@@ -120,7 +127,7 @@ clustering with interpretable gene groupings.
 \end{abstract}
 
 \noindent%
-{\it Keywords:} clustering, $k$-means, model selection, unsupervised learning
+{\it Keywords:} clustering, cross-validation, $k$-means, model selection, unsupervised learning
 \vfill
 
 \newpage
@@ -351,8 +358,9 @@ $k$, the number of clusters:
 \noindent
 In principle, we could use any clustering and classification methods in
 steps~\ref{step:gabriel-cluster} and~\ref{step:gabriel-classify}.  In this
-report, we use $k$-means as the clustering algorithm.  For the classification
-step, we compute the mean value of $X$ for each class; we assign an
+report, we use $k$-means \citep{hartigan1979algorithm} as the clustering algorithm 
+and develop the theoretical properties of the proposed method based on $k$-means. 
+For the classification step, we compute the mean value of $X$ for each class; we assign an
 observation to class $g$ if that class has the closest mean (randomly breaking
 ties between classes).  The classification step is equivalent to linear
 discriminant analysis with equal class priors and identity noise covariance
@@ -387,7 +395,7 @@ Gabriel cross-validation procedure finds the optimal number of clusters.
 
 
 It will suffice to prove self-consistency for a single fold of the
-cross-validation procedure.  As in in section~\ref{sec:gabriel-cv-algorithm}
+cross-validation procedure.  As in section~\ref{sec:gabriel-cv-algorithm}
 we assume that the $P$ variables of the data set have been partitioned into
 $p$ predictor variables represented in vector~$X$ and $q$ response variables
 represented in vector~$Y$.  The $N$ observations have been divided into two
@@ -426,6 +434,9 @@ Then $\CV(k) < \CV(K)$ for $k < K$, and $\CV(k) = \CV(K)$ for $k > K$, so that
 Gabriel cross-validation correctly chooses $k = K$.
 \end{proposition}
 
+Given $\mu(g) = \bigl(\muX(g),\muY(g)\bigr)$ are distinct for $g = 1, \dotsc, K$,
+~\ref{asn:self-consistency-distinct-mux} and ~\ref{asn:self-consistency-distinct-muy}
+are reasonable given not too small dimension $p$ and $q$.
 The result statement of Proposition~\ref{prop:self-consistency} follows from 
 Lemmas~\ref{lem:self-consistency1} and~\ref{lem:self-consistency2}, which we
 will now state and prove.
@@ -789,7 +800,9 @@ precisely when
   2 \varphi(\muY) + \muY + 2 \muY \Phi(\muY) < 4 \muY \Phi(\muX).
 \)
 \end{proof}
-
+The inequality in Proposition~\ref{prop:twoclust} means that the proposed method
+would correctly pick $k = 2$ given that $(\muX, \muY)$ and 
+$(-\muX, -\muY)$ are not too close. 
 We confirm the result of Proposition~\ref{prop:twoclust} with a simulation.
 We perform $10$ replicates for each $(\mu^X, \mu^Y)$ pair, sweeping over
 a two-dimensional grid of values in the domain $[0,3] \times [0,3]$, with step
@@ -904,7 +917,7 @@ are likely to hold. The second reason for multiplying by $Q$ is to spread any
 remaining correlation in the noise evenly (in expectation) across all
 dimensions. The latter effect follows since if $Z$ is a random vector with
 covariance matrix $\Theta$, then $Q Z$ has covariance matrix $Q \Theta Q^\T$,
-which has expectation $\E(Q \Theta Q^\T) = \tr(\Theta) I$.
+which has expectation $E(Q \Theta Q^\T) = \tr(\Theta) I$.
 
 
 Our correlation correction is not backed by a rigorous theoretical
@@ -977,7 +990,7 @@ of high correlation are the Gaussian model-based BIC method
 \subsection{Setting 2: Noise dimensions}
 
 We generate three clusters in $6$ dimensions. Each cluster has $1000$ or $500$
-mean zero multivariate normal observations with identity covariance matrix.
+multivariate normal observations with identity covariance matrix.
 We add $r$ dimensions of noise to the data, randomly generated from a uniform
 distribution on $[0,1]$. The noise dimension $r$ takes values in
 $\{0,6,...,54\}$. 
@@ -996,7 +1009,7 @@ the presence of extra noise dimensions.
 \subsection{Setting 3: High dimension}
 
 We generate eight clusters in $P$ dimensions, with $P$ taking values in
-$\{10,20,...,100\}$.  Each cluster has $100$ or $50$ mean zero multivariate
+$\{10,20,...,100\}$.  Each cluster has $100$ or $50$ multivariate
 normal observations with identity covariance matrix. 
 	
 \begin{figure}[H]
@@ -1121,7 +1134,7 @@ variables, corresponding to log activation levels for 1379 genes.
 \toprule                  
          & \multicolumn{3}{c}{Dataset} \\
 \cmidrule(l){2-4}
-Method   & Congress Voting & Breast Cancer & Brain Tumors \\
+Method   & Congress Voting & Breast Cancer & Brain Tumours \\
 \midrule                    
 Gabriel  & $2$             & $3$           & $5$  \\    
 Gabriel (corr.~correct) & $2$ & $2$           & $5$  \\  
@@ -1321,7 +1334,7 @@ mitochondrion organization. Cluster~3, the first period cluster, contains cell
 cycle genes related to budding and cell polarity, along with genes that govern
 RNA processing and transcription. Cluster~4 contains genes related to
 cytoplasmic translation and genes encoding ribosomes. Cluster~5, the second
-periodic cluster, contains genes that participate in cell-cycle processes, along
+periodic cluster, contains genes that participate cell-cycle processes, along
 with DNA replication and DNA repair.
 
 
@@ -1759,7 +1772,10 @@ estimate of cross-validation error, $\CV(k)$, which we average over all folds.
 %% \end{tabular}
 %% \end{table}
 
-\bibliographystyle{apalike}
-\bibliography{references}
 
+
+
+\bibliographystyle{apalike}
+
+\bibliography{references}
 \end{document}
