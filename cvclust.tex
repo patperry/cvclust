@@ -138,7 +138,7 @@ clustering with interpretable gene groupings.
 A clustering procedure segments a collection of items into smaller groups,
 with the property that items in the same group are more similar to each other
 than items in different groups \citep{hartigan1975clustering}.  Such
-procedures are used in two main applicaitons: (a) exploratory analysis, where clusters
+procedures are used in two main applications: (a) exploratory analysis, where clusters
 reveal homogeneous sub-groups within a large sample; (b) data
 reduction, where high-dimensional item attribute vectors get reduced to discrete
 cluster labels \citep{jain1999data}.
@@ -162,7 +162,7 @@ in choosing $k$ is that clustering is fundamentally an ``unsupervised''
 learning problem, meaning that there is no obvious way to use ``prediction
 ability'' to drive the model selection \citep{hastie2009elements}.  Most
 existing methods for choosing $k$ instead rely on explicit or implicit
-assumptions about the data distribution, including it shape, scale, and
+assumptions about the data distribution, including its shape, scale, and
 correlation structure.
 
 
@@ -197,7 +197,9 @@ distribution. The essential idea is to devise a way to measure a form of
 internal prediction error associated each choose of $k$, and then choose the
 $k$ with the smallest associated error. We describe this method in detail in
 Section~\ref{sec:meth}.  In Section~\ref{sec:self-consistent}, we prove that
-our method is self-consistent. Then, in Section~\ref{sec:theory-gaussian}, we
+our method is self-consistent in certain situations, meaning that in the
+absence of noise, it recovers the correct $k$. Then, in
+Section~\ref{sec:theory-gaussian}, we
 analyze the performance of our method in the presence of Gaussian noise. The
 theoretical analysis shows that the performance of our method degrades in the
 presence of correlated noise; to fix this, we propose a correction for
@@ -213,6 +215,7 @@ dataset. We conclude with a short discussion in Section~\ref{sec:discussion}.
 \label{sec:meth}
 
 \subsection{Problem statement}
+\label{sec:problem-statement}
 
 Suppose that we are given a data matrix with $N$ rows and $P$ columns, and we
 are tasked with choosing an appropriate number $k$ of clusters to use for
@@ -221,11 +224,11 @@ the $k$-means procedure takes a set of observations $\{ x_1, \dotsc ,x_n \}$
 and finds a set of $k$ or cluster centers $A = \{ a_1, \dotsc, a_k \} $
 minimizing the within cluster dispersion
 \[
-  W(A) = \sum_{i=1}^{n} \min_{a \in A} \|x_i - a\|^2.
+    W(A) = \sum_{i=1}^{n} \min_{g \in \{ 1, \dotsc, k \} } \|x_i - a_g\|^2.
 \]
 This implicitly defines a cluster assignment rule
 \[
-  g(x) = \argmin_{g \in \{1, \dotsc, k\}} \|x - a_g\|^2,
+  G(x) = \argmin_{g \in \{1, \dotsc, k\}} \|x - a_g\|^2,
 \]
 with ties broken arbitrarily.
 %We will assume that the $k$-means procedure
@@ -241,10 +244,12 @@ In these settings, the data comes in the form of $N$
 predictor-response pairs, $(X_1, Y_1), \dotsc, (X_N, Y_N)$, with $X_i \in
 \R^{p}$ and $Y_i \in \R^{q}$.  The data can be represented as a matrix with
 $N$ rows and $p + q$ columns.  We partition the data into $K$ hold-out
-``test'' subsets, with $K$ typically chosen to be $5$ or $10$.  For each
-``fold'' $r$ in the range $1, \dotsc, K$, we permute the rows of the data
-matrix to get $\dataX$, a matrix with the $r$th test subset as its trailing
-rows.  We partition $\dataX$ as
+``test'' subsets, with $K$ typically chosen to be $5$ or $10$.  We do this
+by randomly assigning a fold number $r_i$ in the range $\{1, \dotsc, K\}$
+for each row~$i$. For each ``fold'' $r$ in the range $1, \dotsc, K$, we
+permute the rows of the data matrix to get $\dataX$, a matrix with the
+$r$th test subset, the rows $i$ with $r_i = r$ as its trailing rows.  
+We partition $\dataX$ as
 \[
   \dataX =
   \begin{bmatrix}
@@ -252,7 +257,8 @@ rows.  We partition $\dataX$ as
     \Xtest  & \Ytest
   \end{bmatrix}.
 \]
-We use the training rows $[ \Xtrain\ \Ytrain ]$ to fit a regression model
+We use the training rows $[ \Xtrain\ \Ytrain ]$, containing roughly $N
+(K-1)/K$ of the observations to fit a regression model
 $\hat Y = \hat Y(X)$, and then evaluate the performance of this model on the
 test set, computing the cross-validation error $\|\Ytest - \hat Y(\Xtest)\|^2$
 or some variant thereof.  We choose the model with the smallest
@@ -330,16 +336,24 @@ $k$, the number of clusters:
 \begin{enumerate}
   \item \label{step:gabriel-cluster}
     \textbf{Cluster:}
-    Cluster $Y_{1}, \dotsc, Y_n$, the rows of $\Ytrain$, yielding the
-    assignment rule $\hGY : \R^q \to \{ 1, \dotsc, k \}$ and the
-    cluster means $\bmuY_1, \dotsc, \bmuY_k$.  Set $\hGY_i = \hGY(Y_i)$ to
-    be the assigned cluster for row $i$.
+    Cluster $Y_{1}, \dotsc, Y_n$, the rows of $\Ytrain$, yielding
+    $k$ cluster centers, denoted $\bmuY_1, \dotsc, \bmuY_k$, identified
+    with the labels $1, \dotsc, k$. This also yields the
+    assignment rule $\hGY : \R^q \to \{ 1, \dotsc, k \}$ defined analogously
+    to the assignment rule $G$ from Sec.~\ref{sec:problem-statement}, which
+    for any input $Y$, yields the label of the closest cluster center.
+    Set $\hGY_i = \hGY(Y_i)$ to be the assigned cluster label for row~$i$: the
+    label of the closest cluster mean to $Y_i$.
   \item \label{step:gabriel-classify}
     \textbf{Classify:}
     Take $X_{1}, \dotsc, X_n$, the rows of $\Xtrain$ to be predictors,
     and take $\hGY_1, \dotsc, \hGY_n$ to be corresponding class labels.  Use
-    the pairs $\{ (X_i, \hGY_i) \}_{i=1}^{n}$ to train a classifier
-    $\hGX : \R^p \to \{ 1, \dotsc, k \}$.
+    the pairs $\{ (X_i, \hGY_i) \}_{i=1}^{n}$ to fit a model that can
+    predicts a label from input vector $X$; denote the fitted
+    prediction function by
+    $\hGX : \R^p \to \{ 1, \dotsc, k \}$. In principle this prediction method
+    can be arbitrary but in the sequel we will use linear discriminant
+    analysis.
   \item \label{step:gabriel-predict}
     \textbf{Predict:}
     Apply the classifier to $X_{n+1}, \dotsc, X_{n+m}$, the rows of
@@ -378,7 +392,7 @@ of a tie).
 
 
 In Section~\ref{sec:self-consistent}, we prove that this procedure is
-self-consistent, in the sense that it recover the correct value of $k$ in the
+self-consistent, in the sense that it recovers the correct value of $k$ in the
 absence of noise. Then, in Section~\ref{sec:theory-gaussian}, we analyze some
 of the properties of Gabriel cross-validation in the presence of Gaussian
 noise.
@@ -387,7 +401,7 @@ noise.
 \section{Self-consistency}
 \label{sec:self-consistent}
 
-An important property of any estimation procedure is that in the absence of of
+An important property of any estimation procedure is that in the absence of
 noise, the procedure correctly estimates the truth. This property is called
 ``self-consistency'' \citep{tarpey96}. We will now show that Gabriel
 cross-validation is self-consistent. That is, in the absence of noise, the
@@ -412,7 +426,8 @@ clusters in the absence of noise.
 Let $\{ (X_i, Y_i) \}_{i=1}^{n+m}$ be the data from a single fold of Gabriel
 cross-validation.  For any $k$, let $\CV(k)$ be the cross-validation error for
 this fold, computed as described in Section~\ref{sec:gabriel-cv-algorithm}.
-We will assume that there are $K$ true centers $\mu(1), \dotsc,\mu(K)$, with
+We will assume that there are $K$ ``true cluster centers''
+$\mu(1), \dotsc,\mu(K)$, with
 the $g$th cluster center partitioned as $\mu(g) = \bigl(\muX(g),
 \muY(g)\bigr)$ for $g = 1, \dotsc, K$.  Suppose that
 \begin{enumerate}[label=(\roman*)]
