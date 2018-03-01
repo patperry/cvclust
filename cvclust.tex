@@ -984,21 +984,27 @@ demonstrate the effectiveness of our ad-hoc adjustment procedure.
 
 \subsection{Overview}
 
-In this section, we perform a set of simulations to evaluate the performance of our
-proposed method and the associated correlation correction described in
-Section~\ref{sec:corr-correct}.
-We compare our method
-with a basket of competing methods including the Gap statistic
+In this section, we perform a set of simulations to evaluate the performance
+of our proposed method and the associated correlation correction described in
+Section~\ref{sec:corr-correct}.  We compare our method with a basket of
+competing methods including the Gap statistic
 \citep{tibshirani2001estimating}, Gaussian mixture model-based clustering
 \citep{fraley2002model}, the CH-index \citep{calinski1974dendrite}, Hartigan's
 statistic \citep{hartigan1975clustering}, the Jump method
 \citep{sugar2003finding}, Prediction strength \citep{tibshirani2005cluster},
-and Bootstrap stability \citep{fang2012selection}.
-We use the default parameter settings for all competing methods. For Gabriel
-cross-validation, we perform $2$-fold cross-validation on the columns~($p=q$)
-and $5$-fold cross-validation on the rows~($m=n/4$).
-We also compare with Wold cross-validation, which we describe in
-Appendix~\ref{sec:wold-cv}.
+and Bootstrap stability \citep{fang2012selection}.  We use the default
+parameter settings for all competing methods.  For Gabriel cross-validation,
+we perform $2$-fold cross-validation on the columns~($p=q$) and $5$-fold
+cross-validation on the rows~($m=n/4$).  We also compare with Wold
+cross-validation, which we describe in Appendix~\ref{sec:wold-cv}.
+
+
+For the competing methods, some might take issue with the fact that we are
+using default parameter settings.  In many other benchmark comparisons, one
+would choose the tuning parameters using some form of cross-validation. In our
+case, this is not an option. We are in an \emph{unsupervised} setting, so
+there is no clear way to set the tuning parameters. We must rely on the
+defaults from the implementations of these methods.
 
 
 In all simulation settings, we randomly generate cluster centers by drawing

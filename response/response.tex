@@ -1,0 +1,1498 @@
+\documentclass[11pt]{article}
+\usepackage{epsf}
+\usepackage{hyperref}
+\usepackage{graphicx}
+\usepackage{subfigure}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath}
+\usepackage{footnote}
+\usepackage[bottom]{footmisc}
+\usepackage[singlelinecheck=false]{caption}
+\usepackage{caption}
+\usepackage{amsthm}
+\usepackage{enumitem}
+\usepackage{graphics}
+\usepackage{float}
+\usepackage{amssymb}
+\usepackage{natbib}
+\usepackage{lscape}
+\usepackage{array}
+\textheight=8.7in
+\usepackage{setspace}
+\usepackage{verbatim}
+\usepackage{multirow}
+\usepackage{booktabs}
+\usepackage{longtable}
+
+\def\threedigits#1{%
+  \ifnum#1<100 0\fi
+  \ifnum#1<10 0\fi
+  \number#1}
+
+\topmargin=0.1in \oddsidemargin=-0.1cm \evensidemargin=-0.1cm
+
+\paperheight=11in \paperwidth=8.5in \marginparwidth=0in
+
+\marginparsep=0in \textwidth=6.5in \headheight=0in \headsep=0in
+
+\onehalfspacing
+\def\argmax{\mathop{\rm arg\,max}}
+%\usepackage{xspace,epsfig,subfig}
+\newtheorem{theorem}{Theorem}
+\newtheorem{lemma}{Lemma}
+\newtheorem{claim}{Claim}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+\newtheorem{corollary}{Corollary}
+\newenvironment{sketch}{\noindent\emph{Proof Sketch:}}{$\quad \Box$}
+%\newenvironment{proof}{\noindent\emph{Proof:}}{$\quad \Box$}
+
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+% operators
+\DeclareMathOperator*{\argmin}{arg\,min}
+\newcommand{\CV}{\operatorname{CV}}
+\newcommand{\PE}{\operatorname{PE}}
+\newcommand{\E}{\operatorname{E}}
+\DeclareMathOperator*{\cov}{cov}
+\DeclareMathOperator*{\corr}{corr}
+\DeclareMathOperator*{\tr}{tr}
+\DeclareMathOperator*{\var}{var}
+\newcommand{\T}{T}
+
+% convergence
+\newcommand{\toas}{\overset{\mathit{a.s.}}{\to}}
+
+\newcommand{\OhP}{O_p}
+
+% sets
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\sA}{\mathcal{A}}
+\newcommand{\sbA}{\mathcal{\bar A}}
+\newcommand{\sC}{\mathcal{C}}
+\newcommand{\sE}{\mathcal{E}}
+\newcommand{\sN}{\mathcal{N}}
+\newcommand{\sX}{\mathcal{X}}
+
+% scalars
+\newcommand{\bpi}{\bar \pi}
+
+% vectors
+\newcommand{\muX}{\mu^{X}}
+\newcommand{\muY}{\mu^{Y}}
+\newcommand{\bmuX}{\bar \mu^{X}}
+\newcommand{\bmuY}{\bar \mu^{Y}}
+
+% matrices
+\newcommand{\dataX}{\mathfrak{X}}
+\newcommand{\SigmaY}{\Sigma^Y}
+\newcommand{\Xtrain}{X_{\text{train}}}
+\newcommand{\Ytrain}{Y_{\text{train}}}
+\newcommand{\Xtest}{X_{\text{test}}}
+\newcommand{\Ytest}{Y_{\text{test}}}
+
+% class labels
+\newcommand{\hGX}{\hat G^{X}}
+\newcommand{\hGY}{\hat G^{Y}}
+
+
+\bibpunct{(}{)}{;}{a}{,}{,}
+
+\begin{document}
+
+
+
+
+\begin{center}\textbf{\LARGE Revision of the paper}\\
+Wei Fu \\
+\today \\ \end{center}
+
+\section{Respons to Associate Editor}
+
+\subssection{Point 1}
+
+\emph{1. What is the exact difference between the proposed method and Owen and
+Perry (2009) and Gabriel (2002)? I think the three methods are related, and
+the differences should be stated clearly so to make the contribution of the
+current paper clear.}
+
+Added the following at the end of Sec~2.1:
+
+Gabriel's cross validation is analogous to leave-one-out cross-validation,
+while Owen and Perry's generalization handles more general leave-outs.
+
+Gabriel's cross-validation the Owen and Perry generalization are designed
+specifically for choosing the rank of a low-rank matrix approximation like the
+singular value decomposition or the non-negative matrix factorization. While
+for some purposes it makes sense to view $k$-means clustering as a sort of low
+rank approximation to the data matrix, the discrete nature of clustering (each
+observation gets assigned to one of $k$ possible clusters) imposes additional
+structure on the problem that makes the prior procedures not directly
+applicable.
+
+In the sequel, we extend the version of Gabriel cross-validation described by
+Owen and Perry to the problem of selecting the number of clusters, $k$. To do
+so, we introduce a classification procedure into the cross-validation steps
+that takes the place of least squares regression in the matrix factorization
+problem formation. Our new procedure is able to select the number of clusters,
+$k$, automatically. For this procedure, we provide theoretical and empirical
+support analogous to the consistency results proved by Owen and Perry~(2009).
+
+
+\subsection{Point 2}
+
+\emph{2. In numerical comparisons, default parameters settings were used for
+competing methods. Is this fair?}
+
+Added the following to Sec.~6.1:
+
+For the competing methods, some might take issue with the fact that we are
+using default parameter settings.  In many other benchmark comparisons, one
+would choose the tuning parameters using some form of cross-validation. In our
+case, this is not an option. We are in an \emph{unsupervised} setting, so
+there is no clear way to set the tuning parameters. We must rely on the
+defaults from the implementations of these methods.
+
+
+
+\section{Response to Reviewer 1}
+
+
+\section{Relax normality assumption in Proposition 2}
+From the original proof of Proposition $2$, we can see the two actual properties that are used in the proof which are derived from the multivariate normal distribution are:
+
+\begin{enumerate}
+	\item $E(Y|X) = \rho X$
+	\item Symmetric marginal distribution of $X$ and $Y$
+\end{enumerate}
+
+So we can relax the condition in Proposition $2$ as following:\\\
+\textit{ let $\{X,Y\}$ denotes a bivariate distribution with correlation $\rho$ that can be decomposed as
+\begin{itemize}
+	\item $X = Z_1$
+	\item $Y =  \rho Z_1 + \sqrt{1-\rho^2}Z_2$
+\end{itemize}
+where $Z_1$ and $Z_2$ are \textbf{independent} random variables with mean zero, unit variance and symmetric distribution}. \\\
+
+One can see the above condition is sufficient to get the two properties used in the proof and it's more relax than multivariate normal. In fact, $X$ and $Y$ do not necessary to have the same distribution (just the same first and second moments).  
+Actually, for any bivariate distribution $\{X,Y\}$ with mean zero, unit variance and correlation $\rho$, we can decompose $\{X,Y\}$ as:
+\begin{itemize}
+	\item $X = Z_1$
+	\item $Y =  \rho Z_1 + \sqrt{1-\rho^2}Z_2$
+\end{itemize}
+where $Z_1$ and $Z_2$ are \textbf{uncorrelated} random variables through Gram-Schmidt procedure. However, we need stronger result than uncorrelated in order to get the first property used in the proof, i.e. $E(Y|X) = \rho X$.
+
+
+\section{Extend the result of Proposition 3 to higher dimension}
+\begin{proof}
+There are two clusters $G_1$ and $G_2$, where observations from $G_1$ are distributed as
+\[	\mathcal{N}\left( \begin{pmatrix} 
+    \mu^X \\
+    \mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)	\]
+and observations from $G_2$ are distributed as
+\[	\mathcal{N}\left( \begin{pmatrix} 
+    -\mu^X \\
+    -\mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)	\]
+here $\mu^X$ and $\mu^Y$ are all vectors. Let $G_i$ be the true cluster where observation $i$ is generated from, by assumption
+\[	P(G_i=G_1) = P(G_i=G_2) = 1/2	\]
+
+To simplify the notation, let 
+\[
+ \begin{pmatrix} 
+    X_1 \\
+    Y_1 \\
+  \end{pmatrix}  \sim
+  \mathcal{N}\left( \begin{pmatrix} 
+    \mu^X \\
+    \mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)
+\]  
+denote the observations from $G_1$ and 
+\[
+ \begin{pmatrix} 
+    X_2 \\
+    Y_2 \\
+  \end{pmatrix}  \sim
+  \mathcal{N}\left( \begin{pmatrix} 
+    -\mu^X \\
+    -\mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)
+\]  
+denote the observations from $G_2$ 
+
+Further, let's denote $\mu^X = \lambda_x e_x$ where $\lambda_x$ is a scalar denotes the distance of $\mu^X$ from origin and $e_x$ is the unit vector point at the same direction as $\mu^X$; $\mu^Y = \lambda_y e_y$ has the same interpretation.
+
+Apply $K$-mean on the $Y$-space, where the two clusters are $\mathcal{N}\left( \mu^Y, \mathbf{I}\right)$ and  $\mathcal{N}\left( -\mu^Y, \mathbf{I}\right)$, the $K$-mean centroids are $\bar{\mu}^Y_1$ and $\bar{\mu}^Y_2$ with $\bar{\mu}^Y_1 = -\bar{\mu}^Y_2$. Note that the boundary between the two clusters are $e^T_y Y > 0 $. So 
+
+\begin{align}
+\bar{\mu}^Y_1 & = E(Y \mid Y>0) \\
+ &= E(Y_1 \mid e^T_y Y_1 > 0) \cdot P(e^T_y Y_1 >0) +E(Y_2 \mid e^T_y Y_2 > 0) \cdot P(e^T_y Y_2 >0)
+\end{align}
+
+Note that $e^T_y Y_1$ projects vector $Y_1$ on the direction of $e_y$. And because the $e_y$ is the same direct as $\mu^Y$, it goes through the center of the sphere $\mathcal{N}\left( \mu^Y, \mathbf{I}\right)$. Because the covariance matrix is $\mathbf{I}$, the sphere is symmetric around $e_y$. Therefore, 
+\begin{align}
+E(Y_1 \mid e^T_y Y_1 = a ) & = a e_y
+\end{align}
+
+Also, $Y_1 \sim \mathcal{N}\left( \mu^Y, \mathbf{I}\right)$ so $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)$. We have
+
+\begin{align}
+E(Y_1 \mid e^T_y Y_1 > 0)  & = E \left[  E\left(  Y_1 \mid e^T_y Y_1  \right) \mid e^T_y Y_1 > 0  \right] \\
+ from \hspace{0.05in} (3) \hspace{0.05in} above	& =  E( e^T_y Y_1 e_y  \mid e^T_y Y_1 > 0  )  \\ 
+	& = e_y E( e^T_y Y_1 \mid e^T_y Y_1 > 0  ) 
+\end{align}
+
+Because $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)  = \lambda_y + Z$, where $Z$ is standard normal, by Lemma $3$ from Appendix C we have 
+\begin{align}
+E( e^T_y Y_1 \mid e^T_y Y_1 > 0  ) &= E(\lambda_y +  Z \mid Z > -  \lambda_y )  \\
+ &= \lambda_y + E(Z \mid Z > -  \lambda_y ) \\
+ &= \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}
+\end{align}
+
+ where $\varphi()$ and $\Phi()$ are the standard normal probability and cumulative distribution function respectively. So, by $(6)$ we have
+
+\begin{align}
+E(Y_1 \mid e^T_y Y_1 > 0)  &= \left[ \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}  \right] e_y
+\end{align}
+
+Similarly, we can have
+
+\begin{align}
+E(Y_2 \mid e^T_y Y_2 > 0)  &= - E(Y_1 \mid e^T_y Y_1 < 0) \\
+	&= - e_y E( e^T_y Y_1 \mid e^T_y Y_1 < 0  )  \\
+	&= \left[ \frac{\varphi(\lambda_y)}{1-\Phi(\lambda_y)} - \lambda_y  \right] e_y 
+\end{align}
+
+Because $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)  = \lambda_y + Z$, it's easy to get 
+\begin{align}
+P(e^T_y Y_1 > 0) &= P(Z > - \lambda_y) \\
+	&= \Phi(\lambda_y) 
+\end{align}
+
+By symmetry, we can get 
+\begin{align}
+P(e^T_y Y_2 > 0) &= 1- \Phi(\lambda_y)
+\end{align}
+
+Put everything together, we have 
+
+\begin{align}
+\bar{\mu}^Y_1 & = E(Y_1 \mid e^T_y Y_1 > 0) \cdot P(e^T_y Y_1 >0) +E(Y_2 \mid e^T_y Y_2 > 0) \cdot P(e^T_y Y_2 >0) \\
+ &=  \left[ \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}  \right]\cdot \Phi(\lambda_y) e_y + \left[ \frac{\varphi(\lambda_y)}{1-\Phi(\lambda_y)} - \lambda_y  \right]\cdot\left(1- \Phi(\lambda_y)\right) e_y  \\
+ & = [2\lambda_y \Phi(\lambda_y) + 2\varphi(\lambda_y) - \lambda_y]e_y 
+\end{align}
+
+After training the classifier, because of the identity covariance matrix, the classification boundary is $e^T_x X > 0$. So the $Y$ center for observation with $e^T_x X > 0$ is 
+
+\begin{align}
+\hat{\mu}^Y_1 &= E(Y_1 \mid e^T_x X_1 > 0)\cdot P(e^T_x X_1 > 0) + E(Y_2 \mid e^T_x X_2 > 0)\cdot P(e^T_x X_2 > 0)\\ 
+\text{ X independent of Y}	&= E(Y_1) \cdot P(e^T_x X_1 > 0) + E(Y_2) \cdot P(e^T_x X_2 > 0)\\ 
+  & = \mu^Y \cdot P(e^T_x X_1 > 0) -  \mu^Y \cdot P(e^T_x X_2 > 0)\\
+  & = \mu^Y \left( P(e^T_x X_1 > 0) -  P(e^T_x X_2 > 0)  \right) \\
+   & = \mu^Y \left[ \Phi(\lambda_x) -  (1-\Phi(\lambda_x))  \right] \\
+   & = (2\Phi(\lambda_x) - 1)\mu^Y \\
+    & = (2\Phi(\lambda_x) - 1)\lambda_y e_y
+\end{align}
+
+Because of symmetry and $P(G_i=G_1) = P(G_i=G_2) = 1/2$, it's sufficient to show that for observations with  $e^T_x X > 0$, if $CV(2) < CV(1)$ then the Gabriel CV method correctly picks $k=2$ over $k=1$. 
+
+Similar as in the proof of Proposition $4$, by the variance and bias decomposition of MSE, the variance is the same, so only the bias influences the result. Note the predicted center is grand $0$ for $CV(1)$, so to see if  $CV(2) < CV(1)$ one only need to see if $||\bar{\mu}^Y_1-\hat{\mu}^Y_1||^2 < ||\hat{\mu}^Y_1 - 0||^2$, which is true if 
+\[ 2\Phi(\lambda_y) + 2 \frac{\varphi(\lambda_y)}{\lambda_y} < 4\Phi(\lambda_x)-1 \] 
+
+such result reduce to the original result of Proposition $3$ if one set $\lambda_x = \mu^X$ and $\lambda_y = \mu^Y$
+
+\end{proof}
+
+
+\section{Correct description of simulation and reply to comments}
+
+\begin{enumerate}
+	\item \textbf{Comment $2$ of referee $1$} \\
+	It is true that $\hat{k}_0$ tends to overestimate $k$ when correlation is high, and the covariance matrices for the  $\hat{k}_0$ clusters is not the same as the true underlying covariance matrices for the $k$ clusters. The point is that we only need the estimated noise covariance matrix to be "close" to the actual covariance matrix such that after adjusting for correlation, the (transformed) data become weakly correlated (not necessary zero-correlated). We have demonstrate that the proposed method works well when the correlation is weak in both theoretical results and simulation results.
+	\item \textbf{Comment $3.1$ of referee $1$} \\
+    The previous description of how the clusters are generated in the simulation and the distance between them are incorrect (last paragraph in page $20$ of previous draft). The correct description should be "any simulation with clusters having minimum distance less than $1.0$ units between them was discarded; ... the settings are such that about half of the random realizations were discarded"
+\cite{tibshirani2001estimating}. This idea was directly borrowed from \cite{tibshirani2001estimating}. 
+
+The idea is that any observation $i$ which is generated from cluster $G_i$ will has the distance between $i$ and $\mu_{G_i}$ (its true cluster center) less than the distance between $i$ and $\mu_{G_j} (i\neq j)$ by more than $1.0$ unit, i.e. $||i - \mu_{G_i}|| + 1 \leq ||i - \mu_{G_j}||$. Such procedure ensures that the generated clusters have no overlap, so it's clear what the "true" number of cluster is. 
+	\item \textbf{Comment $3.2$ of referee $1$} \\
+	All our simulation setting are similar to the $(c)$ and $(d)$ settings in section $6$ of \cite{tibshirani2001estimating}, given how we generated the clusters (see previous reply). 
+\end{enumerate}
+
+\section{Simulation results in tables}
+
+\subsection{Setting 1}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 97 & 84 & 28 & 3 & 1 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 3 & 7 & 15 & 1 & 1 & 1 & 0 & 0 & 1 & 2 \\ 
+  8 & 0 & 4 & 16 & 7 & 4 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 4 & 24 & 27 & 16 & 11 & 7 & 4 & 4 & 2 \\ 
+  10 & 0 & 1 & 17 & 62 & 78 & 88 & 93 & 96 & 95 & 96 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-nearest-5x2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 96 & 97 & 91 & 89 & 89 & 95 & 95 & 95 & 100 & 97 \\ 
+  7 & 1 & 2 & 6 & 6 & 4 & 2 & 2 & 3 & 0 & 0 \\ 
+  8 & 1 & 1 & 2 & 2 & 3 & 2 & 3 & 2 & 0 & 1 \\ 
+  9 & 2 & 0 & 1 & 3 & 3 & 0 & 0 & 0 & 0 & 1 \\ 
+  10 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 0 & 0 & 1 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-corr-correct2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 1 & 1 & 2 & 2 & 2 & 1 & 2 & 0 \\ 
+  4 & 4 & 3 & 5 & 5 & 9 & 4 & 4 & 8 & 8 & 4 \\ 
+  5 & 15 & 16 & 15 & 14 & 15 & 16 & 18 & 20 & 17 & 17 \\ 
+  6 & 74 & 72 & 69 & 68 & 58 & 65 & 62 & 57 & 58 & 48 \\ 
+  7 & 4 & 6 & 7 & 9 & 11 & 7 & 6 & 8 & 9 & 9 \\ 
+  8 & 3 & 3 & 3 & 3 & 3 & 2 & 5 & 2 & 4 & 6 \\ 
+  9 & 0 & 0 & 0 & 0 & 1 & 1 & 1 & 1 & 0 & 9 \\ 
+  10 & 0 & 0 & 0 & 0 & 1 & 3 & 2 & 3 & 2 & 7 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{wold} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 100 & 100 & 62 & 9 & 1 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 8 & 5 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 17 & 16 & 2 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 8 & 18 & 11 & 3 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 5 & 52 & 86 & 97 & 100 & 100 & 100 & 100 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gap} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 100 & 92 & 98 & 100 & 99 & 99 & 98 & 99 & 99 & 94 \\ 
+  7 & 0 & 7 & 1 & 0 & 0 & 0 & 2 & 0 & 0 & 3 \\ 
+  8 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 2 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 
+  NA & 0 & 1 & 0 & 0 & 1 & 1 & 0 & 1 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{BIC} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 3 & 1 & 2 & 0 & 1 & 1 & 1 & 1 & 1 & 0 \\ 
+  4 & 6 & 3 & 5 & 3 & 3 & 3 & 3 & 3 & 3 & 2 \\ 
+  5 & 15 & 17 & 10 & 7 & 10 & 6 & 7 & 6 & 4 & 5 \\ 
+  6 & 38 & 35 & 27 & 32 & 35 & 27 & 26 & 25 & 23 & 23 \\ 
+  7 & 23 & 18 & 26 & 27 & 19 & 33 & 26 & 23 & 14 & 10 \\ 
+  8 & 6 & 15 & 11 & 18 & 15 & 12 & 15 & 13 & 18 & 15 \\ 
+  9 & 4 & 4 & 15 & 7 & 13 & 13 & 13 & 17 & 16 & 20 \\ 
+  10 & 4 & 6 & 4 & 6 & 4 & 5 & 9 & 12 & 21 & 25 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{CH} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 3 & 8 & 7 & 7 & 7 & 5 & 5 & 4 & 3 & 8 \\ 
+  4 & 9 & 11 & 11 & 7 & 8 & 11 & 9 & 6 & 6 & 13 \\ 
+  5 & 17 & 21 & 13 & 12 & 11 & 9 & 12 & 7 & 10 & 10 \\ 
+  6 & 45 & 34 & 31 & 39 & 36 & 31 & 34 & 34 & 32 & 29 \\ 
+  7 & 14 & 10 & 15 & 18 & 17 & 24 & 16 & 22 & 14 & 17 \\ 
+  8 & 4 & 7 & 15 & 9 & 13 & 9 & 8 & 11 & 18 & 8 \\ 
+  9 & 7 & 7 & 7 & 4 & 7 & 7 & 9 & 12 & 12 & 9 \\ 
+  10 & 1 & 2 & 1 & 4 & 1 & 4 & 7 & 4 & 5 & 6 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Hartigan} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 100 & 100 & 100 & 96 & 22 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 1 & 3 & 1 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 13 & 15 & 9 & 5 & 3 & 1 \\ 
+  10 & 0 & 0 & 0 & 3 & 62 & 84 & 91 & 95 & 97 & 99 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Jump} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 89 & 95 & 90 & 95 & 88 & 89 & 91 & 92 & 91 & 93 \\ 
+  2 & 10 & 4 & 10 & 5 & 10 & 11 & 8 & 8 & 8 & 6 \\ 
+  3 & 1 & 1 & 0 & 0 & 2 & 0 & 1 & 0 & 1 & 1 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{PS} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:26:49 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 0.1 & 0.2 & 0.3 & 0.4 & 0.5 & 0.6 & 0.7 & 0.8 & 0.9 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 5 & 2 & 2 & 0 & 1 & 1 & 1 & 1 & 1 & 1 \\ 
+  3 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 \\ 
+  6 & 5 & 7 & 7 & 1 & 2 & 0 & 0 & 0 & 1 & 3 \\ 
+  7 & 14 & 19 & 8 & 4 & 5 & 7 & 3 & 3 & 3 & 2 \\ 
+  8 & 30 & 22 & 27 & 17 & 21 & 13 & 15 & 9 & 11 & 13 \\ 
+  9 & 25 & 23 & 24 & 31 & 38 & 25 & 26 & 26 & 27 & 27 \\ 
+  10 & 20 & 26 & 32 & 47 & 32 & 54 & 55 & 61 & 56 & 54 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Stab} 
+\end{table}
+
+
+
+\subsection{Setting 2}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 3 & 9 & 3 & 19 & 0 & 12 & 6 & 0 & 1 \\ 
+  2 & 0 & 5 & 7 & 1 & 6 & 0 & 12 & 6 & 1 & 1 \\ 
+  3 & 99 & 88 & 82 & 92 & 74 & 99 & 73 & 84 & 97 & 97 \\ 
+  4 & 0 & 2 & 0 & 2 & 0 & 0 & 3 & 3 & 0 & 0 \\ 
+  5 & 1 & 0 & 2 & 1 & 1 & 1 & 0 & 1 & 2 & 1 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 1 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-nearest-5x2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 3 & 9 & 3 & 19 & 0 & 12 & 6 & 0 & 1 \\ 
+  2 & 1 & 5 & 6 & 1 & 5 & 0 & 11 & 6 & 1 & 1 \\ 
+  3 & 98 & 92 & 85 & 96 & 76 & 100 & 77 & 88 & 99 & 98 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-corr-correct2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 6 & 6 & 6 & 6 & 6 & 6 & 6 & 7 & 6 & 6 \\ 
+  2 & 25 & 24 & 23 & 23 & 24 & 24 & 23 & 24 & 26 & 25 \\ 
+  3 & 47 & 49 & 52 & 52 & 51 & 51 & 51 & 50 & 48 & 49 \\ 
+  4 & 8 & 14 & 12 & 13 & 14 & 15 & 11 & 14 & 15 & 15 \\ 
+  5 & 3 & 1 & 2 & 2 & 2 & 1 & 5 & 0 & 1 & 3 \\ 
+  6 & 1 & 1 & 3 & 2 & 2 & 2 & 4 & 3 & 3 & 1 \\ 
+  7 & 0 & 1 & 0 & 2 & 0 & 0 & 0 & 0 & 1 & 0 \\ 
+  8 & 4 & 2 & 2 & 0 & 1 & 1 & 0 & 1 & 0 & 1 \\ 
+  9 & 2 & 1 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 \\ 
+  10 & 4 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{wold} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gap} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 100 & 99 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{BIC} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 1 & 2 & 4 & 4 & 5 & 5 & 5 & 7 & 7 & 7 \\ 
+  3 & 80 & 80 & 80 & 80 & 80 & 80 & 80 & 79 & 79 & 79 \\ 
+  4 & 12 & 12 & 10 & 11 & 11 & 10 & 11 & 11 & 10 & 11 \\ 
+  5 & 5 & 5 & 5 & 4 & 3 & 4 & 3 & 2 & 3 & 2 \\ 
+  6 & 2 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 & 1 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{CH} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 89 & 89 & 88 & 89 & 89 & 88 & 89 & 89 & 88 & 89 \\ 
+  4 & 7 & 7 & 8 & 7 & 7 & 8 & 7 & 7 & 8 & 7 \\ 
+  5 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 & 2 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Hartigan} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 100 & 100 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 8 & 3 & 1 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 92 & 97 & 99 & 100 & 100 & 100 & 100 & 100 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Jump} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 30 & 28 & 30 & 34 & 31 & 31 & 32 & 26 & 27 & 31 \\ 
+  2 & 30 & 29 & 26 & 27 & 30 & 28 & 32 & 29 & 28 & 27 \\ 
+  3 & 40 & 43 & 44 & 39 & 39 & 41 & 36 & 45 & 45 & 42 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{PS} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 0 & 6 & 12 & 18 & 24 & 30 & 36 & 42 & 48 & 54 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 23 & 23 & 22 & 23 & 24 & 24 & 23 & 23 & 23 & 22 \\ 
+  3 & 55 & 62 & 59 & 62 & 60 & 56 & 56 & 59 & 57 & 57 \\ 
+  4 & 13 & 8 & 11 & 7 & 9 & 13 & 13 & 10 & 12 & 14 \\ 
+  5 & 0 & 2 & 0 & 0 & 2 & 1 & 0 & 1 & 2 & 3 \\ 
+  6 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 1 & 1 & 0 & 1 & 0 & 0 \\ 
+  8 & 0 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 0 & 0 \\ 
+  9 & 0 & 1 & 2 & 2 & 1 & 0 & 2 & 0 & 3 & 0 \\ 
+  10 & 9 & 4 & 5 & 5 & 2 & 5 & 5 & 6 & 3 & 4 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Stab} 
+\end{table}
+
+
+\subsection{Setting 3}
+
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 91 & 98 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  9 & 6 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-nearest-5x2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 90 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  9 & 7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-corr-correct2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 20 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 62 & 98 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  9 & 7 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{wold} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gap} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 2 & 9 & 33 & 76 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 4 & 4 & 6 & 8 & 6 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 4 & 8 & 9 & 5 & 5 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 4 & 8 & 7 & 9 & 6 \\ 
+  5 & 0 & 0 & 0 & 0 & 1 & 9 & 15 & 12 & 5 & 1 \\ 
+  6 & 0 & 0 & 0 & 0 & 4 & 11 & 8 & 8 & 9 & 1 \\ 
+  7 & 0 & 0 & 0 & 0 & 14 & 14 & 12 & 10 & 8 & 1 \\ 
+  8 & 100 & 100 & 100 & 100 & 73 & 21 & 18 & 17 & 6 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 3 & 14 & 9 & 8 & 8 & 1 \\ 
+  10 & 0 & 0 & 0 & 0 & 5 & 19 & 16 & 14 & 9 & 3 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{BIC} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 1 & 6 & 14 & 22 & 24 & 26 & 35 & 28 & 27 & 29 \\ 
+  3 & 0 & 3 & 2 & 11 & 9 & 10 & 14 & 19 & 22 & 23 \\ 
+  4 & 2 & 2 & 8 & 9 & 12 & 11 & 9 & 14 & 14 & 12 \\ 
+  5 & 3 & 6 & 11 & 8 & 11 & 10 & 11 & 9 & 10 & 13 \\ 
+  6 & 12 & 14 & 13 & 16 & 11 & 11 & 10 & 10 & 8 & 11 \\ 
+  7 & 19 & 24 & 23 & 15 & 13 & 19 & 12 & 14 & 12 & 5 \\ 
+  8 & 23 & 23 & 21 & 13 & 20 & 13 & 9 & 4 & 7 & 7 \\ 
+  9 & 20 & 14 & 5 & 6 & 0 & 0 & 0 & 2 & 0 & 0 \\ 
+  10 & 20 & 8 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{CH} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 7 & 7 & 3 & 4 & 1 & 4 & 4 & 3 & 3 & 2 \\ 
+  4 & 4 & 1 & 3 & 5 & 4 & 7 & 5 & 6 & 3 & 6 \\ 
+  5 & 5 & 3 & 5 & 7 & 13 & 3 & 7 & 7 & 5 & 8 \\ 
+  6 & 14 & 13 & 17 & 17 & 13 & 15 & 12 & 8 & 9 & 19 \\ 
+  7 & 19 & 24 & 23 & 14 & 19 & 17 & 25 & 28 & 26 & 14 \\ 
+  8 & 18 & 25 & 20 & 27 & 35 & 33 & 30 & 32 & 27 & 32 \\ 
+  9 & 17 & 12 & 12 & 18 & 9 & 9 & 14 & 11 & 17 & 10 \\ 
+  10 & 16 & 15 & 17 & 8 & 6 & 12 & 3 & 5 & 10 & 9 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Hartigan} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Jump} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 90 & 94 & 98 & 97 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  2 & 9 & 6 & 2 & 3 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{PS} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 10 & 20 & 30 & 40 & 50 & 60 & 70 & 80 & 90 & 100 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 9 & 6 & 8 & 12 & 7 & 2 & 2 & 2 & 3 & 1 \\ 
+  9 & 27 & 31 & 32 & 26 & 27 & 36 & 32 & 37 & 28 & 28 \\ 
+  10 & 63 & 62 & 60 & 62 & 66 & 62 & 66 & 61 & 69 & 71 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Stab} 
+\end{table}
+
+
+\subsection{Setting 4}
+
+
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 100 & 100 & 99 & 99 & 99 & 99 & 99 & 99 & 100 & 100 \\ 
+  4 & 0 & 0 & 1 & 1 & 1 & 1 & 1 & 1 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-nearest-5x2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 99 & 100 & 99 & 100 & 99 & 99 & 99 & 99 & 100 & 100 \\ 
+  4 & 1 & 0 & 1 & 0 & 1 & 1 & 1 & 1 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-corr-correct2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 100 & 96 & 97 & 97 & 95 & 96 & 94 & 93 & 94 & 94 \\ 
+  4 & 0 & 4 & 3 & 3 & 5 & 4 & 6 & 7 & 6 & 5 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{wold} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 100 & 100 & 100 & 96 & 85 & 75 & 62 & 54 & 49 & 41 \\ 
+  4 & 0 & 0 & 0 & 1 & 4 & 6 & 7 & 5 & 3 & 2 \\ 
+  5 & 0 & 0 & 0 & 1 & 1 & 1 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 1 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 1 & 1 & 1 \\ 
+  8 & 0 & 0 & 0 & 0 & 1 & 3 & 3 & 5 & 5 & 4 \\ 
+  9 & 0 & 0 & 0 & 0 & 2 & 5 & 6 & 6 & 7 & 10 \\ 
+  10 & 0 & 0 & 0 & 2 & 7 & 9 & 22 & 29 & 34 & 41 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gap} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 100 & 100 & 100 & 97 & 97 & 82 & 76 & 69 & 61 & 65 \\ 
+  4 & 0 & 0 & 0 & 1 & 2 & 16 & 20 & 28 & 28 & 17 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 1 & 4 & 3 & 10 & 15 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 2 & 1 & 1 & 0 & 0 & 1 & 3 \\ 
+   \hline
+\end{tabular}
+\caption{BIC} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 14 & 11 & 10 & 8 & 9 & 10 & 11 & 10 & 10 & 14 \\ 
+  3 & 83 & 80 & 80 & 81 & 81 & 81 & 79 & 81 & 82 & 80 \\ 
+  4 & 3 & 9 & 10 & 11 & 10 & 9 & 10 & 9 & 8 & 6 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{CH} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 96 & 91 & 90 & 91 & 90 & 91 & 90 & 90 & 91 & 90 \\ 
+  4 & 4 & 7 & 9 & 8 & 8 & 7 & 7 & 7 & 7 & 7 \\ 
+  5 & 0 & 2 & 1 & 1 & 2 & 2 & 3 & 3 & 2 & 3 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Hartigan} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 4 & 3 & 2 & 1 & 2 & 1 & 2 & 2 & 2 \\ 
+  9 & 10 & 31 & 30 & 24 & 19 & 24 & 21 & 18 & 19 & 20 \\ 
+  10 & 87 & 65 & 67 & 74 & 80 & 74 & 78 & 80 & 79 & 78 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Jump} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 5 & 13 & 29 & 28 & 28 & 28 & 28 & 30 & 30 & 34 \\ 
+  2 & 1 & 3 & 1 & 2 & 2 & 2 & 1 & 1 & 1 & 2 \\ 
+  3 & 94 & 84 & 70 & 70 & 70 & 70 & 71 & 69 & 69 & 64 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{PS} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:30:05 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 1 & 5 & 10 & 15 & 20 & 25 & 30 & 35 & 40 & 45 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 2 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 
+  3 & 73 & 55 & 57 & 61 & 61 & 58 & 58 & 58 & 57 & 52 \\ 
+  4 & 24 & 34 & 32 & 26 & 27 & 30 & 31 & 30 & 28 & 32 \\ 
+  5 & 1 & 9 & 11 & 11 & 10 & 10 & 8 & 11 & 12 & 13 \\ 
+  6 & 0 & 0 & 0 & 1 & 2 & 2 & 3 & 1 & 3 & 2 \\ 
+  7 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Stab} 
+\end{table}
+
+
+\subsection{Setting 5}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 5 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 91 & 97 & 99 & 100 & 99 & 99 & 100 & 99 & 99 & 99 \\ 
+  6 & 2 & 1 & 1 & 0 & 1 & 1 & 0 & 1 & 1 & 1 \\ 
+  7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-nearest-5x2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 2 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 73 & 96 & 98 & 100 & 100 & 100 & 99 & 100 & 100 & 100 \\ 
+  6 & 20 & 2 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gabriel-corr-correct2} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 5 & 3 & 0 & 0 & 1 & 0 & 1 & 0 & 0 & 1 \\ 
+  5 & 87 & 95 & 94 & 96 & 97 & 98 & 97 & 97 & 93 & 94 \\ 
+  6 & 8 & 2 & 5 & 4 & 2 & 2 & 2 & 3 & 7 & 4 \\ 
+  7 & 0 & 0 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 1 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{wold} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 50 & 98 & 99 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  6 & 21 & 2 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 6 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{gap} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 31 & 64 & 86 & 97 & 96 & 100 & 100 & 100 \\ 
+  6 & 3 & 29 & 53 & 32 & 12 & 3 & 4 & 0 & 0 & 0 \\ 
+  7 & 0 & 24 & 15 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 1 & 22 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 5 & 12 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 91 & 10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 3 & 1 & 4 & 2 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{BIC} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 1 & 1 & 0 & 1 & 2 & 3 & 3 & 2 \\ 
+  3 & 0 & 1 & 0 & 3 & 1 & 2 & 3 & 2 & 4 & 1 \\ 
+  4 & 5 & 11 & 8 & 14 & 16 & 10 & 17 & 20 & 10 & 17 \\ 
+  5 & 37 & 32 & 51 & 46 & 53 & 58 & 50 & 49 & 50 & 45 \\ 
+  6 & 23 & 33 & 25 & 29 & 22 & 20 & 22 & 20 & 29 & 29 \\ 
+  7 & 16 & 18 & 10 & 3 & 5 & 8 & 4 & 4 & 2 & 3 \\ 
+  8 & 13 & 1 & 2 & 3 & 3 & 1 & 2 & 2 & 1 & 2 \\ 
+  9 & 4 & 3 & 2 & 1 & 0 & 0 & 0 & 0 & 1 & 1 \\ 
+  10 & 2 & 1 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{CH} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 1 & 5 & 2 & 5 & 5 & 2 & 4 & 1 & 3 & 3 \\ 
+  4 & 2 & 15 & 10 & 15 & 13 & 9 & 13 & 17 & 10 & 15 \\ 
+  5 & 45 & 40 & 59 & 59 & 54 & 66 & 60 & 54 & 58 & 52 \\ 
+  6 & 24 & 26 & 19 & 11 & 13 & 13 & 14 & 18 & 17 & 23 \\ 
+  7 & 15 & 9 & 4 & 4 & 10 & 7 & 4 & 7 & 7 & 4 \\ 
+  8 & 7 & 2 & 3 & 3 & 3 & 3 & 2 & 2 & 4 & 2 \\ 
+  9 & 2 & 2 & 1 & 2 & 2 & 0 & 1 & 1 & 1 & 0 \\ 
+  10 & 4 & 1 & 2 & 1 & 0 & 0 & 2 & 0 & 0 & 1 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Hartigan} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 13 & 92 & 98 & 100 & 100 & 100 & 100 & 100 & 100 & 100 \\ 
+  6 & 8 & 3 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 9 & 3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 7 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 15 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 48 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Jump} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 88 & 99 & 96 & 93 & 94 & 94 & 96 & 91 & 94 & 94 \\ 
+  2 & 2 & 1 & 4 & 7 & 6 & 5 & 4 & 9 & 6 & 6 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 1 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  6 & 4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  7 & 2 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  8 & 4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  9 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  10 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  NA & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{PS} 
+\end{table}
+% latex table generated in R 3.4.3 by xtable 1.8-2 package
+% Sun Dec 31 15:44:14 2017
+\begin{table}[H]
+\centering
+\begin{tabular}{rrrrrrrrrrr}
+  \hline
+ & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\ 
+  \hline
+1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  2 & 0 & 0 & 1 & 2 & 1 & 1 & 1 & 1 & 1 & 2 \\ 
+  3 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  4 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+  5 & 0 & 0 & 1 & 0 & 2 & 0 & 3 & 5 & 2 & 2 \\ 
+  6 & 0 & 16 & 21 & 23 & 25 & 15 & 35 & 35 & 43 & 37 \\ 
+  7 & 10 & 31 & 33 & 40 & 44 & 48 & 45 & 37 & 34 & 36 \\ 
+  8 & 26 & 37 & 27 & 24 & 21 & 25 & 13 & 16 & 19 & 18 \\ 
+  9 & 32 & 10 & 15 & 9 & 6 & 6 & 3 & 5 & 1 & 2 \\ 
+  10 & 27 & 5 & 2 & 2 & 1 & 5 & 0 & 1 & 0 & 3 \\ 
+  NA & 5 & 1 & 0 & 0 & 0 & 0 & 0 & 0 & 0 & 0 \\ 
+   \hline
+\end{tabular}
+\caption{Stab} 
+\end{table}
+
+
+
+
+\bibliography{myreferences}
+\bibliographystyle{apalike}
+\end{document}
