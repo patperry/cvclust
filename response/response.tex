@@ -107,11 +107,19 @@
 Wei Fu \\
 \today \\ \end{center}
 
-\section{Respons to Associate Editor}
+\section{Overview}
 
-\subssection{Point 1}
+We thank the two reviewers and the Associate Editor for their close reading of
+the paper and their many suggestions and edits. We have taken these suggesions
+into account in our revision, and we believe that our paper is greatly
+improved.
 
-\emph{1. What is the exact difference between the proposed method and Owen and
+See below for detailed point-by-point responses.
+
+
+\section{Response to Associate Editor}
+
+\subsection{1. What is the exact difference between the proposed method and Owen and
 Perry (2009) and Gabriel (2002)? I think the three methods are related, and
 the differences should be stated clearly so to make the contribution of the
 current paper clear.}
@@ -139,9 +147,7 @@ $k$, automatically. For this procedure, we provide theoretical and empirical
 support analogous to the consistency results proved by Owen and Perry~(2009).
 
 
-\subsection{Point 2}
-
-\emph{2. In numerical comparisons, default parameters settings were used for
+\subsection{2. In numerical comparisons, default parameters settings were used for
 competing methods. Is this fair?}
 
 Added the following to Sec.~6.1:
@@ -152,6 +158,29 @@ would choose the tuning parameters using some form of cross-validation. In our
 case, this is not an option. We are in an \emph{unsupervised} setting, so
 there is no clear way to set the tuning parameters. We must rely on the
 defaults from the implementations of these methods.
+
+
+\subsection{3. The correlation correction. How is this done in the high-dimensional
+setting... It's well known that the sample covariance matrix is unstable.}
+
+Added the following to end of Sec.~5:
+
+
+In many applications, including our application in the sequel to a yeast cell
+cycle dataset, the number of observations $N$ is below the number of
+features~$P$. When this happens, the sample covariance matrix $\hat \Sigma$
+will not have full rank~$P$, and will be a poor estimate of the population
+covariance matrix. In these situations, though, it will still be the case that
+a decomposition $\hat \Sigma = \Gamma \Lambda \Gamma^\T$ exists with $\Gamma$
+having orthonormal columns and $\Lambda$ being diagonal and positive-definite.
+It will also be the case that $\Lambda^{-1/2}$ and hence $\tilde{X}$
+exist. What fails in these situation is that, since $\hat \Sigma$ is no longer
+a good estimate of $\Sigma$, it will no longer be the case that our correction
+reliably transforms the noise covariance to $I$. Still, in these situations,
+applying the correlation correction may give better results than using the
+original untransformed data. In practice we inspect the resulting estimate
+$\hat k$ both with and without the correlation correction, and if the two
+answers agree, we can be more confident in our answer.
 
 
 

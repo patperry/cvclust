@@ -924,7 +924,9 @@ The details of the correlation correction procedure are as follow:
     \]
 
   \item \label{step:transform}
-    Compute the eigendecomposition $\hat{\Sigma} = \Gamma\Lambda\Gamma^\T$.
+    Compute a decomposition $\hat{\Sigma} = \Gamma\Lambda\Gamma^\T$
+    where $\Gamma$ has orthonormal columns and
+    $\Lambda$ is diagonal and positive-definite.
     Choose a random (Haar distributed) $P \times P$ orthogonal matrix $Q$.
     Rescale and rotate the original data matrix $\dataX$ to get a
     transformed data matrix defined by
@@ -977,6 +979,23 @@ Our correlation correction is not backed by a rigorous theoretical
 justification. However, the simulations and empirical validation in
 Sections~\ref{sec:simulations} and~\ref{sec:empirical-validation}
 demonstrate the effectiveness of our ad-hoc adjustment procedure.
+
+
+In many applications, including our application in the sequel to a yeast cell
+cycle dataset, the number of observations $N$ is below the number of
+features~$P$. When this happens, the sample covariance matrix $\hat \Sigma$
+will not have full rank~$P$, and will be a poor estimate of the population
+covariance matrix. In these situations, though, it will still be the case that
+a decomposition $\hat \Sigma = \Gamma \Lambda \Gamma^\T$ exists with $\Gamma$
+having orthonormal columns and $\Lambda$ being diagonal and positive-definite.
+It will also be the case that $\Lambda^{-1/2}$ and hence $\tilde{\dataX}$
+exist. What fails in these situation is that, since $\hat \Sigma$ is no longer
+a good estimate of $\Sigma$, it will no longer be the case that our correction
+reliably transforms the noise covariance to $I$. Still, in these situations,
+applying the correlation correction may give better results than using the
+original untransformed data. In practice we inspect the resulting estimate
+$\hat k$ both with and without the correlation correction, and if the two
+answers agree, we can be more confident in our answer.
 
 
 \section{Performance in simulations}
