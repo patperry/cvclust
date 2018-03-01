@@ -276,7 +276,9 @@ and it requires a factor analysis procedure that can handle missing data.
 each fold designates a subset of the data matrix columns to be response and a
 subset of the rows to be test data.  This generalized a procedure due to
 \citet{gabriel2002biblot}, who proposed holding out a single column and a
-single row at each fold.
+single row at each fold. Gabriel's cross validation is analogous to
+leave-one-out cross-validation, while Owen and Perry's generalization handles
+more general leave-outs.
 
 
 
@@ -292,10 +294,22 @@ single row at each fold.
 %% \citep{hastie2009elements}. Therefore, cross-validation prefers larger $k$ if
 %% we do the cross-validation naively.
 
-In the sequel, we extend Gabriel cross-validation to the problem of selecting
-the number of clusters, $k$, automatically, and we provide theoretical and
-empirical support analogous to the consistency results proved by
-\citet{owen2009bi}.
+Gabriel's cross-validation the Owen and Perry generalization are designed
+specifically for choosing the rank of a low-rank matrix approximation like the
+singular value decomposition or the non-negative matrix factorization. While
+for some purposes it makes sense to view $k$-means clustering as a sort of low
+rank approximation to the data matrix, the discrete nature of clustering (each
+observation gets assigned to one of $k$ possible clusters) imposes additional
+structure on the problem that makes the prior procedures not directly
+applicable.
+
+In the sequel, we extend the version of Gabriel cross-validation described by
+Owen and Perry to the problem of selecting the number of clusters, $k$. To do
+so, we introduce a classification procedure into the cross-validation steps
+that takes the place of least squares regression in the matrix factorization
+problem formation. Our new procedure is able to select the number of clusters,
+$k$, automatically. For this procedure, we provide theoretical and empirical
+support analogous to the consistency results proved by \citet{owen2009bi}.
 
 
 \subsection{Gabriel cross-validation}
