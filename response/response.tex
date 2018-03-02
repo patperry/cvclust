@@ -186,30 +186,47 @@ answers agree, we can be more confident in our answer.
 
 \section{Response to Reviewer 1}
 
+Thank you for providing many corrections to our original manuscript. We have
+mostly made the changes you suggested, except that we preferred keeping the
+description as ``Gabriel cross-validation'' rather than ``Gabriel's
+cross-validation''.
 
-\section{Relax normality assumption in Proposition 2}
-From the original proof of Proposition $2$, we can see the two actual properties that are used in the proof which are derived from the multivariate normal distribution are:
+Regarding your question about Fujita's method 
 
-\begin{enumerate}
-	\item $E(Y|X) = \rho X$
-	\item Symmetric marginal distribution of $X$ and $Y$
-\end{enumerate}
+\textbf{\Large{TODO: Fill in}}
 
-So we can relax the condition in Proposition $2$ as following:\\\
-\textit{ let $\{X,Y\}$ denotes a bivariate distribution with correlation $\rho$ that can be decomposed as
-\begin{itemize}
-	\item $X = Z_1$
-	\item $Y =  \rho Z_1 + \sqrt{1-\rho^2}Z_2$
-\end{itemize}
-where $Z_1$ and $Z_2$ are \textbf{independent} random variables with mean zero, unit variance and symmetric distribution}. \\\
 
-One can see the above condition is sufficient to get the two properties used in the proof and it's more relax than multivariate normal. In fact, $X$ and $Y$ do not necessary to have the same distribution (just the same first and second moments).  
-Actually, for any bivariate distribution $\{X,Y\}$ with mean zero, unit variance and correlation $\rho$, we can decompose $\{X,Y\}$ as:
-\begin{itemize}
-	\item $X = Z_1$
-	\item $Y =  \rho Z_1 + \sqrt{1-\rho^2}Z_2$
-\end{itemize}
-where $Z_1$ and $Z_2$ are \textbf{uncorrelated} random variables through Gram-Schmidt procedure. However, we need stronger result than uncorrelated in order to get the first property used in the proof, i.e. $E(Y|X) = \rho X$.
+\section{Response to Reviewer 2}
+
+\subsection{(1) In both Propositions 2 and 3, normality assumption is assumed.
+Can it be relaxed?}
+
+\emph{We added the following comment after the proof of Proposition~2, which
+describes one way to relax the normality assumption:}
+
+The proof of Proposition~2 relies on normality assumptions
+in two crucial ways: (i) assuming that $X$ and $Y$ have symmetric marginal
+distributions; and (ii) assuming that $E(Y|X) = \rho X$. We could relax the
+normality assumption by instead supposing that $X$ and $Y$ can be decomposed
+as $X = Z_1$ and $Y = \rho Z_1 + \sqrt{1-\rho^2}Z_2$ where $Z_1$ and $Z_2$ are
+independent random variables with mean zero, unit variance and symmetric
+distribution. Any bivariate distribution can be put in this form for
+uncorrelated $Z_1$ and $Z_2$, but only special distributions, including the
+bivariate normal, can be put in the form with independent $Z_1$ and $Z_2$.
+
+\emph{We also added the following comment after the proof of Proposition~3}
+
+In principle the proof of Proposition~3 generalizes to non-normal
+distributions easily, provided expressions for $E(Y | Y > 0)$ and the other
+related quantities are available. Different distributions for $(X,Y)$ give
+rise to different cutoffs for when $k = 1$ cluster is preferred to $k = 2$.
+The normal distribution is only special here in that the required conditional
+expectations and the boundary where $CV(1) = CV(2)$ are computable in closed
+form. 
+
+
+\subsection{(2) In Proposition 3, only 2 dimensional case is considered. Can
+it be generalized to multi-dimension as in Proposition 4?}
 
 
 \section{Extend the result of Proposition 3 to higher dimension}

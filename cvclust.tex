@@ -675,6 +675,18 @@ tends to one.
 \end{proof}
 
 
+The proof of Proposition~\ref{prop:single-2d} relies on normality assumptions
+in two crucial ways: (i) assuming that $X$ and $Y$ have symmetric marginal
+distributions; and (ii) assuming that $E(Y|X) = \rho X$. We could relax the
+normality assumption by instead supposing that $X$ and $Y$ can be decomposed
+as $X = Z_1$ and $Y = \rho Z_1 + \sqrt{1-\rho^2}Z_2$ where $Z_1$ and $Z_2$ are
+independent random variables with mean zero, unit variance and symmetric
+distribution. Any bivariate distribution can be put in this form for
+uncorrelated $Z_1$ and $Z_2$, but only special distributions, including the
+bivariate normal, can be put in the form with independent $Z_1$ and $Z_2$.
+
+
+
 We confirm the result of Proposition~\ref{prop:single-2d} with a simulation.
 We perform $10$ replicates.  In each replicate, we generate $20000$
 observations from a mean-zero bivariate normal distribution with unit marginal
@@ -856,6 +868,18 @@ precisely when
   2 \varphi(\muY) + \muY + 2 \muY \Phi(\muY) < 4 \muY \Phi(\muX).
 \)
 \end{proof}
+
+
+In principle the proof of Proposition~\ref{prop:twoclust} generalizes to
+non-normal distributions easily, provided expressions for $\E(Y | Y > 0)$ and
+the other related quantities are available. Different distributions for
+$(X,Y)$ give rise to different cutoffs for when $k = 1$ cluster is preferred
+to $k = 2$. The normal distribution is only special here in that the required
+conditional expectations and the boundary where $\CV(1) = \CV(2)$ are
+computable in closed form. 
+
+
+
 We confirm the result of Proposition~\ref{prop:twoclust} with a simulation.
 We perform $10$ replicates for each $(\mu^X, \mu^Y)$ pair, sweeping over
 a two-dimensional grid of values in the domain $[0,3] \times [0,3]$, with step
