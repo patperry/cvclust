@@ -118,10 +118,12 @@ See below for detailed point-by-point responses.
 
 \section{Response to Associate Editor}
 
+\noindent
 \emph{1. What is the exact difference between the proposed method and Owen and
 Perry (2009) and Gabriel (2002)? I think the three methods are related, and
 the differences should be stated clearly so to make the contribution of the
 current paper clear.}
+\\
 
 We added the following text at the end of Sec~2.1:
 
@@ -147,9 +149,10 @@ $k$, automatically. For this procedure, we provide theoretical and empirical
 support analogous to the consistency results proved by Owen and Perry~(2009).
 \end{quote}
 
-
+\noindent
 \emph{2. In numerical comparisons, default parameters settings were used for
 competing methods. Is this fair?}
+\\
 
 We added the following to Sec.~6.1:
 
@@ -163,8 +166,10 @@ defaults from the implementations of these methods.
 \end{quote}
 
 
+\noindent
 \emph{3. The correlation correction. How is this done in the high-dimensional
 setting... It's well known that the sample covariance matrix is unstable.}
+\\
 
 We added the following to end of Sec.~5:
 
@@ -197,9 +202,12 @@ Thank you for providing many corrections to our original manuscript. We have
 mostly made the changes you suggested, except that we preferred keeping the
 description as ``Gabriel cross-validation'' rather than ``Gabriel's
 cross-validation''.
+\\
 
+\noindent
 \emph{I missed a comparison with the slope statistics published by Fujita
 et~al.}
+\\
 
 Regarding your question about why we did not compare to Fujita et~al.'s
 method, we must emphasize that there are literally hundreds of methods for
@@ -254,8 +262,10 @@ form.
 \end{enumerate}
 
 
+\noindent
 \emph{(2) In Proposition 3, only 2 dimensional case is considered. Can
 it be generalized to multi-dimension as in Proposition 4?}
+\\
 
 We generalized the result as you requested, and added the following
 comment after the proof of Proposition~3:
@@ -268,10 +278,12 @@ Appendex~C.
 \end{quote}
 
 
+\noindent
 \emph{(3) In Proposition 4, one assumption is posed on the first eigenvalue
 and eigenvector of $\Sigma_YY$ for any split, and thus it is difficult to
 verify. It would be more convincing to assume a verifiable condition on the
 distribution of $(X, Y)$.}
+\\
 
 \textbf{TODO: finish}
 
@@ -280,6 +292,7 @@ distribution of $(X, Y)$.}
 
 \emph{The adjustment for correlation is based on the assumption of a
 shared covariance matrix. Yet this assumption is insufficient.}
+\\
 
 As you note, $\hat{k}_0$ tends to overestimate $k$ when correlation is high,
 and the covariance matrices for the  $\hat{k}_0$ clusters is not the same as
@@ -304,9 +317,11 @@ in practice.
 \end{quote}
 
 
-\subsection{3. Numeric experiments}
+\subsection{3. Numerical experiments}
 
+\noindent
 \emph{(1) I suspect that the generated clusters are severely overlapped.}
+\\
 
 Thank you for catching this mistake. Our previous description was
 incorrect. We changed the description in 6.1 to the following:
@@ -325,18 +340,20 @@ some of our simulation settings are chosen to mimic those used by~Tibshirani
 et al. (2001) in settings (c) and (d) of their Section~6.
 \end{quote}
 
-
+\noindent
 \emph{The last example on t-distribution is similar to normal distribution}
+\\
 
 For large degrees of freedom the two distributions are similar, but when the
 degrees of freedom approach 2 as in our simulation, the distribution becomes
 heavy-tailed, with infinite variance.  The ``well-separated'' condition and
 some of our simulation settings are chosen to mimic those used by~Tibshirani
 et al. (2001) in settings (c) and (d) of their Section~6.
+\\
 
-
-
+\noindent
 \emph{(2) I didn't find any examples the same as in Tibshirani}
+\\
 
 Added the following in 6.1
 
@@ -346,7 +363,9 @@ some o our simulation settings are chosen to mimic those used by~Tibshirani
 et al. (2001) in settings (c) and (d) of their Section~6.
 \end{quote}
 
-\emph{(3)} I suggest the authors replace the figures by tables.
+\noindent
+\emph{(3) I suggest the authors replace the figures by tables.}
+\\
 
 This is difficult. Not only do we have 5 simulation setups, for each setup we
 vary a parameter from 10 settings. This requires us to report 50 tables. We
@@ -356,23 +375,33 @@ figures as-is in the main text of the article.
 
 \subsection{4. Some typos}
 
+\noindent
 \emph{(1) ``cross validation'' should be ``cross-validation''}
+\\
 
-Fixed.
+Fixed. \\
 
+\noindent
 \emph{(2) ``of of'' should be ``of''}
+\\
 
-Fixed.
+Fixed. \\
 
+\noindent
 \emph{(3) Line 1, page 25 misses a period}
+\\
 
-Fixed.
+Fixed. \\
 
+\noindent
 \emph{(4) In Proposition 4, $\Sigma_{XY}$ is used for two different meanings.}
+\\
 
-Fixed.
+Fixed. \\
 
+\noindent
 \emph{(5) Most figures do not have captions.}
+\\
 
 Fixed.
 
