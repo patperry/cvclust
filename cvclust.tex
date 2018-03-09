@@ -276,7 +276,7 @@ and it requires a factor analysis procedure that can handle missing data.
 each fold designates a subset of the data matrix columns to be response and a
 subset of the rows to be test data.  This generalized a procedure due to
 \citet{gabriel2002biblot}, who proposed holding out a single column and a
-single row at each fold. Gabriel's cross validation is analogous to
+single row at each fold. Gabriel's cross-validation is analogous to
 leave-one-out cross-validation, while Owen and Perry's generalization handles
 more general leave-outs.
 
@@ -316,7 +316,7 @@ support analogous to the consistency results proved by \citet{owen2009bi}.
 \label{sec:gabriel-cv-algorithm}
 
 
-Our version of Gabriel cross validation for clustering works by performing a
+Our version of Gabriel cross-validation for clustering works by performing a
 sequence of ``folds'' over the data. We use these folds to estimate a version
 of prediction error (cross-validation error) for each possible value of $k$;
 we then choose the value $\hat k$ with the smallest cross-validation error.
@@ -870,7 +870,7 @@ precisely when
 \end{proof}
 
 
-We have stated and prooved Proposition~\ref{prop:twoclust} for data in $d = 2$
+We have stated and proved Proposition~\ref{prop:twoclust} for data in $d = 2$
 dimensions, but there is nothing essential about the particulars of the
 dimension; we generalize the result to arbitrary dimension in
 Appendex~\ref{app:twoclust-anyd}.
@@ -1007,14 +1007,15 @@ which has expectation $E(Q \Theta Q^\T) = \tr(\Theta) I$.
 
 Our correlation correction is not backed by a rigorous theoretical
 justification. Further, since our initial estimate $\hat k_0$ tends to
-over-estimate the true number of clusters, our covariance estimate $\hat
-\Sigma$ will often be biased. Fortunately, we do not need to estimate $\Sigma$
-with high accuracy. For our correction to be useful, we only need $\hat
-\Sigma^{-1/2}$ to have lower within-cluster correlation than the raw data. In
-our simulations and in our empirical validation study in
-Sections~\ref{sec:simulations} and~\ref{sec:empirical-validation} we
-demonstrate that despite its theoretical shortcoming, our ad-hoc correlation
-adjustment often performs well in practice.
+over-estimate the true number of clusters in the presence of strong
+correlation, our covariance estimate $\hat \Sigma$ will often be biased.
+Fortunately, we do not need to estimate $\Sigma$ with high accuracy. For our
+correction to be useful, we only need $\tilde{\dataX}$ to have lower
+within-cluster correlation than the raw data~$\dataX$. In our simulations and
+in our empirical validation study in Sections~\ref{sec:simulations}
+and~\ref{sec:empirical-validation} we demonstrate that despite its theoretical
+shortcoming, our ad-hoc correlation adjustment often performs well in
+practice.
 
 
 In many applications, including our application in the sequel to a yeast cell
@@ -1064,12 +1065,16 @@ defaults from the implementations of these methods.
 
 In all simulation settings, we randomly generate cluster centers by drawing
 from a multivariate normal distribution with covariance matrix $\tau I$,
-conditional on the cluster centers being well-separated (if the distance
-between any two cluster centers is less than $1$, then we re-draw a new set of
-cluster centers). We choose $\tau$ to make the probability the cluster
+conditional on the cluster points being well-separated. By ``well-separated''
+we mean that the distance from any point to its own cluster center is less
+than the distance of that point to any other cluster center by a margin of
+at least $1.0$ units. In any replicate where the clusters are not
+well-separated, we discard the replicate and generate another set of points.
+We choose $\tau$ to make the probability the cluster
 centers being well-separated on the first draw to be equal to approximately
-50\%. Many of our simulation settings are chosen to mimic the settings used by
-\cite{tibshirani2001estimating}. 
+50\%.  The ``well-separated'' condition and some of our simulation settings
+are chosen to mimic those used by~\cite{tibshirani2001estimating} in
+settings (c) and (d) of their Section~6.
 
 
 For each setting, we perform $100$ replicates. We report the number of times
@@ -1189,7 +1194,7 @@ with known clustering structure.
 
 
 The first data set is congressional voting data consisting of voting records
-of the second session of the $98$th United States Congress,
+of the second session of the $98$th United States Congress
 \citep{schlimmer1987concept}.  This data set includes votes for legislators on
 the $P = 16$ key votes.  For each vote, each legislator either votes
 positively (``yea'') or negatively (``nay''). We removed legislators with missing
@@ -1529,7 +1534,7 @@ found by our analysis.
 In this paper, we proposed a new approach to estimate the number of clusters
 to be used in $k$-means clustering. The intuition behind our proposed method
 is to transform the unsupervised learning problem into a supervised learning
-problem via a form of Gabriel cross validation.  We proved that our method is
+problem via a form of Gabriel cross-validation.  We proved that our method is
 self-consistent, and we analyzed its behavior in some special cases of
 Gaussian mixture models.  Using simulations and real data examples, we
 demonstrated that our method has good performance, competitive with existing

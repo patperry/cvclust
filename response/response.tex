@@ -103,9 +103,8 @@
 
 
 
-\begin{center}\textbf{\LARGE Revision of the paper}\\
-Wei Fu \\
-\today \\ \end{center}
+\begin{center}\textbf{\LARGE Response to Reviewers}
+\end{center}
 
 \section{Overview}
 
@@ -119,13 +118,14 @@ See below for detailed point-by-point responses.
 
 \section{Response to Associate Editor}
 
-\subsection{1. What is the exact difference between the proposed method and Owen and
+\emph{1. What is the exact difference between the proposed method and Owen and
 Perry (2009) and Gabriel (2002)? I think the three methods are related, and
 the differences should be stated clearly so to make the contribution of the
 current paper clear.}
 
-Added the following at the end of Sec~2.1:
+We added the following text at the end of Sec~2.1:
 
+\begin{quote}
 Gabriel's cross validation is analogous to leave-one-out cross-validation,
 while Owen and Perry's generalization handles more general leave-outs.
 
@@ -145,27 +145,31 @@ that takes the place of least squares regression in the matrix factorization
 problem formation. Our new procedure is able to select the number of clusters,
 $k$, automatically. For this procedure, we provide theoretical and empirical
 support analogous to the consistency results proved by Owen and Perry~(2009).
+\end{quote}
 
 
-\subsection{2. In numerical comparisons, default parameters settings were used for
+\emph{2. In numerical comparisons, default parameters settings were used for
 competing methods. Is this fair?}
 
-Added the following to Sec.~6.1:
+We added the following to Sec.~6.1:
 
+\begin{quote}
 For the competing methods, some might take issue with the fact that we are
 using default parameter settings.  In many other benchmark comparisons, one
 would choose the tuning parameters using some form of cross-validation. In our
 case, this is not an option. We are in an \emph{unsupervised} setting, so
 there is no clear way to set the tuning parameters. We must rely on the
 defaults from the implementations of these methods.
+\end{quote}
 
 
-\subsection{3. The correlation correction. How is this done in the high-dimensional
+\emph{3. The correlation correction. How is this done in the high-dimensional
 setting... It's well known that the sample covariance matrix is unstable.}
 
-Added the following to end of Sec.~5:
+We added the following to end of Sec.~5:
 
 
+\begin{quote}
 In many applications, including our application in the sequel to a yeast cell
 cycle dataset, the number of observations $N$ is below the number of
 features~$P$. When this happens, the sample covariance matrix $\hat \Sigma$
@@ -181,7 +185,10 @@ applying the correlation correction may give better results than using the
 original untransformed data. In practice we inspect the resulting estimate
 $\hat k$ both with and without the correlation correction, and if the two
 answers agree, we can be more confident in our answer.
+\end{quote}
 
+
+\newpage
 
 
 \section{Response to Reviewer 1}
@@ -191,7 +198,10 @@ mostly made the changes you suggested, except that we preferred keeping the
 description as ``Gabriel cross-validation'' rather than ``Gabriel's
 cross-validation''.
 
-Regarding your question about why we did not compare to Fujita et. al's
+\emph{I missed a comparison with the slope statistics published by Fujita
+et~al.}
+
+Regarding your question about why we did not compare to Fujita et~al.'s
 method, we must emphasize that there are literally hundreds of methods for
 choosing the number of clusters, and it is impossible to compare against them
 all. The main reason we did not compare against the Fujita et. al method is
@@ -204,15 +214,20 @@ method, so we do not expect to get radically different results from those four
 methods.
 
 
+\newpage
 
 \section{Response to Reviewer 2}
 
-\subsection{1.(1) In both Propositions 2 and 3, normality assumption is assumed.
+\subsection{Theoretical justification}
+
+\emph{(1) In both Propositions 2 and 3, normality assumption is assumed.
 Can it be relaxed?}
 
-\emph{We added the following comment after the proof of Proposition~2, which
-describes one way to relax the normality assumption:}
+\begin{enumerate}
+\item We added the following comment after the proof of Proposition~2, which
+describes one way to relax the normality assumption:
 
+\begin{quote}
 The proof of Proposition~2 relies on normality assumptions
 in two crucial ways: (i) assuming that $X$ and $Y$ have symmetric marginal
 distributions; and (ii) assuming that $E(Y|X) = \rho X$. We could relax the
@@ -222,9 +237,11 @@ independent random variables with mean zero, unit variance and symmetric
 distribution. Any bivariate distribution can be put in this form for
 uncorrelated $Z_1$ and $Z_2$, but only special distributions, including the
 bivariate normal, can be put in the form with independent $Z_1$ and $Z_2$.
+\end{quote}
 
-\emph{We also added the following comment after the proof of Proposition~3}
+\item We also added the following comment after the proof of Proposition~3:
 
+\begin{quote}
 In principle the proof of Proposition~3 generalizes to non-normal
 distributions easily, provided expressions for $E(Y | Y > 0)$ and the other
 related quantities are available. Different distributions for $(X,Y)$ give
@@ -232,39 +249,48 @@ rise to different cutoffs for when $k = 1$ cluster is preferred to $k = 2$.
 The normal distribution is only special here in that the required conditional
 expectations and the boundary where $CV(1) = CV(2)$ are computable in closed
 form. 
+\end{quote}
+
+\end{enumerate}
 
 
-\subsection{1.(2) In Proposition 3, only 2 dimensional case is considered. Can
+\emph{(2) In Proposition 3, only 2 dimensional case is considered. Can
 it be generalized to multi-dimension as in Proposition 4?}
 
-\emph{We generalized the result as you requested, and added the following
-comment after the proof of Proposition~3}: 
+We generalized the result as you requested, and added the following
+comment after the proof of Proposition~3:
 
-We have stated and prooved Proposition~3 for data in $d = 2$
+\begin{quote}
+We have stated and proved Proposition~3 for data in $d = 2$
 dimensions, but there is nothing essential about the particulars of the
 dimension; we generalize the result to arbitrary dimension in
 Appendex~C.
+\end{quote}
 
 
-\subsection{1.(3) In Proposition 4, one assumption is posed on the first eigenvalue
+\emph{(3) In Proposition 4, one assumption is posed on the first eigenvalue
 and eigenvector of $\Sigma_YY$ for any split, and thus it is difficult to
 verify. It would be more convincing to assume a verifiable condition on the
 distribution of $(X, Y)$.}
 
+\textbf{TODO: finish}
 
-\subsection{2. The adjustment for correlation is based on the assumption of a
+
+\subsection{2. Correlation correction}
+
+\emph{The adjustment for correlation is based on the assumption of a
 shared covariance matrix. Yet this assumption is insufficient.}
 
-\emph{As you note, $\hat{k}_0$ tends to overestimate $k$ when correlation is high,
+As you note, $\hat{k}_0$ tends to overestimate $k$ when correlation is high,
 and the covariance matrices for the  $\hat{k}_0$ clusters is not the same as
 the true underlying covariance matrices for the $k$ clusters. We never claim,
 however, to estimate $\Sigma$ consistently. We only claim that our adjustment
 is an ad-hoc procedure that performs well in both our simulations and our
-real-data examples.}
+real-data examples.
 
-\emph{We expaned the discussion at the end of Section~5 to emphasize this point:}
+We expaned the discussion at the end of Section~5 to emphasize this point:
 
-
+\begin{quote}
 Our correlation correction is not backed by a rigorous theoretical
 justification. Further, since our initial estimate $\hat k_0$ tends to
 over-estimate the true number of clusters in the presence of strong
@@ -275,13 +301,17 @@ correlation than the raw data~$X$. In our simulations and in our empirical
 validation study in Sections~6 and~7 we demonstrate that despite its
 theoretical shortcoming, our ad-hoc correlation adjustment often performs well
 in practice.
+\end{quote}
 
 
-\subsection{3.(1) I suspect that the generated clusters are severely overlapped.}
+\subsection{3. Numeric experiments}
+
+\emph{(1) I suspect that the generated clusters are severely overlapped.}
 
 Thank you for catching this mistake. Our previous description was
 incorrect. We changed the description in 6.1 to the following:
 
+\begin{quote}
 In all simulation settings, we randomly generate cluster centers by drawing
 from a multivariate normal distribution with covariance matrix $\tau I$,
 conditional on the cluster points being well-separated. By ``well-separated''
@@ -293,10 +323,10 @@ to make the probability the cluster centers being well-separated on the first
 draw to be equal to approximately 50\%.  The ``well-separated'' condition and
 some of our simulation settings are chosen to mimic those used by~Tibshirani
 et al. (2001) in settings (c) and (d) of their Section~6.
+\end{quote}
 
 
-
-\textbf{The last example on t-distribution is similar to normal distribution}
+\emph{The last example on t-distribution is similar to normal distribution}
 
 For large degrees of freedom the two distributions are similar, but when the
 degrees of freedom approach 2 as in our simulation, the distribution becomes
@@ -306,20 +336,41 @@ et al. (2001) in settings (c) and (d) of their Section~6.
 
 
 
-\subsection{3.(2) I didn't find any examples the same as in Tibshirani}
+\emph{(2) I didn't find any examples the same as in Tibshirani}
 
 Added the following in 6.1
 
-\emph{The ``well-separated'' condition and
+\begin{quote}
+The ``well-separated'' condition and
 some o our simulation settings are chosen to mimic those used by~Tibshirani
-et al. (2001) in settings (c) and (d) of their Section~6.}
+et al. (2001) in settings (c) and (d) of their Section~6.
+\end{quote}
 
-\subsection{3.(3) I suggest the authors replace the figures by tables}
+\emph{(3)} I suggest the authors replace the figures by tables.
 
-This is difficult. Not only do we have 5 simulation setups, for each
-setup we vary a parameter from 10 settings. This requires us to report 50
-tables. We have added a supplementary appendix with the tables, but we have
-left the figures as-is in the main text of the article.
+This is difficult. Not only do we have 5 simulation setups, for each setup we
+vary a parameter from 10 settings. This requires us to report 50 tables. We
+have added a supplementary appendix with the tables, but we have left the
+figures as-is in the main text of the article.
+
+
+\subsection{4. Some typos}
+
+\emph{(1) ``cross validation'' should be ``cross-validation''}
+
+Fixed.
+
+\emph{(2) ``of of'' should be ``of''}
+
+Fixed.
+
+\emph{(3) Line 1, page 25 misses a period}
+
+Fixed.
+
+\emph{(4) In Proposition 4, $\Sigma_{XY}$ is used for two different meanings.}
+
+\emph{(5) Most figures do not have captions.}
 
 
 \bibliography{myreferences}
