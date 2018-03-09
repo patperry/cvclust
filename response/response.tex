@@ -207,7 +207,7 @@ methods.
 
 \section{Response to Reviewer 2}
 
-\subsection{(1) In both Propositions 2 and 3, normality assumption is assumed.
+\subsection{1.(1) In both Propositions 2 and 3, normality assumption is assumed.
 Can it be relaxed?}
 
 \emph{We added the following comment after the proof of Proposition~2, which
@@ -234,131 +234,22 @@ expectations and the boundary where $CV(1) = CV(2)$ are computable in closed
 form. 
 
 
-\subsection{(2) In Proposition 3, only 2 dimensional case is considered. Can
+\subsection{1.(2) In Proposition 3, only 2 dimensional case is considered. Can
 it be generalized to multi-dimension as in Proposition 4?}
 
+\emph{We generalized the result as you requested, and added the following
+comment after the proof of Proposition~3}: 
 
-\section{Extend the result of Proposition 3 to higher dimension}
-\begin{proof}
-There are two clusters $G_1$ and $G_2$, where observations from $G_1$ are distributed as
-\[	\mathcal{N}\left( \begin{pmatrix} 
-    \mu^X \\
-    \mu^Y \\
-  \end{pmatrix}, \mathbf{I} \right)	\]
-and observations from $G_2$ are distributed as
-\[	\mathcal{N}\left( \begin{pmatrix} 
-    -\mu^X \\
-    -\mu^Y \\
-  \end{pmatrix}, \mathbf{I} \right)	\]
-here $\mu^X$ and $\mu^Y$ are all vectors. Let $G_i$ be the true cluster where observation $i$ is generated from, by assumption
-\[	P(G_i=G_1) = P(G_i=G_2) = 1/2	\]
+We have stated and prooved Proposition~3 for data in $d = 2$
+dimensions, but there is nothing essential about the particulars of the
+dimension; we generalize the result to arbitrary dimension in
+Appendex~C.
 
-To simplify the notation, let 
-\[
- \begin{pmatrix} 
-    X_1 \\
-    Y_1 \\
-  \end{pmatrix}  \sim
-  \mathcal{N}\left( \begin{pmatrix} 
-    \mu^X \\
-    \mu^Y \\
-  \end{pmatrix}, \mathbf{I} \right)
-\]  
-denote the observations from $G_1$ and 
-\[
- \begin{pmatrix} 
-    X_2 \\
-    Y_2 \\
-  \end{pmatrix}  \sim
-  \mathcal{N}\left( \begin{pmatrix} 
-    -\mu^X \\
-    -\mu^Y \\
-  \end{pmatrix}, \mathbf{I} \right)
-\]  
-denote the observations from $G_2$ 
 
-Further, let's denote $\mu^X = \lambda_x e_x$ where $\lambda_x$ is a scalar denotes the distance of $\mu^X$ from origin and $e_x$ is the unit vector point at the same direction as $\mu^X$; $\mu^Y = \lambda_y e_y$ has the same interpretation.
-
-Apply $K$-mean on the $Y$-space, where the two clusters are $\mathcal{N}\left( \mu^Y, \mathbf{I}\right)$ and  $\mathcal{N}\left( -\mu^Y, \mathbf{I}\right)$, the $K$-mean centroids are $\bar{\mu}^Y_1$ and $\bar{\mu}^Y_2$ with $\bar{\mu}^Y_1 = -\bar{\mu}^Y_2$. Note that the boundary between the two clusters are $e^T_y Y > 0 $. So 
-
-\begin{align}
-\bar{\mu}^Y_1 & = E(Y \mid Y>0) \\
- &= E(Y_1 \mid e^T_y Y_1 > 0) \cdot P(e^T_y Y_1 >0) +E(Y_2 \mid e^T_y Y_2 > 0) \cdot P(e^T_y Y_2 >0)
-\end{align}
-
-Note that $e^T_y Y_1$ projects vector $Y_1$ on the direction of $e_y$. And because the $e_y$ is the same direct as $\mu^Y$, it goes through the center of the sphere $\mathcal{N}\left( \mu^Y, \mathbf{I}\right)$. Because the covariance matrix is $\mathbf{I}$, the sphere is symmetric around $e_y$. Therefore, 
-\begin{align}
-E(Y_1 \mid e^T_y Y_1 = a ) & = a e_y
-\end{align}
-
-Also, $Y_1 \sim \mathcal{N}\left( \mu^Y, \mathbf{I}\right)$ so $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)$. We have
-
-\begin{align}
-E(Y_1 \mid e^T_y Y_1 > 0)  & = E \left[  E\left(  Y_1 \mid e^T_y Y_1  \right) \mid e^T_y Y_1 > 0  \right] \\
- from \hspace{0.05in} (3) \hspace{0.05in} above	& =  E( e^T_y Y_1 e_y  \mid e^T_y Y_1 > 0  )  \\ 
-	& = e_y E( e^T_y Y_1 \mid e^T_y Y_1 > 0  ) 
-\end{align}
-
-Because $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)  = \lambda_y + Z$, where $Z$ is standard normal, by Lemma $3$ from Appendix C we have 
-\begin{align}
-E( e^T_y Y_1 \mid e^T_y Y_1 > 0  ) &= E(\lambda_y +  Z \mid Z > -  \lambda_y )  \\
- &= \lambda_y + E(Z \mid Z > -  \lambda_y ) \\
- &= \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}
-\end{align}
-
- where $\varphi()$ and $\Phi()$ are the standard normal probability and cumulative distribution function respectively. So, by $(6)$ we have
-
-\begin{align}
-E(Y_1 \mid e^T_y Y_1 > 0)  &= \left[ \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}  \right] e_y
-\end{align}
-
-Similarly, we can have
-
-\begin{align}
-E(Y_2 \mid e^T_y Y_2 > 0)  &= - E(Y_1 \mid e^T_y Y_1 < 0) \\
-	&= - e_y E( e^T_y Y_1 \mid e^T_y Y_1 < 0  )  \\
-	&= \left[ \frac{\varphi(\lambda_y)}{1-\Phi(\lambda_y)} - \lambda_y  \right] e_y 
-\end{align}
-
-Because $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)  = \lambda_y + Z$, it's easy to get 
-\begin{align}
-P(e^T_y Y_1 > 0) &= P(Z > - \lambda_y) \\
-	&= \Phi(\lambda_y) 
-\end{align}
-
-By symmetry, we can get 
-\begin{align}
-P(e^T_y Y_2 > 0) &= 1- \Phi(\lambda_y)
-\end{align}
-
-Put everything together, we have 
-
-\begin{align}
-\bar{\mu}^Y_1 & = E(Y_1 \mid e^T_y Y_1 > 0) \cdot P(e^T_y Y_1 >0) +E(Y_2 \mid e^T_y Y_2 > 0) \cdot P(e^T_y Y_2 >0) \\
- &=  \left[ \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}  \right]\cdot \Phi(\lambda_y) e_y + \left[ \frac{\varphi(\lambda_y)}{1-\Phi(\lambda_y)} - \lambda_y  \right]\cdot\left(1- \Phi(\lambda_y)\right) e_y  \\
- & = [2\lambda_y \Phi(\lambda_y) + 2\varphi(\lambda_y) - \lambda_y]e_y 
-\end{align}
-
-After training the classifier, because of the identity covariance matrix, the classification boundary is $e^T_x X > 0$. So the $Y$ center for observation with $e^T_x X > 0$ is 
-
-\begin{align}
-\hat{\mu}^Y_1 &= E(Y_1 \mid e^T_x X_1 > 0)\cdot P(e^T_x X_1 > 0) + E(Y_2 \mid e^T_x X_2 > 0)\cdot P(e^T_x X_2 > 0)\\ 
-\text{ X independent of Y}	&= E(Y_1) \cdot P(e^T_x X_1 > 0) + E(Y_2) \cdot P(e^T_x X_2 > 0)\\ 
-  & = \mu^Y \cdot P(e^T_x X_1 > 0) -  \mu^Y \cdot P(e^T_x X_2 > 0)\\
-  & = \mu^Y \left( P(e^T_x X_1 > 0) -  P(e^T_x X_2 > 0)  \right) \\
-   & = \mu^Y \left[ \Phi(\lambda_x) -  (1-\Phi(\lambda_x))  \right] \\
-   & = (2\Phi(\lambda_x) - 1)\mu^Y \\
-    & = (2\Phi(\lambda_x) - 1)\lambda_y e_y
-\end{align}
-
-Because of symmetry and $P(G_i=G_1) = P(G_i=G_2) = 1/2$, it's sufficient to show that for observations with  $e^T_x X > 0$, if $CV(2) < CV(1)$ then the Gabriel CV method correctly picks $k=2$ over $k=1$. 
-
-Similar as in the proof of Proposition $4$, by the variance and bias decomposition of MSE, the variance is the same, so only the bias influences the result. Note the predicted center is grand $0$ for $CV(1)$, so to see if  $CV(2) < CV(1)$ one only need to see if $||\bar{\mu}^Y_1-\hat{\mu}^Y_1||^2 < ||\hat{\mu}^Y_1 - 0||^2$, which is true if 
-\[ 2\Phi(\lambda_y) + 2 \frac{\varphi(\lambda_y)}{\lambda_y} < 4\Phi(\lambda_x)-1 \] 
-
-such result reduce to the original result of Proposition $3$ if one set $\lambda_x = \mu^X$ and $\lambda_y = \mu^Y$
-
-\end{proof}
+\section{1.(3) In Proposition 4, one assumption is posed on the first eigenvalue
+and eigenvector of $\Sigma_YY$ for any split, and thus it is difficult to
+verify. It would be more convincing to assume a verifiable condition on the
+distribution of $(X, Y)$.}
 
 
 \section{Correct description of simulation and reply to comments}

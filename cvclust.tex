@@ -870,6 +870,12 @@ precisely when
 \end{proof}
 
 
+We have stated and prooved Proposition~\ref{prop:twoclust} for data in $d = 2$
+dimensions, but there is nothing essential about the particulars of the
+dimension; we generalize the result to arbitrary dimension in
+Appendex~\ref{app:twoclust-anyd}.
+
+
 In principle the proof of Proposition~\ref{prop:twoclust} generalizes to
 non-normal distributions easily, provided expressions for $\E(Y | Y > 0)$ and
 the other related quantities are available. Different distributions for
@@ -1671,10 +1677,10 @@ plotted against the number of clusters, $k$.}
 
 
 
-\section{Analysis of Gabriel method: Single cluster in more than two dimensions}
+\section{Analysis of single cluster in more than two dimensions}
 \label{sec:single-general-dim}
 
-\begin{proposition}
+\begin{proposition}\label{prop:single-general-dim}
 Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
 of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^{p+q}$ is an
 independent draw from a mean-zero multivariate normal distribution with 
@@ -1757,6 +1763,147 @@ $\|\hat{\mu}^Y_1 - \bar{\mu}^Y_1\|^2 > \|\hat{\mu}^Y_1\|^2$ or $\CV(2) >
  \frac{\sqrt{\lambda_1}}{2} > \frac{u^T_1\Sigma_{YX}\Sigma_{XY}u_1}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}} 
 \]
 \end{proof}
+
+
+\section{Analysis of two clusters in more than two dimensions}
+\label{app:twoclust-anyd}
+
+
+\begin{proposition}\label{prop:twoclust-anyd}
+Suppose that $\{(X_i,Y_i)\}_{i=1}^{n+m}$ is data from a single fold of Gabriel
+    cross-validation, where each $(X,Y)$ pair in with $X \in \mathbb{R}^P$ and $Y \in
+    \mathbb{R}^Q$ is an independent draw
+from an equiprobable mixture of two multivariate normal distributions with
+identity covariance. Suppose that the first mixture component has mean
+$\mu = (\muX, \muY)$ and the second has mean $-\mu = (-\muX, -\muY)$,
+where $\muX \geq 0$ and $\muY \geq 0$. 
+If the cluster centers are well separated, specifically such that
+\(
+  2 \varphi(\muY) + \muY + 2 \muY \Phi(\muY) < 4 \muY \Phi(\muX),
+\)
+then $\CV(2) < \CV(1)$ with probability tending to one as $m$ and $n$ increase.
+\end{proposition}
+
+\begin{proof}
+There are two clusters $G_1$ and $G_2$, where observations from $G_1$ are distributed as
+\[	\mathcal{N}\left( \begin{pmatrix} 
+    \mu^X \\
+    \mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)	\]
+and observations from $G_2$ are distributed as
+\[	\mathcal{N}\left( \begin{pmatrix} 
+    -\mu^X \\
+    -\mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)	\]
+here $\mu^X$ and $\mu^Y$ are all vectors. Let $G_i$ be the true cluster where observation $i$ is generated from, by assumption
+\[	P(G_i=G_1) = P(G_i=G_2) = 1/2	\]
+
+To simplify the notation, let 
+\[
+ \begin{pmatrix} 
+    X_1 \\
+    Y_1 \\
+  \end{pmatrix}  \sim
+  \mathcal{N}\left( \begin{pmatrix} 
+    \mu^X \\
+    \mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)
+\]  
+denote the observations from $G_1$ and 
+\[
+ \begin{pmatrix} 
+    X_2 \\
+    Y_2 \\
+  \end{pmatrix}  \sim
+  \mathcal{N}\left( \begin{pmatrix} 
+    -\mu^X \\
+    -\mu^Y \\
+  \end{pmatrix}, \mathbf{I} \right)
+\]  
+denote the observations from $G_2$ 
+
+Further, let's denote $\mu^X = \lambda_x e_x$ where $\lambda_x$ is a scalar denotes the distance of $\mu^X$ from origin and $e_x$ is the unit vector point at the same direction as $\mu^X$; $\mu^Y = \lambda_y e_y$ has the same interpretation.
+
+Apply $K$-mean on the $Y$-space, where the two clusters are $\mathcal{N}\left( \mu^Y, \mathbf{I}\right)$ and  $\mathcal{N}\left( -\mu^Y, \mathbf{I}\right)$, the $K$-mean centroids are $\bar{\mu}^Y_1$ and $\bar{\mu}^Y_2$ with $\bar{\mu}^Y_1 = -\bar{\mu}^Y_2$. Note that the boundary between the two clusters are $e^T_y Y > 0 $. So 
+
+\begin{align}
+\bar{\mu}^Y_1 & = E(Y \mid Y>0) \\
+ &= E(Y_1 \mid e^T_y Y_1 > 0) \cdot P(e^T_y Y_1 >0) +E(Y_2 \mid e^T_y Y_2 > 0) \cdot P(e^T_y Y_2 >0)
+\end{align}
+
+Note that $e^T_y Y_1$ projects vector $Y_1$ on the direction of $e_y$. And because the $e_y$ is the same direct as $\mu^Y$, it goes through the center of the sphere $\mathcal{N}\left( \mu^Y, \mathbf{I}\right)$. Because the covariance matrix is $\mathbf{I}$, the sphere is symmetric around $e_y$. Therefore, 
+\begin{align}
+E(Y_1 \mid e^T_y Y_1 = a ) & = a e_y
+\end{align}
+
+Also, $Y_1 \sim \mathcal{N}\left( \mu^Y, \mathbf{I}\right)$ so $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)$. We have
+
+\begin{align}
+E(Y_1 \mid e^T_y Y_1 > 0)  & = E \left[  E\left(  Y_1 \mid e^T_y Y_1  \right) \mid e^T_y Y_1 > 0  \right] \\
+ from \hspace{0.05in} (3) \hspace{0.05in} above	& =  E( e^T_y Y_1 e_y  \mid e^T_y Y_1 > 0  )  \\ 
+	& = e_y E( e^T_y Y_1 \mid e^T_y Y_1 > 0  ) 
+\end{align}
+
+Because $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)  = \lambda_y + Z$, where $Z$ is standard normal, by Lemma $3$ from Appendix C we have 
+\begin{align}
+E( e^T_y Y_1 \mid e^T_y Y_1 > 0  ) &= E(\lambda_y +  Z \mid Z > -  \lambda_y )  \\
+ &= \lambda_y + E(Z \mid Z > -  \lambda_y ) \\
+ &= \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}
+\end{align}
+
+ where $\varphi()$ and $\Phi()$ are the standard normal probability and cumulative distribution function respectively. So, by $(6)$ we have
+
+\begin{align}
+E(Y_1 \mid e^T_y Y_1 > 0)  &= \left[ \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}  \right] e_y
+\end{align}
+
+Similarly, we can have
+
+\begin{align}
+E(Y_2 \mid e^T_y Y_2 > 0)  &= - E(Y_1 \mid e^T_y Y_1 < 0) \\
+	&= - e_y E( e^T_y Y_1 \mid e^T_y Y_1 < 0  )  \\
+	&= \left[ \frac{\varphi(\lambda_y)}{1-\Phi(\lambda_y)} - \lambda_y  \right] e_y 
+\end{align}
+
+Because $e^T_y Y_1 \sim \mathcal{N}\left( \lambda_y, 1\right)  = \lambda_y + Z$, it's easy to get 
+\begin{align}
+P(e^T_y Y_1 > 0) &= P(Z > - \lambda_y) \\
+	&= \Phi(\lambda_y) 
+\end{align}
+
+By symmetry, we can get 
+\begin{align}
+P(e^T_y Y_2 > 0) &= 1- \Phi(\lambda_y)
+\end{align}
+
+Put everything together, we have 
+
+\begin{align}
+\bar{\mu}^Y_1 & = E(Y_1 \mid e^T_y Y_1 > 0) \cdot P(e^T_y Y_1 >0) +E(Y_2 \mid e^T_y Y_2 > 0) \cdot P(e^T_y Y_2 >0) \\
+ &=  \left[ \lambda_y + \frac{\varphi(\lambda_y)}{\Phi(\lambda_y)}  \right]\cdot \Phi(\lambda_y) e_y + \left[ \frac{\varphi(\lambda_y)}{1-\Phi(\lambda_y)} - \lambda_y  \right]\cdot\left(1- \Phi(\lambda_y)\right) e_y  \\
+ & = [2\lambda_y \Phi(\lambda_y) + 2\varphi(\lambda_y) - \lambda_y]e_y 
+\end{align}
+
+After training the classifier, because of the identity covariance matrix, the classification boundary is $e^T_x X > 0$. So the $Y$ center for observation with $e^T_x X > 0$ is 
+
+\begin{align}
+\hat{\mu}^Y_1 &= E(Y_1 \mid e^T_x X_1 > 0)\cdot P(e^T_x X_1 > 0) + E(Y_2 \mid e^T_x X_2 > 0)\cdot P(e^T_x X_2 > 0)\\ 
+\text{ X independent of Y}	&= E(Y_1) \cdot P(e^T_x X_1 > 0) + E(Y_2) \cdot P(e^T_x X_2 > 0)\\ 
+  & = \mu^Y \cdot P(e^T_x X_1 > 0) -  \mu^Y \cdot P(e^T_x X_2 > 0)\\
+  & = \mu^Y \left( P(e^T_x X_1 > 0) -  P(e^T_x X_2 > 0)  \right) \\
+   & = \mu^Y \left[ \Phi(\lambda_x) -  (1-\Phi(\lambda_x))  \right] \\
+   & = (2\Phi(\lambda_x) - 1)\mu^Y \\
+    & = (2\Phi(\lambda_x) - 1)\lambda_y e_y
+\end{align}
+
+Because of symmetry and $P(G_i=G_1) = P(G_i=G_2) = 1/2$, it's sufficient to show that for observations with  $e^T_x X > 0$, if $CV(2) < CV(1)$ then the Gabriel CV method correctly picks $k=2$ over $k=1$. 
+
+Similar as in the proof of Proposition~\ref{prop:single-general-dim}, by the variance and bias decomposition of MSE, the variance is the same, so only the bias influences the result. Note the predicted center is grand $0$ for $CV(1)$, so to see if  $CV(2) < CV(1)$ one only need to see if $||\bar{\mu}^Y_1-\hat{\mu}^Y_1||^2 < ||\hat{\mu}^Y_1 - 0||^2$, which is true if 
+\[ 2\Phi(\lambda_y) + 2 \frac{\varphi(\lambda_y)}{\lambda_y} < 4\Phi(\lambda_x)-1 \] 
+this result reduces to the original result of Proposition~\ref{prop:twoclust}
+if one sets $\lambda_x = \mu^X$ and $\lambda_y = \mu^Y$.
+\end{proof}
+
 
 
 \section{Technical Lemmas}
