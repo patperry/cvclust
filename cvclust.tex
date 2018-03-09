@@ -294,7 +294,7 @@ more general leave-outs.
 %% \citep{hastie2009elements}. Therefore, cross-validation prefers larger $k$ if
 %% we do the cross-validation naively.
 
-Gabriel's cross-validation the Owen and Perry generalization are designed
+Gabriel's cross-validation and the Owen and Perry generalization are designed
 specifically for choosing the rank of a low-rank matrix approximation like the
 singular value decomposition or the non-negative matrix factorization. While
 for some purposes it makes sense to view $k$-means clustering as a sort of low
@@ -1013,7 +1013,7 @@ covariance matrix. In these situations, though, it will still be the case that
 a decomposition $\hat \Sigma = \Gamma \Lambda \Gamma^\T$ exists with $\Gamma$
 having orthonormal columns and $\Lambda$ being diagonal and positive-definite.
 It will also be the case that $\Lambda^{-1/2}$ and hence $\tilde{\dataX}$
-exist. What fails in these situation is that, since $\hat \Sigma$ is no longer
+exist. What fails in these situations is that, since $\hat \Sigma$ is no longer
 a good estimate of $\Sigma$, it will no longer be the case that our correction
 reliably transforms the noise covariance to $I$. Still, in these situations,
 applying the correlation correction may give better results than using the

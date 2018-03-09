@@ -129,7 +129,7 @@ Added the following at the end of Sec~2.1:
 Gabriel's cross validation is analogous to leave-one-out cross-validation,
 while Owen and Perry's generalization handles more general leave-outs.
 
-Gabriel's cross-validation the Owen and Perry generalization are designed
+Gabriel's cross-validation and the Owen and Perry generalization are designed
 specifically for choosing the rank of a low-rank matrix approximation like the
 singular value decomposition or the non-negative matrix factorization. While
 for some purposes it makes sense to view $k$-means clustering as a sort of low
@@ -191,9 +191,18 @@ mostly made the changes you suggested, except that we preferred keeping the
 description as ``Gabriel cross-validation'' rather than ``Gabriel's
 cross-validation''.
 
-Regarding your question about Fujita's method 
+Regarding your question about why we did not compare to Fujita et. al's
+method, we must emphasize that there are literally hundreds of methods for
+choosing the number of clusters, and it is impossible to compare against them
+all. The main reason we did not compare against the Fujita et. al method is
+that there is no publicly-available implementation. Beyond that, the method is
+not in common usage relative to the others we surveyed (28 Google scholar
+citations versus, for example, 2992 citations for the Gap statistic). Finally,
+the Fujita method, being based on inter-point distance, is roughly in the same
+category as four other methods we surveyed: Gap, Jump, CH, and Hartigan's
+method, so we do not expect to get radically different results from those four
+methods.
 
-\textbf{\Large{TODO: Fill in}}
 
 
 \section{Response to Reviewer 2}
