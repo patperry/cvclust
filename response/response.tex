@@ -285,7 +285,37 @@ verify. It would be more convincing to assume a verifiable condition on the
 distribution of $(X, Y)$.}
 \\
 
-\textbf{TODO: finish}
+We added a more intuitive condition after the proof of Proposition~4.
+
+\begin{quote}
+    The condition that ensures $\CV(1) < \CV(2)$ is tight but difficult to
+understand intuitively. We make understand this condition better by
+noting that it is equivalent to a condition on the correlation between the
+two linear combinations of $X$ and $Y$ variables:
+\begin{equation}\label{eqn:clust-anyd}
+    \mathrm{cor}(u_1^\T \Sigma_{YX} X, u_1^\T Y) < 1/2.
+\end{equation}
+A stronger condition that is easier to understand, then, is that the canonical
+correlation between $X$ and $Y$ is below $1/2$; when the latter is true the
+former follows and $\CV(1) < \CV(2)$. A necessary but not sufficient
+guarantee of the stronger condition is that all correlations between variables
+are below $1/2$.
+
+
+One might object to the condition~\eqref{eqn:clust-anyd} being stated in terms
+of a particular $(X, Y)$ split of the data.  In practice, one might want the
+condition to hold for all possible splits of the data. A sufficient guarantee
+that~\eqref{eqn:clust-anyd} holds for any $(X, Y)$ split of the data is that
+the data covariance matrix $\Sigma$ is diagonal. The ad-hoc adjustment we
+propose in Sec.~5 attempts to transform the data to this form.
+\end{quote}
+
+The main point of this theorem is to prove analytically that our method has
+difficulty in the face of correlated noise. This motivates us to propose the
+correlation correction in section 5. We then demonstrate empirically through
+the simulation studies and real data examples that are correlation correction
+is sufficient to correct many of the types correlation found in practice.
+
 
 
 \subsection{2. Correlation correction}

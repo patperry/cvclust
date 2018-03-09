@@ -40,6 +40,7 @@
 \newcommand{\PE}{\operatorname{PE}}
 \newcommand{\E}{\operatorname{E}}
 \DeclareMathOperator*{\cov}{cov}
+\DeclareMathOperator*{\cor}{cor}
 \DeclareMathOperator*{\tr}{tr}
 \DeclareMathOperator*{\var}{var}
 \newcommand{\T}{T}
@@ -1779,6 +1780,30 @@ $\|\hat{\mu}^Y_1 - \bar{\mu}^Y_1\|^2 > \|\hat{\mu}^Y_1\|^2$ or $\CV(2) >
  \frac{\sqrt{\lambda_1}}{2} > \frac{u^T_1\Sigma_{YX}\Sigma_{XY}u_1}{\sqrt{u^T_1\Sigma_{YX} \Sigma_{XX} \Sigma_{XY} u_1}} 
 \]
 \end{proof}
+
+
+The condition that ensures $\CV(1) < \CV(2)$ is tight but difficult to
+understand intuitively. We make understand this condition better by
+noting that it is equivalent to a condition on the correlation between the
+two linear combinations of $X$ and $Y$ variables:
+\begin{equation}\label{eqn:clust-anyd}
+    \cor(u_1^\T \Sigma_{YX} X, u_1^\T Y) < 1/2.
+\end{equation}
+A stronger condition that is easier to understand, then, is that the canonical
+correlation between $X$ and $Y$ is below $1/2$; when the latter is true the
+former follows and $\CV(1) < \CV(2)$. A necessary but not sufficient
+guarantee of the stronger condition is that all correlations between variables
+are below $1/2$.
+
+
+One might object to the condition~\eqref{eqn:clust-anyd} being stated in terms
+of a particular $(X, Y)$ split of the data.  In practice, one might want the
+condition to hold for all possible splits of the data. A sufficient guarantee
+that~\eqref{eqn:clust-anyd} holds for any $(X, Y)$ split of the data is that
+the data covariance matrix $\Sigma$ is diagonal. The ad-hoc adjustment we
+propose in Sec.~\ref{sec:corr-correct} attempts to transform the data to this
+form.
+
 
 
 \section{Analysis of two clusters in more than two dimensions}
