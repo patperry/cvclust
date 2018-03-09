@@ -1096,6 +1096,7 @@ $\rho$ takes value in $\{0,0.1,...,0.9\}$.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting1/Facet.pdf}
+\caption{Performance as correlation increases.}
 \label{fig:setting1}
 \end{figure}
 	
@@ -1117,6 +1118,7 @@ $\{0,6,...,54\}$.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting2/Facet.pdf}
+\caption{Performance as number of noise dimensions increases.}
 \label{fig:setting2}
 \end{figure}
 
@@ -1134,6 +1136,7 @@ normal observations with identity covariance matrix.
 \begin{figure}[H]
 \centering
 \includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting3/Facet.pdf}
+\caption{Performance as number of dimensions increases.}
 \label{fig:setting3}
 \end{figure}
 
@@ -1156,6 +1159,7 @@ values in $\{1,5,10,...,45\}$
 \begin{figure}[H]
 \centering
 \includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting4/Facet.pdf}
+\caption{Performance as variance heterogeneity increases.}
 \label{fig:setting4}
 \end{figure}
 
@@ -1175,6 +1179,7 @@ dimension, with degrees of freedom $\nu$ taking values in $\{11,10,...,2\}$
 \begin{figure}[H]
 \centering
 \includegraphics[width=5.5in, height=3.3in]{New simulation/demo/bench/setting5/Facet.pdf}
+\caption{Performance as tail width increases.}
 \label{fig:setting5}
 \end{figure}
 
@@ -1695,7 +1700,7 @@ plotted against the number of clusters, $k$.}
 Suppose that $\{ (X_i, Y_i) \}_{i=1}^{n + m}$ is data from a single fold
 of Gabriel cross-validation, where each $(X,Y)$ pair in $\R^{p+q}$ is an
 independent draw from a mean-zero multivariate normal distribution with 
-covariance matrix $\Sigma_{XY}= \left( \begin{smallmatrix} \Sigma_{XX} & \Sigma_{XY} \\ 
+covariance matrix $\Sigma = \left( \begin{smallmatrix} \Sigma_{XX} & \Sigma_{XY} \\ 
  \Sigma_{YX} & \Sigma_{YY} \end{smallmatrix}\right)$, with $\Sigma_{YY}$ has leading 
 eigenvalue $\lambda_1$ and corresponding eigenvector $u_1$. In this case, the data are drawn
 from a single cluster; the true number of clusters is~$1$.  If  $\frac{\sqrt{\lambda_1}}{2}
@@ -1704,9 +1709,9 @@ then $\CV(1) < \CV(2)$ with probability tending to one as $m$ and $n$ increase.
 \end{proposition}
 
 \begin{proof}
-Let $X$ and $Y$ be jointly multivariate normal distributed with mean $\mathbf{0}$ and covariance matrix $\Sigma_{XY}$, i.e.
-\[	(X,Y) \sim \mathcal{N} \left( \mathbf{0}, \Sigma_{XY}\right)	\]
-where $\Sigma_{XY}=\begin{bmatrix} \Sigma_{XX} & \Sigma_{XY} \\  \Sigma_{YX} & \Sigma_{YY} \end{bmatrix}$.
+Let $X$ and $Y$ be jointly multivariate normal distributed with mean $\mathbf{0}$ and covariance matrix $\Sigma$, i.e.
+\[	(X,Y) \sim \mathcal{N} \left( \mathbf{0}, \Sigma\right)	\]
+where $\Sigma=\begin{bmatrix} \Sigma_{XX} & \Sigma_{XY} \\  \Sigma_{YX} & \Sigma_{YY} \end{bmatrix}$.
 
 Let $\Sigma_{YY} = U \Lambda U^T$  be the eigendecomposition of $\Sigma_{YY}$,
 with leading eigenvalue $\lambda_1$ and corresponding eigenvector $u_1$. Then
