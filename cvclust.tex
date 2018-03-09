@@ -1006,9 +1006,15 @@ which has expectation $E(Q \Theta Q^\T) = \tr(\Theta) I$.
 
 
 Our correlation correction is not backed by a rigorous theoretical
-justification. However, the simulations and empirical validation in
-Sections~\ref{sec:simulations} and~\ref{sec:empirical-validation}
-demonstrate the effectiveness of our ad-hoc adjustment procedure.
+justification. Further, since our initial estimate $\hat k_0$ tends to
+over-estimate the true number of clusters, our covariance estimate $\hat
+\Sigma$ will often be biased. Fortunately, we do not need to estimate $\Sigma$
+with high accuracy. For our correction to be useful, we only need $\hat
+\Sigma^{-1/2}$ to have lower within-cluster correlation than the raw data. In
+our simulations and in our empirical validation study in
+Sections~\ref{sec:simulations} and~\ref{sec:empirical-validation} we
+demonstrate that despite its theoretical shortcoming, our ad-hoc correlation
+adjustment often performs well in practice.
 
 
 In many applications, including our application in the sequel to a yeast cell

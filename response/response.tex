@@ -252,11 +252,35 @@ verify. It would be more convincing to assume a verifiable condition on the
 distribution of $(X, Y)$.}
 
 
-\section{Correct description of simulation and reply to comments}
+\subsection{2. The adjustment for correlation is based on the assumption of a
+shared covariance matrix. Yet this assumption is insufficient.}
+
+\emph{As you note, $\hat{k}_0$ tends to overestimate $k$ when correlation is high,
+and the covariance matrices for the  $\hat{k}_0$ clusters is not the same as
+the true underlying covariance matrices for the $k$ clusters. We never claim,
+however, to estimate $\Sigma$ consistently. We only claim that our adjustment
+is an ad-hoc procedure that performs well in both our simulations and our
+real-data examples.}
+
+\emph{We expaned the discussion at the end of Section~5 to emphasize this point:}
+
+
+Our correlation correction is not backed by a rigorous theoretical
+justification. Further, since our initial estimate $\hat k_0$ tends to
+over-estimate the true number of clusters in the presence of strong
+correlation, our covariance estimate $\hat \Sigma$ will often be biased.
+Fortunately, we do not need to estimate $\Sigma$ with high accuracy. For our
+correction to be useful, we only need $\tilde{X}$ to have lower within-cluster
+correlation than the raw data~$X$. In our simulations and in our empirical
+validation study in Sections~6 and~7 we demonstrate that despite its
+theoretical shortcoming, our ad-hoc correlation adjustment often performs well
+in practice.
+
+
+\subsection{3.(1) Simulation descriptions}
 
 \begin{enumerate}
-	\item \textbf{Comment $2$ of referee $1$} \\
-	It is true that $\hat{k}_0$ tends to overestimate $k$ when correlation is high, and the covariance matrices for the  $\hat{k}_0$ clusters is not the same as the true underlying covariance matrices for the $k$ clusters. The point is that we only need the estimated noise covariance matrix to be "close" to the actual covariance matrix such that after adjusting for correlation, the (transformed) data become weakly correlated (not necessary zero-correlated). We have demonstrate that the proposed method works well when the correlation is weak in both theoretical results and simulation results.
+
 	\item \textbf{Comment $3.1$ of referee $1$} \\
     The previous description of how the clusters are generated in the simulation and the distance between them are incorrect (last paragraph in page $20$ of previous draft). The correct description should be "any simulation with clusters having minimum distance less than $1.0$ units between them was discarded; ... the settings are such that about half of the random realizations were discarded"
 \cite{tibshirani2001estimating}. This idea was directly borrowed from \cite{tibshirani2001estimating}. 
