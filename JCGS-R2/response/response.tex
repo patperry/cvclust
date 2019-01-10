@@ -147,25 +147,31 @@ constraints we will take your suggestion and move the proof to an appendix.
 % of estimation in a regression setting.
 
 
-\item {\textit Proposition 2 improvements.}
+\item {\textit Proposition 2. Define the indicator function.}
 
-\textbf{Response:} \todo
+\textbf{Response:} Done.
 
-% Please, define the indicator function.
 
-\item \textit{Page 8, line 14. Generalization.}
+\item \textit{Page 18, line 14. Generalization conditions.}
 
-\textbf{Response:} \todo
+\textbf{Response:} 
 
-We clarified what we meant by saying the proof ``generalizes to non-normal
-distributions easily''. You rightly point out that it will not generalize to
-all possible situations, but only to distributions with finite moments and
-cases where both clusters have the same distribution.
+We clarified what we meant by saying our proof generalized:
+\textit{
+In principle the proof of Proposition~3 generalizes to
+non-normal location families of distributions easily, provided that
+both cluster distributions are in the same family and expressions for
+$E(Y | Y > 0)$ and the other related quantities are available (and finite).
+}
+
+You rightly point out that it will not generalize to all possible situations,
+but only to distributions with finite moments and cases where both clusters
+have the same distribution.
 
 
 \item \textit{Figure 2. Please define correctly the x,y axis}
 
-\textbf{Response:} \todo
+\textbf{Response:} Done.
 
 
 \item \textit{Page 20, first paragraph.}
@@ -177,9 +183,13 @@ think you may have meant that our statement in the first paragraph of  page
 strong correlation between the variables'' is too strong.
 
 
-\item \textit{Compare to standardized Euclidean norm $k$-means.}
+\item \textit{Page 22, the standardized Euclidean norm $k$-means could produce
+good results.}
 
-\textbf{Response:} \todo
+\textbf{Response:} You may be correct, but we do not want to overwhelm the
+reader with two many variations of the same algorithm. The correlation-correction
+we propose is a slightly more general version of Euclidean standardization,
+and seems to perform adequately.
 
 %10. Page 22, line 3. Maybe the standardized Euclidean norm in the k-means
 %algorithm could produce good results. 
@@ -187,7 +197,13 @@ strong correlation between the variables'' is too strong.
 
 \item \textit{Compare to slope}
 
-\textbf{Response:} \todo
+\textbf{Response:} As you suggested, we added comparisons to the slope method,
+using the \texttt{cstab} package. In our simulations, slope performs very well
+with noise dimensions and high-dimensional data; its performance degrades with
+correlated clusters, variance heterogeneity, and heavy-tailed data. Certainly
+there are some situations where slope is better than our method, but no method
+uniformly dominates the others. In our simulations, our correlation-corrected
+Gabriel CV method seems to be a good default choice.
 
 % 11. Page 23, line 35. Under normal distributions, the slope statistics
 % proposed by Fujita et al. also works very good if the clusters are well

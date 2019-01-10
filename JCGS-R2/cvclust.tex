@@ -580,8 +580,9 @@ symmetric about the origin.
 For $j$ in $1, \dotsc, k$, set
 \[
   \bmuX_j = \frac{\sum_{i=1}^{n} 1\{ \hGY_i = j \} X_i}
-                 {\sum_{i=1}^{n} 1\{ \hGY_i = j \}}.
+                 {\sum_{i=1}^{n} 1\{ \hGY_i = j \}},
 \]
+where $1\{ . \}$ denotes the indicator function.
 The classification rule $\hGX$ is defined by
 \(
   \hGX(X) = \argmin_j \| \bmuX_j - X \|.
@@ -878,12 +879,13 @@ Appendex~\ref{app:twoclust-anyd}.
 
 
 In principle the proof of Proposition~\ref{prop:twoclust} generalizes to
-non-normal distributions easily, provided expressions for $\E(Y | Y > 0)$ and
-the other related quantities are available. Different distributions for
-$(X,Y)$ give rise to different cutoffs for when $k = 1$ cluster is preferred
-to $k = 2$. The normal distribution is only special here in that the required
-conditional expectations and the boundary where $\CV(1) = \CV(2)$ are
-computable in closed form. 
+non-normal location families of distributions easily, provided that
+both cluster distributions are in the same family and expressions for
+$\E(Y | Y > 0)$ and the other related quantities are available (and finite).
+Different distributions for $(X,Y)$ give rise to different cutoffs for when $k
+= 1$ cluster is preferred to $k = 2$. The normal distribution is only special
+here in that the required conditional expectations and the boundary where
+$\CV(1) = \CV(2)$ are computable in closed form. 
 
 
 
