@@ -1,0 +1,213 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{fullpage}
+\usepackage{hyperref} % must be last usepackage
+\usepackage{color}
+\usepackage[authoryear]{natbib}
+
+\newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
+\newcommand{\todo}{\hilight{TODO}}
+
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\let\PBS=\PreserveBackslash
+
+\title{``Estimating the number of clusters using cross-validation''
+Summary of changes to the revised manuscript}
+\author{Wei Fu \and Patrick O. Perry}
+
+\begin{document}
+
+\maketitle
+\setlength{\parindent}{0ex}
+\setlength{\parskip}{1ex}
+\vspace{2ex}
+
+We thank the editors and reviewers for their time reading our submission, and
+for providing many helpful suggestions for improvement.  We also thank you for
+the opportunity to revise and resubmit our manuscript.  We have revised our
+manuscript carefully taking into account your comments.
+
+Detailed responses to reviewer comments follow below.
+
+
+\section*{Response to Editor}
+
+\begin{itemize}
+
+\item \textit{Fix the figure captions.}
+
+\textbf{Response:} Per your instruction, all figure captions now include
+(1) what is the plot about, (2) specific details of plot, like what type of
+display and how variables are mapped, (3) the most important thing that the
+reader should learn.
+
+\todo
+
+
+\item \textit{Cite R packages.}
+
+\textbf{Response:} We added citations for all packages used in our work: \todo
+
+% You need to cite R and any packages used in your work, like ggplot2.
+
+\item \textit{Reprodicibility.}
+
+\textbf{Response:} \todo
+
+% Your code is quite a mess. It is not clear to me how to reproduce the results
+% you have reported. There is code in two different tar.gz files. Which is the
+% code to use? In each there are several folders. This all needs to be
+% organised so that it is easy for the reader to produce the results that you
+% have reported in the paper.
+
+
+\end{itemize}
+
+
+\section*{Response to Associate Editor}
+
+\begin{itemize}
+
+\item \textit{Compare to the slope method}
+
+\todo
+
+\end{itemize}
+
+
+\section*{Response to Reviewer 1}
+
+(No further comments.)
+
+
+\section*{Response to Reviewer 2}
+
+\begin{itemize}
+
+\item \textit{Bottom of page 4. The authors need to clarify the notation}
+
+\textbf{Response:} \todo
+
+%The fold numbers r and r_i are not well-defined. Please maintain the
+%notational consistency. You defined only "r_i". What do you mean by: 'For each
+%"fold" r'?
+
+
+\item \textit{Page 6. Clarify that $n \gg K$, $m \gg L$.}
+
+\textbf{Response:} \todo
+
+%By my understanding, the authors must assume further that
+%
+%n  >> K
+%m >> K	
+%
+%That is, they need to ensure that they are choosing n and m larger that K.
+%This limitation should be clarified to the reader.
+
+
+\item \textit{Section 2.2. Clarify.}
+
+\textbf{Response:} \todo
+
+
+%The authors need to clarify if and how the methods are applied
+%to a non-regression setting.
+
+
+\item \textit{Section 3. Note that slope is self consistent.}
+
+\textbf{Response:} \todo
+
+%Section 3. I am very confident that the slope statistics (Fujita et al) is
+%also self-consistent under the absence of noise. This follows basically from
+%the properties of finite differences.  On the other hand, the original
+%Silhouette method is not self-consistent. The authors could explore this
+%easily in this section in one paragraph.
+
+
+\item \textit{Proposition 1 improvements.}
+
+\textbf{Response:} \todo
+
+We chose to keep the proof in the main text, but if there are space
+constraints we will take your suggestion and move the proof to an appendix.
+
+% 5. Proposition 1. 
+% 
+% 5.1 In order to check condition (iv), it seems the user must know something about K.
+% 
+% 5.2 Should it be CV(k)>CV(K)?
+% 
+% 5.3 My feeling is that once the reader fully understand the ingredients of the
+% procedure, Proposition one renders trivial.  The authors could provide direct
+% arguments for that. This seems to follow straightforward from the properties
+% of estimation in a regression setting.
+
+
+\item {\textit Proposition 2 improvements.}
+
+\textbf{Response:} \todo
+
+% Please, define the indicator function.
+
+\item \textit{Page 8, line 14. Generalization.}
+
+\textbf{Response:} \todo
+
+We clarified what we meant by saying the proof ``generalizes to non-normal
+distributions easily''. You rightly point out that it will not generalize to
+all possible situations, but only to distributions with finite moments and
+cases where both clusters have the same distribution.
+
+
+\item \textit{Figure 2. Please define correctly the x,y axis}
+
+\textbf{Response:} \todo
+
+
+\item \textit{Page 20, first paragraph.}
+
+\textbf{Response:} Your comment was that ``Proposition 2 only shows that if
+$|\rho|<0.5$ the method works correctly.''Did you mean page 14 instead?  We
+think you may have meant that our statement in the first paragraph of  page
+14, ``Proposition~2 tells us that Gabriel cross-validation fails when there is
+strong correlation between the variables'' is too strong.
+
+
+\item \textit{Compare to standardized Euclidean norm $k$-means.}
+
+\textbf{Response:} \todo
+
+%10. Page 22, line 3. Maybe the standardized Euclidean norm in the k-means
+%algorithm could produce good results. 
+
+
+\item \textit{Compare to slope}
+
+\textbf{Response:} \todo
+
+% 11. Page 23, line 35. Under normal distributions, the slope statistics
+% proposed by Fujita et al. also works very good if the clusters are well
+% separated. There are two R packages for computing the slope statistics: 
+% 
+% https://www.rdocumentation.org/packages/anocva/versions/0.1.1/topics/optimalSlope
+% 
+% and:
+% 
+% https://cran.r-project.org/web/packages/cstab/cstab.pdf
+% 
+% 
+% 12. Page 25, line 31. The Slope statistic also works well under correlation.
+% See the papers simulations (section 5).  Moreover, in Fujita et al., it is
+% showed that some of the methods used here have bad performances under some
+% scenarios which slope statistic was very good (high dimensional data, t and
+% exponential distributions for each cluster, correlated items, Gaussian and
+% uniform, heterogeneity). 
+
+\end{itemize}
+
+\end{document}
+
