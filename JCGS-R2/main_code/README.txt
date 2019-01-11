@@ -10,17 +10,17 @@
 ### is very time consuming.
 
 
-1. regenerate Figure 1
-use the R scripts in main_code/demo/nullcorr.
+1. Regenerate Figure 1
+use the R scripts in demo/nullcorr.
 the result is saved in the same directory as equal.pdf
 
 
-2. regenerate Figure 2
-use the R scripts in main_code/demo/overlap.
+2. Regenerate Figure 2
+use the R scripts in demo/overlap.
 the result is saved in the same directory as color_plot.pdf
 
 
-3. regenerate simulation results and the corresponding tables
+3. Regenerate simulation results and the corresponding tables
 use the R scripts in main_code/demo/bench.
 run the code with following order:
 
@@ -32,7 +32,7 @@ run the code with following order:
 
 The results are saved in folder setting1/2/3/4/5,
 For example, the plot in simulation setting 1 (Figure 3)
-is in main_code/demo/bench/setting1/Facet.
+is in demo/bench/setting1/Facet.
 
 To completely re-run the code, delete the folders above
 and run the 5 R scripts above in order.
@@ -40,9 +40,8 @@ and run the 5 R scripts above in order.
 05_create_tables.R gives the tables in suppliment results.
 
 4. Table 1 results in section Empirical validation
-run the R script Empirical_validation.R in main_code/demo/data_examples
+run the R script Empirical_validation.R in demo/data_examples
 
 
-
-5. reproduce Figure 8 and Table 3
-run the R script confusion_table.R in main_code/demo/data_examples
+5. Reproduce Figure 8 and Table 3
+run the R script confusion_table.R in demo/data_examples
