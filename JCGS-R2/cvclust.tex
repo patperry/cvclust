@@ -1436,9 +1436,16 @@ cluster analysis from \url{http://arep.med.harvard.edu/network_discovery/}.
 \begin{figure}
 		\centering
 	\includegraphics[width=5.7in, height=5.7in]{main_code/data_examples/split_plots.pdf}
-	\caption{Yeast data set mean expression profiles. The $5$ clusters found by
-  the Gabriel method are on the bottom; Clusters profiled in
-  \cite{tavazoie1999systematic} are on the right.}
+	\caption{Comparison between  \cite{tavazoie1999systematic} clusters and
+    our proposed Gabriel cross-validation clusters for a Yeast gene expression
+    time series data set.  The plots on the vertical and horizontal
+    show the average expression time series for the \citeauthor{tavazoie1999systematic} 
+    clusters (1--4, 7, 8, 14, Other) and the Gabriel clusters (1--5),
+    respectively. Plot $(i,j)$ in the grid show the time series average
+    in the intersectios of  \citeauthor{tavazoie1999systematic} cluster~$i$
+    with Gabriel cluster~$j$, whenever there is overlap. The Gabriel clusters
+    capture the same general trends with a smaller number of clusters.
+    }
 	\label{fig:5_clusters}
 \end{figure}	
 
