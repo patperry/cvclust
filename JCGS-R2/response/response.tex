@@ -86,13 +86,14 @@ reader should learn.
 
 \begin{itemize}
 
-\item \textit{Bottom of page 4. The authors need to clarify the notation}
+\item \textit{Bottom of page 4. Clarify meaning of ``fold''.}
 
-\textbf{Response:} \todo
+\textbf{Response:} Added the following:
 
-%The fold numbers r and r_i are not well-defined. Please maintain the
-%notational consistency. You defined only "r_i". What do you mean by: 'For each
-%"fold" r'?
+``For each value $r$ in the range $1, \dotsc, K$, we define the $r$th `fold'
+as the matrix gotten by permuting the rows of the original data matrix to get
+$X$, a matrix with the $r$th test subset, the rows $i$ with $r_i = r$ as
+its trailing rows.''
 
 
 \item \textit{Page 6. Clarify that $N \geq K$, $M \geq K$.}

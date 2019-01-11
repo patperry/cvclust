@@ -247,8 +247,9 @@ predictor-response pairs, $(X_1, Y_1), \dotsc, (X_N, Y_N)$, with $X_i \in
 $N$ rows and $p + q$ columns.  We partition the data into $K$ hold-out
 ``test'' subsets, with $K$ typically chosen to be $5$ or $10$.  We do this
 by randomly assigning a fold number $r_i$ in the range $\{1, \dotsc, K\}$
-for each row~$i$. For each ``fold'' $r$ in the range $1, \dotsc, K$, we
-permute the rows of the data matrix to get $\dataX$, a matrix with the
+for each row~$i$. For each value $r$ in the range $1, \dotsc, K$, we define
+the $r$th fold as the matrix gotten by permuting the rows of the 
+original data matrix to get $\dataX$, a matrix with the
 $r$th test subset, the rows $i$ with $r_i = r$ as its trailing rows.  
 We partition $\dataX$ as
 \[
