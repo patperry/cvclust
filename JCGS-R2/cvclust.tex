@@ -712,6 +712,9 @@ bivariate normal, can be put in the form with independent $Z_1$ and $Z_2$.
 
 
 We confirm the result of Proposition~\ref{prop:single-2d} with a simulation.
+Here and throughout the text, our simulations use
+R~software environment~\citep{rproject}, with most figures generated
+with the support of the \texttt{ggplot2} library~\citep{ggplot2}.
 We perform $10$ replicates.  In each replicate, we generate $20000$
 observations from a mean-zero bivariate normal distribution with unit marginal
 variances and correlation $\rho$.  We perform a single $2 \times 2$ fold of
@@ -1082,7 +1085,17 @@ competing methods including the Gap statistic
 statistic \citep{hartigan1975clustering}, the Jump method
 \citep{sugar2003finding}, Prediction strength \citep{tibshirani2005cluster},
 Slope method \citep{fujita2014non} and Bootstrap stability \citep{fang2012selection}. 
-We use the default parameter settings for all competing methods.  For Gabriel cross-validation,
+We use the default parameter settings for all competing methods, implented
+in the following R~packages:
+\texttt{cluster} \citep{cluster};
+\texttt{cstab} \citep{cstab};
+\texttt{e1071} \citep{e1071};
+\texttt{fpc} \citep{fpc};
+\texttt{MASS} \citep{MASS};
+\texttt{mclust} \citep{mclust};
+and
+\texttt{NbClust} \citep{NbClust}.
+For Gabriel cross-validation,
 we perform $2$-fold cross-validation on the columns~($p=q$) and $5$-fold
 cross-validation on the rows~($m=n/4$).  We also compare with Wold
 cross-validation, which we describe in Appendix~\ref{sec:wold-cv}.
