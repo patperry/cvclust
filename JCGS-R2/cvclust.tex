@@ -423,6 +423,13 @@ cross-validation is self-consistent. That is, in the absence of noise, the
 Gabriel cross-validation procedure finds the optimal number of clusters.
 
 
+Self-consistency by itself does not mean that a procedure performs well in
+practice. Self-consistency deals only with the no-noise situation.  Many other
+methods for selecting $K$ are likely self-consistent, but not all perform the
+same in practice. Self-consistency only suggests (but does not guarantee) that
+a procedure might perform reasonably when the noise level is low.
+
+
 It will suffice to prove self-consistency for a single fold of the
 cross-validation procedure.  As in section~\ref{sec:gabriel-cv-algorithm} we
 assume that the $P$ variables of the data set have been partitioned into $p$
@@ -468,7 +475,12 @@ Gabriel cross-validation correctly chooses $k = K$.
 \end{proposition}
 
 The proposition states that our method works well in the absence of noise,
-when each observation is equal to its cluster center.  The essential
+when each observation is equal to its cluster center.  The assumptions here
+are not checkable in practice, but the proposition suggest that Gabriel
+cross-validation might give a reasonable answer, at least when the noise level
+is low.
+
+The essential
 assumption here is assumption~\ref{asn:self-consistency-noiseless}, which states
 that there is no noise.  If we are willing to assume, say, that the cluster
 centers~$\mu(g) = \bigl(\muX(g),\muY(g)\bigr)$ for $g = 1, \dotsc, K$ were

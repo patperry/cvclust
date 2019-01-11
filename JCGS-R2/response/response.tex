@@ -117,9 +117,20 @@ reader should learn.
 %to a non-regression setting.
 
 
-\item \textit{Section 3. Note that slope is self consistent.}
+\item \textit{Section 3. Note that other methods are self consistent.}
 
-\textbf{Response:} \todo
+\textbf{Response:} Per your suggestion, we added this paragraph:
+
+``Self-consistency by itself does not mean that a procedure performs well in
+practice. Self-consistency deals only with the no-noise situation.  Many other
+methods for selecting $K$ are likely self-consistent, but not all perform the
+same in practice. Self-consistency only suggests (but does not guarantee) that
+a procedure might perform reasonably when the noise level is low.''
+
+We did not specifically single out the slope statistic or Silhouette method
+specifically here because we have not taken the time to analyze those methods
+and we are unaware of proofs of their self-consistency or lack thereof.
+
 
 %Section 3. I am very confident that the slope statistics (Fujita et al) is
 %also self-consistent under the absence of noise. This follows basically from
