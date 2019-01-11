@@ -248,7 +248,7 @@ $N$ rows and $p + q$ columns.  We partition the data into $K$ hold-out
 ``test'' subsets, with $K$ typically chosen to be $5$ or $10$.  We do this
 by randomly assigning a fold number $r_i$ in the range $\{1, \dotsc, K\}$
 for each row~$i$. For each value $r$ in the range $1, \dotsc, K$, we define
-the $r$th fold as the matrix gotten by permuting the rows of the 
+the $r$th ``fold'' as the matrix gotten by permuting the rows of the 
 original data matrix to get $\dataX$, a matrix with the
 $r$th test subset, the rows $i$ with $r_i = r$ as its trailing rows.  
 We partition $\dataX$ as
@@ -725,10 +725,12 @@ criterion chooses $k \geq 2$ clusters whenever $|\rho| > 0.5$.
 \begin{figure}
 \centering
 \includegraphics[width=3in]{main_code/demo/nullcorr/equal.pdf}
-\caption{Cross-validation error on $10$ replicates, with the number of
-clusters $k$ ranging from $1$ to $5$.  Data is generated from two-dimensional
-multivariate normal distribution with correlation $\rho$.  The Gabriel
-cross-validation criterion chooses the correct answer $k = 1$ whenever
+\caption{Gabriel cross-validation performance in a single-cluster simulation.
+    Gabriel cross-validation error $\CV(k)$ for $k$ ranging from 1 to~5,
+    averaged over $10$ replicates where
+    data is generated from two-dimensional
+multivariate normal distribution with correlation $\rho$.  The 
+    criterion chooses the correct answer $k = 1$ whenever
 $|\rho| < 0.5$; the criterion chooses $k \geq 2$ clusters whenever $|\rho| > 0.5$.}
 \label{fig:nullcorr-equal}
 \end{figure}
@@ -932,12 +934,18 @@ $k=1$ zone.
 \begin{figure}
 \centering
 \includegraphics[width=3in]{main_code/demo/overlap/color_plot.pdf}
-\caption{Number of times $k=2$ is selected out of $10$ replicates for each
-pair of $(\muX, \muY)$. The heat map shows the frequency $k=2$ is selected by
-the algorithm, with light (blue) means $k = 1$ is preferred to $k = 2$, and
-dark (red) indicates $k = 2$ is preferred to $k = 1$.
-The black line is the theoretical boundary determined from
-Proposition~\ref{prop:twoclust}.}
+\caption{
+    Gabriel cross-validation performance in a two-cluster simulation.
+    For a grid of values for $\muX$ and $\muY$ ranging from $0$ to $3$,
+    we generated data according the manner described in
+    Prop.~\ref{prop:twoclust}, then computed Gabriel cross-validation
+    error $\CV(1)$ and $\CV(2)$. The heat map shows the proportion of times
+    that $\CV(2) < \CV(1)$ with
+    light (blue) indicating that $k = 1$ is preferred to $k = 2$, and
+dark (red) indicating that $k = 2$ is preferred to $k = 1$.
+    The black line is the theoretical boundary determined from
+Proposition~\ref{prop:twoclust}. The simulation confirms our theoretical
+    boundary.}
 \label{fig:overlap-color_plot}
 \end{figure}
 
