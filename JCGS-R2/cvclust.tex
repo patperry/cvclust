@@ -317,7 +317,10 @@ support analogous to the consistency results proved by \citet{owen2009bi}.
 \label{sec:gabriel-cv-algorithm}
 
 
-Our version of Gabriel cross-validation for clustering works by performing a
+Our version of Gabriel cross-validation for clustering works is designed to
+find the best number of clusters to use for $N$~observations of a
+$P$-dimensional random variable with real-valued components.
+The procedure works by performing a
 sequence of ``folds'' over the data. We use these folds to estimate a version
 of prediction error (cross-validation error) for each possible value of $k$;
 we then choose the value $\hat k$ with the smallest cross-validation error.
@@ -396,14 +399,20 @@ discriminant analysis with equal class priors and identity noise covariance
 matrix.
 
 
+
 To choose the folds, we randomly partition the rows and columns into $K$ and
 $L$ subsets, respectively.  Each fold is indexed by a pair $(r,s)$ of
 integers, with $r \in \{1, \dotsc, K\}$ and $s \in \{1, \dotsc, L\}$.  Fold
 $(r,s)$ treats the $r$th row subset as ``test'', and the $s$th column subset
-as ``response''.  We typically take $K = 5$ and $L = 2$.  For the number of
+as ``response''. 
+For this cross-validation to be possible, we must have that
+$K \leq N$ and $L \leq M$.
+We typically take $K = 5$ and $L = 2$.  For the number of
 clusters, we select the value of $k$ that minimizes the average of $\CV(k)$
 over all $K \times L$ folds (choosing the smallest value of $k$ in the event
 of a tie).
+
+
 
 
 In Section~\ref{sec:self-consistent}, we prove that this procedure is
