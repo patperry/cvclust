@@ -1,0 +1,82 @@
+
+1. Bottom of page 4. The authors need to clarify the notation:
+
+The fold numbers r and r_i are not well-defined. Please maintain the
+notational consistency. You defined only "r_i". What do you mean by: 'For each
+"fold" r'?
+
+
+2. Page 6.  By my understanding, the authors must assume further that
+
+n  >> K
+m >> K	
+
+That is, they need to ensure that they are choosing n and m larger that K.
+This limitation should be clarified to the reader.
+
+
+3. Section 2.2. The authors need to clarify if and how the methods are applied
+to a non-regression setting.
+
+
+4. Section 3. I am very confident that the slope statistics (Fujita et al) is
+also self-consistent under the absence of noise. This follows basically from
+the properties of finite differences.  On the other hand, the original
+Silhouette method is not self-consistent. The authors could explore this
+easily in this section in one paragraph.
+
+
+5. Proposition 1. 
+
+5.1 In order to check condition (iv), it seems the user must know something about K.
+
+5.2 Should it be CV(k)>CV(K)?
+
+5.3 My feeling is that once the reader fully understand the ingredients of the
+procedure, Proposition one renders trivial.  The authors could provide direct
+arguments for that. This seems to follow straightforward from the properties
+of estimation in a regression setting.
+
+
+6. Proposition 2. Please, define the indicator function.
+
+7. Page 18, line 14. I am not sure of that. For skewed and/or heavy tailed
+distributions the propositions may not work. For instance, the expectation
+E(Y|Y>0) could be infinite (see the Cauchy distribution). Furthermore, the
+distributions of each cluster could be very different from each other.
+
+
+8. Figure 2. Please define correctly the x,y axis 
+
+
+9. Page 20, first paragraph:
+
+Proposition 2 only shows that if |rho|<0.5 the method works correctly. Maybe I missed something.
+
+
+10. Page 22, line 3. Maybe the standardized Euclidean norm in the k-means
+algorithm could produce good results. 
+
+
+11. Page 23, line 35. Under normal distributions, the slope statistics
+proposed by Fujita et al. also works very good if the clusters are well
+separated. There are two R packages for computing the slope statistics: 
+
+https://www.rdocumentation.org/packages/anocva/versions/0.1.1/topics/optimalSlope
+
+and:
+
+https://cran.r-project.org/web/packages/cstab/cstab.pdf
+
+
+12. Page 25, line 31. The Slope statistic also works well under correlation.
+See the papers simulations (section 5).  Moreover, in Fujita et al., it is
+showed that some of the methods used here have bad performances under some
+scenarios which slope statistic was very good (high dimensional data, t and
+exponential distributions for each cluster, correlated items, Gaussian and
+uniform, heterogeneity). 
+
+The paper can be improved in some justifications and also I am missing a
+comparison with the slope statistics.
+
+

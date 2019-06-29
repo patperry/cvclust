@@ -1,0 +1,208 @@
+\begin{thebibliography}{}
+
+\bibitem[Ben-Hur et~al., 2001]{ben2001stability}
+Ben-Hur, A., Elisseeff, A., and Guyon, I. (2001).
+\newblock A stability based method for discovering structure in clustered data.
+\newblock In {\em Pacific symposium on biocomputing}, volume~7, pages 6--17.
+
+\bibitem[Cali{\'n}ski and Harabasz, 1974]{calinski1974dendrite}
+Cali{\'n}ski, T. and Harabasz, J. (1974).
+\newblock A dendrite method for cluster analysis.
+\newblock {\em Communications in Statistics-theory and Methods}, 3(1):1--27.
+
+\bibitem[Charrad et~al., 2014]{NbClust}
+Charrad, M., Ghazzali, N., Boiteau, V., and Niknafs, A. (2014).
+\newblock {NbClust}: An {R} package for determining the relevant number of
+  clusters in a data set.
+\newblock {\em Journal of Statistical Software}, 61(6):1--36.
+
+\bibitem[Chiang and Mirkin, 2010]{chiang2010intelligent}
+Chiang, M. M.-T. and Mirkin, B. (2010).
+\newblock Intelligent choice of the number of clusters in k-means clustering:
+  an experimental study with different cluster spreads.
+\newblock {\em Journal of classification}, 27(1):3--40.
+
+\bibitem[Cho et~al., 1998]{cho1998genome}
+Cho, R.~J., Campbell, M.~J., Winzeler, E.~A., Steinmetz, L., Conway, A.,
+  Wodicka, L., Wolfsberg, T.~G., Gabrielian, A.~E., Landsman, D., Lockhart,
+  D.~J., et~al. (1998).
+\newblock A genome-wide transcriptional analysis of the mitotic cell cycle.
+\newblock {\em Molecular cell}, 2:65--73.
+
+\bibitem[Dortet-Bernadet and Wicker, 2008]{dortet2008model}
+Dortet-Bernadet, J.-L. and Wicker, N. (2008).
+\newblock Model-based clustering on the unit sphere with an illustration using
+  gene expression profiles.
+\newblock {\em Biostatistics}, 9(1):66--80.
+
+\bibitem[Fang and Wang, 2012]{fang2012selection}
+Fang, Y. and Wang, J. (2012).
+\newblock Selection of the number of clusters via the bootstrap method.
+\newblock {\em Computational Statistics \& Data Analysis}, 56(3):468--477.
+
+\bibitem[Fraley and Raftery, 2002]{fraley2002model}
+Fraley, C. and Raftery, A.~E. (2002).
+\newblock Model-based clustering, discriminant analysis, and density
+  estimation.
+\newblock {\em Journal of the American Statistical Association},
+  97(458):611--631.
+
+\bibitem[Fujita et~al., 2014]{fujita2014non}
+Fujita, A., Takahashi, D.~Y., and Patriota, A.~G. (2014).
+\newblock A non-parametric method to estimate the number of clusters.
+\newblock {\em Computational Statistics \& Data Analysis}, 73:27--39.
+
+\bibitem[Gabriel, 2002]{gabriel2002biblot}
+Gabriel, K.~R. (2002).
+\newblock Le biplot--outil d'exploration de donn\'{e}es multidimensionelles.
+\newblock {\em Journal de la Soci\'{e}t\'{e} Francaise de Statistique},
+  143:5--55.
+
+\bibitem[Hartigan, 1975]{hartigan1975clustering}
+Hartigan, J.~A. (1975).
+\newblock {\em Clustering Algorithms}.
+\newblock Wiley.
+
+\bibitem[Hartigan and Wong, 1979]{hartigan1979algorithm}
+Hartigan, J.~A. and Wong, M.~A. (1979).
+\newblock Algorithm as 136: A k-means clustering algorithm.
+\newblock {\em Journal of the Royal Statistical Society. Series C (Applied
+  Statistics)}, 28:100--108.
+
+\bibitem[Hastie et~al., 2009]{hastie2009elements}
+Hastie, T., Tibshirani, R., and Friedman, J. (2009).
+\newblock {\em {The Elements of Statistical Learning: Data Mining, Inference,
+  and Prediciton}}.
+\newblock Springer Series in Statistics. Springer, 2nd edition.
+
+\bibitem[Hennig, 2015]{fpc}
+Hennig, C. (2015).
+\newblock {\em fpc: Flexible Procedures for Clustering}.
+\newblock R package version 2.1-10.
+
+\bibitem[Jain, 2010]{jain2010data}
+Jain, A.~K. (2010).
+\newblock Data clustering: 50 years beyond k-means.
+\newblock {\em Pattern recognition letters}, 31(8):651--666.
+
+\bibitem[Jain et~al., 1999]{jain1999data}
+Jain, A.~K., Murty, M.~N., and Flynn, P.~J. (1999).
+\newblock Data clustering: a review.
+\newblock {\em ACM computing surveys (CSUR)}, 31(3):264--323.
+
+\bibitem[Jonas M. B.~Haslbeck, 2018]{cstab}
+Jonas M. B.~Haslbeck, D. U.~W. (2018).
+\newblock {\em cluster: Cluster Analysis Basics and Extensions}.
+\newblock R package version 0.2-2.
+
+\bibitem[Maechler et~al., 2018]{cluster}
+Maechler, M., Rousseeuw, P., Struyf, A., Hubert, M., and Hornik, K. (2018).
+\newblock {\em cluster: Cluster Analysis Basics and Extensions}.
+\newblock R package version 2.0.7-1.
+
+\bibitem[Mangasarian et~al., 1990]{mangasarian1990pattern}
+Mangasarian, O.~L., Setiono, R., and Wolberg, W. (1990).
+\newblock Pattern recognition via linear programming: Theory and application to
+  medical diagnosis.
+\newblock {\em Large-scale numerical optimization}, pages 22--31.
+
+\bibitem[Meyer et~al., 2017]{e1071}
+Meyer, D., Dimitriadou, E., Hornik, K., Weingessel, A., and Leisch, F. (2017).
+\newblock {\em e1071: Misc Functions of the Department of Statistics,
+  Probability Theory Group (Formerly: E1071), TU Wien}.
+\newblock R package version 1.6-8.
+
+\bibitem[Owen and Perry, 2009]{owen2009bi}
+Owen, A.~B. and Perry, P.~O. (2009).
+\newblock Bi-cross-validation of the svd and the nonnegative matrix
+  factorization.
+\newblock {\em Ann. Appl. Stat.}, 3(2):564--594.
+
+\bibitem[Pollard, 1981]{pollard1981strong}
+Pollard, D. (1981).
+\newblock Strong consistency of $k$-means clustering.
+\newblock {\em Ann. Stat.}, 9(1):135--140.
+
+\bibitem[Pomeroy et~al., 2002]{pomeroy2002prediction}
+Pomeroy, S.~L., Tamayo, P., Gaasenbeek, M., Sturla, L.~M., Angelo, M.,
+  McLaughlin, M.~E., Kim, J.~Y., Goumnerova, L.~C., Black, P.~M., Lau, C.,
+  et~al. (2002).
+\newblock Prediction of central nervous system embryonal tumour outcome based
+  on gene expression.
+\newblock {\em Nature}, 415(6870):436--442.
+
+\bibitem[{R Core Team}, 2018]{rproject}
+{R Core Team} (2018).
+\newblock {\em R: A Language and Environment for Statistical Computing}.
+\newblock R Foundation for Statistical Computing, Vienna, Austria.
+
+\bibitem[Schlimmer, 1987]{schlimmer1987concept}
+Schlimmer, J.~C. (1987).
+\newblock {\em Concept acquisition through representational adjustment}.
+\newblock PhD thesis, Department of Information and Computer Science,
+  University of California, Irvine.
+
+\bibitem[Scrucca et~al., 2016]{mclust}
+Scrucca, L., Fop, M., Murphy, T.~B., and Raftery, A.~E. (2016).
+\newblock {mclust} 5: clustering, classification and density estimation using
+  {G}aussian finite mixture models.
+\newblock {\em The {R} Journal}, 8(1):205--233.
+
+\bibitem[Sugar and James, 2003]{sugar2003finding}
+Sugar, C.~A. and James, G.~M. (2003).
+\newblock Finding the number of clusters in a dataset.
+\newblock {\em Journal of the American Statistical Association}, 98(463).
+
+\bibitem[Tarpey and Flury, 1996]{tarpey96}
+Tarpey, T. and Flury, B. (1996).
+\newblock Self-consistency: A fundamental concept in statistics.
+\newblock {\em Statist. Sci.}, 11(3):229--243.
+
+\bibitem[Tavazoie et~al., 1999]{tavazoie1999systematic}
+Tavazoie, S., Hughes, J.~D., Campbell, M.~J., Cho, R.~J., and Church, G.~M.
+  (1999).
+\newblock Systematic determination of genetic network architecture.
+\newblock {\em Nature genetics}, 22:281--285.
+
+\bibitem[Tibshirani and Walther, 2005]{tibshirani2005cluster}
+Tibshirani, R. and Walther, G. (2005).
+\newblock Cluster validation by prediction strength.
+\newblock {\em Journal of Computational and Graphical Statistics},
+  14(3):511--528.
+
+\bibitem[Tibshirani et~al., 2001]{tibshirani2001estimating}
+Tibshirani, R., Walther, G., and Hastie, T. (2001).
+\newblock Estimating the number of clusters in a data set via the gap
+  statistic.
+\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
+  Methodology)}, 63(2):411--423.
+
+\bibitem[Venables and Ripley, 2002]{MASS}
+Venables, W.~N. and Ripley, B.~D. (2002).
+\newblock {\em Modern Applied Statistics with S}.
+\newblock Springer, New York, fourth edition.
+\newblock ISBN 0-387-95457-0.
+
+\bibitem[Wang, 2010]{wang2010consistent}
+Wang, J. (2010).
+\newblock Consistent selection of the number of clusters via crossvalidation.
+\newblock {\em Biometrika}, 97(4):893--904.
+
+\bibitem[Wickham, 2016]{ggplot2}
+Wickham, H. (2016).
+\newblock {\em ggplot2: Elegant Graphics for Data Analysis}.
+\newblock Springer-Verlag New York.
+
+\bibitem[Wilson, 1927]{wilson1927probable}
+Wilson, E.~B. (1927).
+\newblock Probable inference, the law of succession, and statistical inference.
+\newblock {\em Journal of the American Statistical Association},
+  22(158):209--212.
+
+\bibitem[Wold, 1978]{wold78cross}
+Wold, S. (1978).
+\newblock Cross-validatory estimation of the number of components in factor and
+  principal components models.
+\newblock {\em Technometrics}, 20:397--405.
+
+\end{thebibliography}

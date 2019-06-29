@@ -1,0 +1,265 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{fullpage}
+\usepackage{hyperref} % must be last usepackage
+\usepackage{color}
+\usepackage[authoryear]{natbib}
+
+\newcommand{\hilight}[1]{\colorbox{yellow}{#1}}
+\newcommand{\todo}{\hilight{TODO}}
+
+\newcommand{\PreserveBackslash}[1]{\let\temp=\\#1\let\\=\temp}
+\let\PBS=\PreserveBackslash
+
+\title{``Estimating the number of clusters using cross-validation''
+Summary of changes to the revised manuscript}
+%\author{Wei Fu \and Patrick O. Perry}
+
+\begin{document}
+
+\maketitle
+\setlength{\parindent}{0ex}
+\setlength{\parskip}{1ex}
+\vspace{2ex}
+
+We thank the editors and reviewers for their time reading our submission, and
+for providing many helpful suggestions for improvement.  We also thank you for
+the opportunity to revise and resubmit our manuscript.  We have revised our
+manuscript carefully taking into account your comments.
+
+Detailed responses to reviewer comments follow below.
+
+
+\section*{Response to Editor}
+
+\begin{itemize}
+
+\item \textit{Fix the figure captions.}
+
+\textbf{Response:} Thank you for the guidance here. Per your instruction, all
+figure captions now include (1)~what is the plot about, (2)~specific details
+of plot, and (3)~the most important thing that the reader should learn.
+
+
+\item \textit{Cite R packages.}
+
+\textbf{Response:} 
+
+We added citations for the main packages used in our work, including for the R
+software environment itself. The packages cited include the following:
+\texttt{cluster},
+\texttt{cstab},
+\texttt{e1071}
+\texttt{fpc},
+\texttt{ggplot2},
+\texttt{MASS},
+\texttt{mclust},
+and
+\texttt{NbClust}.
+
+
+
+% You need to cite R and any packages used in your work, like ggplot2.
+
+\item \textit{Organize the code.}
+
+\textbf{Response:} We simplified the code and provided an instruction file
+on how to run the code \texttt{README.txt}.
+
+% Your code is quite a mess. It is not clear to me how to reproduce the results
+% you have reported. There is code in two different tar.gz files. Which is the
+% code to use? In each there are several folders. This all needs to be
+% organised so that it is easy for the reader to produce the results that you
+% have reported in the paper.
+
+
+\end{itemize}
+
+
+\section*{Response to Associate Editor}
+
+\begin{itemize}
+
+\item \textit{Compare to the slope method}
+
+As requested, we added a comparison to the slope method. Slope performs better
+than our method in Setting 2 (and better than the non-correlation corrected
+version in Setting 1), but otherwise our method either performs comparably or
+performs better.
+
+\end{itemize}
+
+
+\section*{Response to Reviewer 1}
+
+(No further comments.)
+
+
+\section*{Response to Reviewer 2}
+
+\begin{itemize}
+
+\item \textit{Bottom of page 4. Clarify meaning of ``fold''.}
+
+\textbf{Response:} Added the following:
+
+``For each value $r$ in the range $1, \dotsc, K$, we define the $r$th `fold'
+as the matrix gotten by permuting the rows of the original data matrix to get
+$X$, a matrix with the $r$th test subset, the rows $i$ with $r_i = r$ as
+its trailing rows.''
+
+
+\item \textit{Page 6. Clarify that $N \geq K$, $M \geq K$.}
+
+\textbf{Response:} 
+
+Added the sentence: ``For this cross-validation to be possible, we must have that
+$K \leq N$ and $L \leq M$.''
+
+%By my understanding, the authors must assume further that
+%
+%n  >> K
+%m >> K	
+%
+%That is, they need to ensure that they are choosing n and m larger that K.
+%This limitation should be clarified to the reader.
+
+
+\item \textit{Section 2.2. Clarify the context in which the method is applied.}
+
+\textbf{Response:} 
+
+Changed the first sentence as follows: ``Our version of Gabriel
+cross-validation for clustering works is designed to find the best number of
+clusters to use for $N$~observations of a $P$-dimensional random variable with
+real-valued components.''
+
+
+\item \textit{Section 3. Note that other methods are self consistent.}
+
+\textbf{Response:} Per your suggestion, we added this paragraph:
+
+``Self-consistency by itself does not mean that a procedure performs well in
+practice. Self-consistency deals only with the no-noise situation.  Many other
+methods for selecting $K$ are likely self-consistent, but not all perform the
+same in practice. Self-consistency only suggests (but does not guarantee) that
+a procedure might perform reasonably when the noise level is low.''
+
+We did not specifically single out the slope statistic or Silhouette method
+specifically here because we have not taken the time to analyze those methods
+and we are unaware of proofs of their self-consistency or lack thereof.
+
+
+%Section 3. I am very confident that the slope statistics (Fujita et al) is
+%also self-consistent under the absence of noise. This follows basically from
+%the properties of finite differences.  On the other hand, the original
+%Silhouette method is not self-consistent. The authors could explore this
+%easily in this section in one paragraph.
+
+
+\item \textit{Proposition 1 improvements.}
+
+\textbf{Response:} We fixed the typo you spotted ($CV(k) > CV(K)$), and we
+added a note that the proposition is purely for theoretical purposes:
+``The assumptions here are not checkable in practice, but the proposition
+suggest that Gabriel cross-validation might give a reasonable answer, at least
+when the noise level is low.''
+
+You also suggested that we omit the proposition entirely. We chose to keep it,
+but if there are space constraints we will take your suggestion and move the
+proof to an appendix.
+
+% 5. Proposition 1. 
+% 
+% 5.1 In order to check condition (iv), it seems the user must know something about K.
+% 
+% 5.2 Should it be CV(k)>CV(K)?
+% 
+% 5.3 My feeling is that once the reader fully understand the ingredients of the
+% procedure, Proposition one renders trivial.  The authors could provide direct
+% arguments for that. This seems to follow straightforward from the properties
+% of estimation in a regression setting.
+
+
+\item {\textit Proposition 2. Define the indicator function.}
+
+\textbf{Response:} Done.
+
+
+\item \textit{Page 18, line 14. Generalization conditions.}
+
+\textbf{Response:} 
+
+We clarified what we meant by saying our proof generalized:
+\textit{
+In principle the proof of Proposition~3 generalizes to
+non-normal location families of distributions easily, provided that
+both cluster distributions are in the same family and expressions for
+$E(Y | Y > 0)$ and the other related quantities are available (and finite).
+}
+
+You rightly point out that it will not generalize to all possible situations,
+but only to distributions with finite moments and cases where both clusters
+have the same distribution.
+
+
+\item \textit{Figure 2. Please define correctly the x,y axis}
+
+\textbf{Response:} Done.
+
+
+\item \textit{Page 20, first paragraph.}
+
+\textbf{Response:} Your comment was that ``Proposition 2 only shows that if
+$|\rho|<0.5$ the method works correctly.''Did you mean page 14 instead?  We
+think you may have meant that our statement in the first paragraph of  page
+14, ``Proposition~2 tells us that Gabriel cross-validation fails when there is
+strong correlation between the variables'' is too strong.
+
+
+\item \textit{Page 22, the standardized Euclidean norm $k$-means could produce
+good results.}
+
+\textbf{Response:} You may be correct, but we do not want to overwhelm the
+reader with two many variations of the same algorithm. The correlation-correction
+we propose is a slightly more general version of Euclidean standardization,
+and seems to perform adequately.
+
+%10. Page 22, line 3. Maybe the standardized Euclidean norm in the k-means
+%algorithm could produce good results. 
+
+
+\item \textit{Compare to slope}
+
+\textbf{Response:} As you suggested, we added comparisons to the slope method,
+using the \texttt{cstab} package. In our simulations, slope performs very well
+with noise dimensions and high-dimensional data; its performance degrades with
+correlated clusters, variance heterogeneity, and heavy-tailed data. Certainly
+there are some situations where slope is better than our method, but no method
+uniformly dominates the others. In our simulations, our correlation-corrected
+Gabriel CV method seems to be a good default choice.
+
+% 11. Page 23, line 35. Under normal distributions, the slope statistics
+% proposed by Fujita et al. also works very good if the clusters are well
+% separated. There are two R packages for computing the slope statistics: 
+% 
+% https://www.rdocumentation.org/packages/anocva/versions/0.1.1/topics/optimalSlope
+% 
+% and:
+% 
+% https://cran.r-project.org/web/packages/cstab/cstab.pdf
+% 
+% 
+% 12. Page 25, line 31. The Slope statistic also works well under correlation.
+% See the papers simulations (section 5).  Moreover, in Fujita et al., it is
+% showed that some of the methods used here have bad performances under some
+% scenarios which slope statistic was very good (high dimensional data, t and
+% exponential distributions for each cluster, correlated items, Gaussian and
+% uniform, heterogeneity). 
+
+\end{itemize}
+
+\end{document}
+
