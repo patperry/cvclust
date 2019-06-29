@@ -1,0 +1,11 @@
+I am pleased to accept "Estimating the number of clusters using
+cross-validation", for publication in the Journal of Computational and
+Graphical Statistics, subject to shortening the paper. I should have caught
+this before but the paper is too long. Normally, a double-spaced paper is
+under 30 pages. Yours is at about 45, which is far too long to be reasonable.
+Much of this is possibly white-space, as tables are on separate pages, and
+your page size seems to have a big bottom margin. I would recommend shifting
+some material into the appendix, for example, the gene tables, and possibly
+some of the slightly repetitive plots, or condensing those plots into a
+smaller summary chart. I need to see a revision that is closer to 30 pages to
+finally accept your paper
