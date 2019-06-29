@@ -157,6 +157,142 @@ Figure~\ref{fig:elbow} demonstrates, the approach can easily fail.
 \end{figure}
 
 
+\section{Self-consistency}
+\label{sec:self-consistent}
+
+An important property of any estimation procedure is that in the absence of
+noise, the procedure correctly estimates the truth. This property is called
+``self-consistency'' \citep{tarpey96}. We will now show that Gabriel
+cross-validation is self-consistent. That is, in the absence of noise, the
+Gabriel cross-validation procedure finds the optimal number of clusters.
+
+
+Self-consistency by itself does not mean that a procedure performs well in
+practice. Self-consistency deals only with the no-noise situation.  Many other
+methods for selecting $K$ are likely self-consistent, but not all perform the
+same in practice. Self-consistency only suggests (but does not guarantee) that
+a procedure might perform reasonably when the noise level is low.
+
+
+It will suffice to prove self-consistency for a single fold of the
+cross-validation procedure.  As in section~\ref{sec:gabriel-cv-algorithm} we
+assume that the $P$ variables of the data set have been partitioned into $p$
+predictor variables represented in vector~$X$ and $q$ response variables
+represented in vector~$Y$.  The $N$ observations have been divided into two
+sets: $n$ train observations and $m$ test observations.  We state the
+assumptions for the self-consistency result in terms of a specific split; for
+the result to hold in general, with high probability, these assumptions would
+have to hold with high probability for a random split. The following theorem
+gives conditions for Gabriel cross-validation to recover the true number of
+clusters in the absence of noise.
+
+
+\begin{proposition}\label{prop:self-consistency}
+
+Let $\{ (X_i, Y_i) \}_{i=1}^{n+m}$ be the data from a single fold of Gabriel
+cross-validation.  For any $k$, let $\CV(k)$ be the cross-validation error for
+this fold, computed as described in Section~\ref{sec:gabriel-cv-algorithm}.
+We will assume that there are $K$ ``true cluster centers''
+$\mu(1), \dotsc,\mu(K)$, with
+the $g$th cluster center partitioned as $\mu(g) = \bigl(\muX(g),
+\muY(g)\bigr)$ for $g = 1, \dotsc, K$.  Suppose that
+\begin{enumerate}[label=(\roman*)]
+  \item \label{asn:self-consistency-noiseless}
+    Each observation $i$ has a true cluster $G_i \in \{ 1, \dotsc, K \}$.
+    There is no noise, so that $X_i = \muX({G_i})$ and $Y_i = \muY(G_i)$ for
+    $i = 1, \dotsc, n+m$.
+  \item \label{asn:self-consistency-distinct-mux}
+    The vectors $\muX(1), \dotsc,\muX(K)$ are all distinct.
+  \item \label{asn:self-consistency-distinct-muy}
+    The vectors $\muY(1), \dotsc,\muY(K)$ are all distinct.
+  \item \label{asn:self-consistency-train}
+    The training set contains at least one member of each cluster: for all $g$
+    in the range $1, \dotsc, K$, there exists at least one $i$ in the range
+    $1, \dotsc, n$ such that $G_i = g$.
+  \item \label{asn:self-consistency-test}
+    The test set contains at least one member of each cluster: for all $g$ in
+    the range $1, \dotsc, K$, there exists at least one $i$ in the range $n+1,
+    \dotsc, n+m$ such that $G_i = g$.
+\end{enumerate}
+Then $\CV(k) > \CV(K)$ for $k < K$, and $\CV(k) = \CV(K)$ for $k > K$, so that
+Gabriel cross-validation correctly chooses $k = K$.
+\end{proposition}
+
+The proposition states that our method works well in the absence of noise,
+when each observation is equal to its cluster center.  The assumptions here
+are not checkable in practice, but the proposition suggest that Gabriel
+cross-validation might give a reasonable answer, at least when the noise level
+is low.
+
+The essential
+assumption here is assumption~\ref{asn:self-consistency-noiseless}, which states
+that there is no noise.  If we are willing to assume, say, that the cluster
+centers~$\mu(g) = \bigl(\muX(g),\muY(g)\bigr)$ for $g = 1, \dotsc, K$ were
+randomly drawn from a distribution with a density over $\R^{p+q}$, then
+assumptions~\ref{asn:self-consistency-distinct-mux}
+and~\ref{asn:self-consistency-distinct-muy} will hold with probability one for
+all splits of the data. Likewise, if the clusters are not too small (relative
+to $n$ and $m$), then assumptions~\ref{asn:self-consistency-train}
+and~\ref{asn:self-consistency-test} will likely hold for a random split of the
+data into test and train.
+
+
+Proposition~\ref{prop:self-consistency} follows from
+Lemmas~\ref{lem:self-consistency1} and~\ref{lem:self-consistency2}, which we
+now state and prove.
+
+
+\begin{lemma}\label{lem:self-consistency1}
+Suppose that the assumptions of Proposition~\ref{prop:self-consistency} are in
+force.  If $k < K$, then $\CV(k) > 0$.
+\end{lemma}
+\begin{proof}
+By definition,
+\[
+  \CV(k)
+    =
+      \sum_{i=n+1}^{n+m}
+        \| Y_i - \bmuY (\hGX_i) \|^2,
+\]
+where $\bmuY(g)$ is the center of cluster $g$ returned from applying $k$-means
+to $Y_1, \dotsc, Y_n$.  Assumptions~\ref{asn:self-consistency-noiseless}
+and~\ref{asn:self-consistency-test}, imply that as $i$ ranges over the test
+set $n+1, \dotsc, n+m$, the response $Y_i$ ranges over all distinct values in
+$\{ \muY(1), \dotsc, \muY(K) \}$.
+Assumption~\ref{asn:self-consistency-distinct-muy} implies that there are
+exactly $K$ such distinct values.  However, there are only $k$ distinct values
+of $\bmuY(g)$.  Thus, at least one summand
+\(
+  \| Y_i - \bmuY(\hGX_i) \|^2
+\)
+is nonzero.  Therefore,
+\(
+  \CV(k) > 0.
+\)
+\end{proof}
+
+\begin{lemma}\label{lem:self-consistency2}
+Suppose that the assumptions of Proposition~\ref{prop:self-consistency} are in
+force.  If $k \geq K$, then $\CV(k) = 0$.
+\end{lemma}
+\begin{proof}
+From assumptions~\ref{asn:self-consistency-noiseless},
+\ref{asn:self-consistency-distinct-muy},
+and~\ref{asn:self-consistency-train}, we know the cluster centers
+gotten from applying $k$-means to $Y_1, \dotsc, Y_n$ must include
+$\muY(1), \dotsc, \muY(K)$.  Without loss of generality, suppose that
+$\bmuY(g) = \muY(g)$ for $g = 1, \dotsc, K$.  This implies that
+$\hGY_i = G_i$ for $i = 1, \dotsc, n$.  Thus, employing
+assumption~\ref{asn:self-consistency-noiseless} again, we get that
+$\bmuX(g) = \muX(g)$ for $g = 1, \dotsc, K$.
+
+
+Since assumption~\ref{asn:self-consistency-distinct-mux} ensures that
+$\muX(1), \dotsc, \muX(K)$ are all distinct, we must have that $\hGX_i = G_i$
+for all $i = 1, \dotsc, m+n$.  In particular, this implies that $\bmuY(\hGX_i)
+= Y_i$ for $i = 1, \dotsc, m+n$, so that $\CV(k) = 0$.
+\end{proof}
+
 
 %% \section{Review of consistency results for clustering}
 %% 
