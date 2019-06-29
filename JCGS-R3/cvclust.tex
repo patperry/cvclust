@@ -767,6 +767,26 @@ dimension; we generalize the result to arbitrary dimension in
 Appendex~\ref{app:twoclust-anyd}.
 
 
+\begin{figure}
+\centering
+\includegraphics[width=3in]{main_code/demo/overlap/color_plot.pdf}
+\caption{
+    Gabriel cross-validation performance in a two-cluster simulation.
+    For a grid of values for $\muX$ and $\muY$ ranging from $0$ to $3$,
+    we generated data according the manner described in
+    Prop.~\ref{prop:twoclust}, then computed Gabriel cross-validation
+    error $\CV(1)$ and $\CV(2)$. The heat map shows the proportion of times
+    that $\CV(2) < \CV(1)$ with
+    light (blue) indicating that $k = 1$ is preferred to $k = 2$, and
+dark (red) indicating that $k = 2$ is preferred to $k = 1$.
+    The black line is the theoretical boundary determined from
+Proposition~\ref{prop:twoclust}. The simulation confirms our theoretical
+    boundary.}
+\label{fig:overlap-color_plot}
+\end{figure}
+
+
+
 In principle the proof of Proposition~\ref{prop:twoclust} generalizes to
 non-normal location families of distributions easily, provided that
 both cluster distributions are in the same family and expressions for
@@ -775,6 +795,7 @@ Different distributions for $(X,Y)$ give rise to different cutoffs for when $k
 = 1$ cluster is preferred to $k = 2$. The normal distribution is only special
 here in that the required conditional expectations and the boundary where
 $\CV(1) = \CV(2)$ are computable in closed form. 
+
 
 
 
@@ -796,23 +817,6 @@ We can see the simulation result perfectly align with the
 theoretical curve (the black line), which separates the $k=2$ zone from the
 $k=1$ zone.
 
-\begin{figure}
-\centering
-\includegraphics[width=3in]{main_code/demo/overlap/color_plot.pdf}
-\caption{
-    Gabriel cross-validation performance in a two-cluster simulation.
-    For a grid of values for $\muX$ and $\muY$ ranging from $0$ to $3$,
-    we generated data according the manner described in
-    Prop.~\ref{prop:twoclust}, then computed Gabriel cross-validation
-    error $\CV(1)$ and $\CV(2)$. The heat map shows the proportion of times
-    that $\CV(2) < \CV(1)$ with
-    light (blue) indicating that $k = 1$ is preferred to $k = 2$, and
-dark (red) indicating that $k = 2$ is preferred to $k = 1$.
-    The black line is the theoretical boundary determined from
-Proposition~\ref{prop:twoclust}. The simulation confirms our theoretical
-    boundary.}
-\label{fig:overlap-color_plot}
-\end{figure}
 
 
 \section{Adjusting for correlation}
@@ -1003,7 +1007,7 @@ $\rho$ takes value in $\{0,0.1,...,0.9\}$.
 	
 \begin{figure}[H]
 \centering
-\includegraphics[width=5.5in, height=3.3in]{main_code/demo/bench/setting1/Facet.pdf}
+\includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting1/Facet.pdf}
 \caption{Setting 1 performance as correlation increases, faceted by estimation
     method. For each estimate method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
@@ -1031,7 +1035,7 @@ $\{0,6,...,54\}$.
 	
 \begin{figure}[H]
 \centering
-\includegraphics[width=5.5in, height=3.3in]{main_code/demo/bench/setting2/Facet.pdf}
+\includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting2/Facet.pdf}
 \caption{Setting 2 performance as the number of noise dimensions increases,
     faceted by estimation method. For each estimate method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
@@ -1054,7 +1058,7 @@ normal observations with identity covariance matrix.
 	
 \begin{figure}[H]
 \centering
-\includegraphics[width=5.5in, height=3.3in]{main_code/demo/bench/setting3/Facet.pdf}
+\includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting3/Facet.pdf}
 \caption{Setting 3 performance as the number of dimensions increases,
     faceted by estimation method. For each estimate method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
@@ -1085,7 +1089,7 @@ values in $\{1,5,10,...,45\}$
 	
 \begin{figure}[H]
 \centering
-\includegraphics[width=5.5in, height=3.3in]{main_code/demo/bench/setting4/Facet.pdf}
+\includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting4/Facet.pdf}
 \caption{Setting 4 performance as the variance heterogeneity increases,
     faceted by estimation method. For each estimate method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
@@ -1109,7 +1113,7 @@ dimension, with degrees of freedom $\nu$ taking values in $\{11,10,...,2\}$
      
 \begin{figure}[H]
 \centering
-\includegraphics[width=5.5in, height=3.3in]{main_code/demo/bench/setting5/Facet.pdf}
+\includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting5/Facet.pdf}
 \caption{Setting 5 performance as the tail heaviness increases,
     faceted by estimation method. For each estimate method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
@@ -1192,6 +1196,7 @@ variables, corresponding to log activation levels for 1379 genes.
 \centering
 \captionsetup{justification=centering}
 \caption{\label{tab:benchmark} Number of clusters selected on benchmark datasets}
+    {\footnotesize
 \begin{tabular}{lccc}
 \toprule                  
          & \multicolumn{3}{c}{Dataset} \\
@@ -1213,6 +1218,7 @@ Slope	 & $2$  & $4$           & $2$ \\
 Ground Truth & $2$         & $2$ or $3$    & $5$  \\
 \bottomrule
 \end{tabular}
+    }
 \end{table} 
 
 
@@ -1279,6 +1285,22 @@ small number of clusters. In contrast to these previous analyses, Gabriel
 cross-validation finds a small number, $k = 5$ clusters, all of which are
 interpretable.
 
+\begin{figure}
+		\centering
+	\includegraphics[width=5.7in, height=5.7in]{main_code/data_examples/split_plots.pdf}
+	\caption{Comparison between  \cite{tavazoie1999systematic} clusters and
+    our proposed Gabriel cross-validation clusters for a Yeast gene expression
+    time series data set.  The plots on the vertical and horizontal
+    show the average expression time series for the \citeauthor{tavazoie1999systematic} 
+    clusters (1--4, 7, 8, 14, Other) and the Gabriel clusters (1--5),
+    respectively. Plot $(i,j)$ in the grid show the time series average
+    in the intersectios of  \citeauthor{tavazoie1999systematic} cluster~$i$
+    with Gabriel cluster~$j$, whenever there is overlap. The Gabriel clusters
+    capture the same general trends with a smaller number of clusters.
+    }
+	\label{fig:5_clusters}
+\end{figure}	
+
 
 \subsection{Data collection and preprocessing}
 
@@ -1308,21 +1330,6 @@ cluster analysis from \url{http://arep.med.harvard.edu/network_discovery/}.
 \subsection{Clustering}
 
 
-\begin{figure}
-		\centering
-	\includegraphics[width=5.7in, height=5.7in]{main_code/data_examples/split_plots.pdf}
-	\caption{Comparison between  \cite{tavazoie1999systematic} clusters and
-    our proposed Gabriel cross-validation clusters for a Yeast gene expression
-    time series data set.  The plots on the vertical and horizontal
-    show the average expression time series for the \citeauthor{tavazoie1999systematic} 
-    clusters (1--4, 7, 8, 14, Other) and the Gabriel clusters (1--5),
-    respectively. Plot $(i,j)$ in the grid show the time series average
-    in the intersectios of  \citeauthor{tavazoie1999systematic} cluster~$i$
-    with Gabriel cluster~$j$, whenever there is overlap. The Gabriel clusters
-    capture the same general trends with a smaller number of clusters.
-    }
-	\label{fig:5_clusters}
-\end{figure}	
 
 Following \citet{tavazoie1999systematic} and \citet{dortet2008model}, we
 treat the $N = 2945$ gene expression profiles as draws from a mixture
