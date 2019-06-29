@@ -151,9 +151,9 @@ clusters is to use an analogue of the principal components scree plot: plot
 the within-cluster dispersion $W_k$, as a function of the number of clusters
 $k$, looking for an ``elbow'' in the plot.  This approach is simple and often
 performs well, but it requires subjective judgment as to where the elbow is
-located, and as we demonstrate in Appendix~\ref{sec:elbow-fail}, the approach
-can easily fail.  In this report, we propose a new method to choose the number
-of clusters automatically.
+located, and can easily fail (we demonstrate such a failure in Section~1 of
+the supplementary appendix).  In this report, we propose a new method to
+choose the number of clusters automatically.
 
 
 The problem of choosing $k$ has been well-studied, and dozens of methods have
@@ -196,9 +196,7 @@ cross-validation, and it is adaptive to the characteristics of the data
 distribution. The essential idea is to devise a way to measure a form of
 internal prediction error associated each choose of $k$, and then choose the
 $k$ with the smallest associated error. We describe this method in detail in
-Section~\ref{sec:meth}.  In Section~\ref{sec:self-consistent}, we prove that
-our method is self-consistent in certain situations, meaning that in the
-absence of noise, it recovers the correct $k$. Then, in
+Section~\ref{sec:meth}.  Then, in
 Section~\ref{sec:theory-gaussian}, we
 analyze the performance of our method in the presence of Gaussian noise. The
 theoretical analysis shows that the performance of our method degrades in the
@@ -412,27 +410,23 @@ over all $K \times L$ folds (choosing the smallest value of $k$ in the event
 of a tie).
 
 
-%% TODO: appendix
-
-In Section~\ref{sec:self-consistent}, we prove that this procedure is
-self-consistent, in the sense that it recovers the correct value of $k$ in the
-absence of noise. Then, in Section~\ref{sec:theory-gaussian}, we analyze some
-of the properties of Gabriel cross-validation in the presence of Gaussian
-noise.
-
-
-
 
 \section{Analysis under Gaussian noise}
 \label{sec:theory-gaussian}
 
+We turn now to theoretical properties of Gabriel cross-validation. In
+Section~2 of the supplementary appendix, show that the procedure is
+self-consistent, in the sense that it recovers the correct value of $k$ in the
+absence of noise.  This gives us some assurance that the procedure is
+well-behaved, but we can bolster our confidence and gain insight into its
+workings by analyzing its behavior in the presence of noise. To that end, we
+devote the present section to analysis of the procedure in the presence of
+Gaussian noise.
+
+
 \subsection{Single cluster in two dimensions}
 
-Proposition~\ref{prop:self-consistency} tells us that the Gabriel cross-validation
-method recovers the true number of clusters when the noise is negligible.
-While this result gives us some assurance that the procedure is well-behaved,
-we can bolster our confidence and gain insight into its workings by analyzing
-its behavior in the presence of noise.  We first study the case of a single
+We first study the case of a single
 cluster in two dimensions with correlated Gaussian noise.
 
 \begin{proposition}\label{prop:single-2d}
@@ -608,7 +602,9 @@ error for $Y$ will also decrease with larger $k$. This explains why
 cross-validation breaks down in the presence of strong correlation.
 
 
-In Appendix~\ref{sec:single-general-dim}, using similar techniques to those used
+In Section~3 of the supplementary appendix,
+%\ref{sec:single-general-dim}
+using similar techniques to those used
 to prove Proposition~\ref{prop:single-2d}, we derive an analogous result for correlated
 Gaussian noise in more than two dimensions. A similar phenomenon holds:
 the Gabriel cross-validation method fails when the first principal component
@@ -683,8 +679,8 @@ $\Pr(X= X_1, Y = Y_1) = \Pr(X= X_2, Y = Y_2) = 1/2$. Then,
   &= 2\varphi(\muY)+ 2\muY\Phi(\muY)- \muY. 
 \end{align*}
 In the second line, we have used
-Lemma~\ref{lem:truncated-normal-moments} from
-Appendix~\ref{app:technical-lemmas} to compute the conditional expectations;
+Lemma~3 from Section~5 of the supplementary appendix
+    to compute the conditional expectations;
 $\varphi()$ and $\Phi()$ are the standard normal density and
 cumulative distribution function, respectively. By symmetry,
 \begin{align*}
@@ -764,7 +760,8 @@ precisely when
 We have stated and proved Proposition~\ref{prop:twoclust} for data in $d = 2$
 dimensions, but there is nothing essential about the particulars of the
 dimension; we generalize the result to arbitrary dimension in
-Appendex~\ref{app:twoclust-anyd}.
+Section~4 of the supplementary appendix.
+%Appendex~\ref{app:twoclust-anyd}.
 
 
 \begin{figure}
@@ -898,9 +895,9 @@ matrix~$Q$, which gets applied to the rows of $\dataX$ after
 multiplying by the estimate of $\Sigma^{-1/2}$. We use this random orthogonal
 matrix for two reasons. First, it ensures that in expectation, each transformed cluster mean
 $Q \Lambda^{-1/2} \Gamma^\T \mu(g)$ for $g = 1, \dotsc, k$ is uniformly
-spread across all $P$ features. This ensures that the self-consistency
-conditions on the cluster centers enumerated in Proposition~\ref{prop:self-consistency}
-are likely to hold. The second reason for multiplying by $Q$ is to spread any
+spread across all $P$ features. This ensures that the cluster centers
+are well identified.
+The second reason for multiplying by $Q$ is to spread any
 remaining correlation in the noise evenly (in expectation) across all
 dimensions. The latter effect follows since if $Z$ is a random vector with
 covariance matrix $\Theta$, then $Q Z$ has covariance matrix $Q \Theta Q^\T$,
@@ -964,7 +961,8 @@ and
 For Gabriel cross-validation,
 we perform $2$-fold cross-validation on the columns~($p=q$) and $5$-fold
 cross-validation on the rows~($m=n/4$).  We also compare with Wold
-cross-validation, which we describe in Appendix~\ref{sec:wold-cv}.
+cross-validation, which we describe in section~6 of the supplementary
+appendix. %Appendix~\ref{sec:wold-cv}.
 
 
 For the competing methods, some might take issue with the fact that we are
