@@ -175,7 +175,8 @@ a procedure might perform reasonably when the noise level is low.
 
 
 It will suffice to prove self-consistency for a single fold of the
-cross-validation procedure.  As in section~\ref{sec:gabriel-cv-algorithm} we
+cross-validation procedure.  As in section~2.2 of the main article, we
+%\ref{sec:gabriel-cv-algorithm} 
 assume that the $P$ variables of the data set have been partitioned into $p$
 predictor variables represented in vector~$X$ and $q$ response variables
 represented in vector~$Y$.  The $N$ observations have been divided into two
@@ -191,7 +192,8 @@ clusters in the absence of noise.
 
 Let $\{ (X_i, Y_i) \}_{i=1}^{n+m}$ be the data from a single fold of Gabriel
 cross-validation.  For any $k$, let $\CV(k)$ be the cross-validation error for
-this fold, computed as described in Section~\ref{sec:gabriel-cv-algorithm}.
+this fold, computed as described in Section~2.2 of the main article.
+%\ref{sec:gabriel-cv-algorithm}.
 We will assume that there are $K$ ``true cluster centers''
 $\mu(1), \dotsc,\mu(K)$, with
 the $g$th cluster center partitioned as $\mu(g) = \bigl(\muX(g),
@@ -452,8 +454,8 @@ of a particular $(X, Y)$ split of the data.  In practice, one might want the
 condition to hold for all possible splits of the data. A sufficient guarantee
 that~\eqref{eqn:clust-anyd} holds for any $(X, Y)$ split of the data is that
 the data covariance matrix $\Sigma$ is diagonal. The ad-hoc adjustment we
-propose in Sec.~\ref{sec:corr-correct} attempts to transform the data to this
-form.
+propose in Section~4 of the main article%.~\ref{sec:corr-correct} 
+attempts to transform the data to this form.
 
 
 
@@ -592,7 +594,8 @@ Because of symmetry and $P(G_i=G_1) = P(G_i=G_2) = 1/2$, it's sufficient to show
 
 Similar as in the proof of Proposition~\ref{prop:single-general-dim}, by the variance and bias decomposition of MSE, the variance is the same, so only the bias influences the result. Note the predicted center is grand $0$ for $CV(1)$, so to see if  $CV(2) < CV(1)$ one only need to see if $||\bar{\mu}^Y_1-\hat{\mu}^Y_1||^2 < ||\hat{\mu}^Y_1 - 0||^2$, which is true if 
 \[ 2\Phi(\lambda_y) + 2 \frac{\varphi(\lambda_y)}{\lambda_y} < 4\Phi(\lambda_x)-1 \] 
-this result reduces to the original result of Proposition~\ref{prop:twoclust}
+this result reduces to the original result of Proposition~2
+of the main article %\ref{prop:twoclust}
 if one sets $\lambda_x = \mu^X$ and $\lambda_y = \mu^Y$.
 \end{proof}
 
@@ -829,13 +832,15 @@ Cluster 1 & 0 & 0 & 1 & 161 & 2 & 164 \\
 \end{table}
 
 
-Figure~\ref{fig:5_clusters} provides a more in-depth comparison with the
+Figure~8 of the main article %\ref{fig:5_clusters}
+provides a more in-depth comparison with the
 Tavazoie clusters, using a graphical confusion matrix.  The plot in cell
 $(i,j)$ of the upper left part of this figure gives the mean expression level
 for genes in the intersection of Tavazoie's Cluster~$i$ and our Cluster~$j$;
 the plots in the margins give the mean expression levels for Tavazoie's
 clusters (top right) and our clusters (bottom left). In
-Figure~\ref{fig:5_clusters}, we only include a plot for cell $(i,j)$ if the
+Figure~8 (main article), %\ref{fig:5_clusters},
+we only include a plot for cell $(i,j)$ if the
 number of genes in that cell is greater than $20$.
 
 
