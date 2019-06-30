@@ -1003,11 +1003,11 @@ multivariate normal observations with common covariance matrix $\Sigma$ which
 has compound symmetric structure with $1$ in diagonal and $\rho$ off diagonal.
 $\rho$ takes value in $\{0,0.1,...,0.9\}$.
 	
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting1/Facet.pdf}
 \caption{Setting 1 performance as correlation increases, faceted by estimation
-    method. For each estimate method, the subplot shows the proportion of
+    method. For each method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
     versus the correlation between dimensions,~$\rho$. Gabriel
     cross-validation performance degrades under moderate correlation, but
@@ -1031,11 +1031,11 @@ We add $r$ dimensions of noise to the data, randomly generated from a uniform
 distribution on $[0,1]$. The noise dimension $r$ takes values in
 $\{0,6,...,54\}$. 
 	
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting2/Facet.pdf}
 \caption{Setting 2 performance as the number of noise dimensions increases,
-    faceted by estimation method. For each estimate method, the subplot shows the proportion of
+    faceted by estimation method. For each method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
     versus the number of noise dimensions,~$r$. Both variants of Gabriel
     cross-validation perform reasonably under all settings of~$r$, though
@@ -1054,17 +1054,16 @@ We generate eight clusters in $P$ dimensions, with $P$ taking values in
 $\{10,20,...,100\}$.  Each cluster has $100$ or $50$ multivariate
 normal observations with identity covariance matrix. 
 	
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting3/Facet.pdf}
 \caption{Setting 3 performance as the number of dimensions increases,
-    faceted by estimation method. For each estimate method, the subplot shows the proportion of
+    faceted by estimation method. For each method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
     versus the number of noise dimensions,~$r$. Both variants of Gabriel
-    cross-validation perform with perfect accuracy in the replicates
+    cross-validation have perfect accuracy in the replicates
     with $r \geq 30$ dimensions.}
 
-\caption{Performance as number of dimensions increases.}
 \label{fig:setting3}
 \end{figure}
 
@@ -1085,14 +1084,14 @@ $\mathcal{N}\left(\mathbf{0},\sigma_3^2\mathbf{I}\right)$ where $\sigma_1^2 :
 \sigma_2^2: \sigma_3^2 = 1:\frac{1+R}{2}:R$. The maximum ratio $R$ takes
 values in $\{1,5,10,...,45\}$
 	
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting4/Facet.pdf}
 \caption{Setting 4 performance as the variance heterogeneity increases,
-    faceted by estimation method. For each estimate method, the subplot shows the proportion of
+    faceted by estimation method. For each method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
     versus the variance heterogeneity parameter,  $R$. Both variants of Gabriel
-    cross-validation perform with near-perfect accuracy for all values of~$R$.}
+    cross-validation have near-perfect accuracy for all values of~$R$.}
 \label{fig:setting4}
 \end{figure}
 
@@ -1109,17 +1108,17 @@ We generate five clusters in $15$ dimensions. Each cluster has $80$
 observations.  Observations have independent $t$ distributions in each
 dimension, with degrees of freedom $\nu$ taking values in $\{11,10,...,2\}$
      
-\begin{figure}[H]
+\begin{figure}
 \centering
 \includegraphics[width=5.5in, height=2.75in]{main_code/demo/bench/setting5/Facet.pdf}
 \caption{Setting 5 performance as the tail heaviness increases,
-    faceted by estimation method. For each estimate method, the subplot shows the proportion of
+    faceted by estimation method. For each method, the subplot shows the proportion of
     replicates in which estimated number of clusters agrees with the truth
     versus the $t$~distributed noise degrees of freedom,~$\nu$, plotted
     backwards so that $\nu$ decreases from $11$ to $2$ going from left to
     right. Both variants of Gabriel cross-validation are robust to moderate
     tail heaviness, with slower performance degradation than most of the other
-    estimation methods as the tail heaviness increases.}
+    methods as the tail heaviness increases.}
 \label{fig:setting5}
 \end{figure}
 
