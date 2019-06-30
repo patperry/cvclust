@@ -66,8 +66,7 @@ Hartigan, J.~A. (1975).
 \bibitem[Hartigan and Wong, 1979]{hartigan1979algorithm}
 Hartigan, J.~A. and Wong, M.~A. (1979).
 \newblock Algorithm as 136: A k-means clustering algorithm.
-\newblock {\em Journal of the Royal Statistical Society. Series C (Applied
-  Statistics)}, 28:100--108.
+\newblock {\em J. R. Stat. Soc. C}, 28:100--108.
 
 \bibitem[Hastie et~al., 2009]{hastie2009elements}
 Hastie, T., Tibshirani, R., and Friedman, J. (2009).
@@ -169,8 +168,7 @@ Tibshirani, R. and Walther, G. (2005).
 Tibshirani, R., Walther, G., and Hastie, T. (2001).
 \newblock Estimating the number of clusters in a data set via the gap
   statistic.
-\newblock {\em Journal of the Royal Statistical Society: Series B (Statistical
-  Methodology)}, 63(2):411--423.
+\newblock {\em J. R. Stat. Soc. B}, 63(2):411--423.
 
 \bibitem[Venables and Ripley, 2002]{MASS}
 Venables, W.~N. and Ripley, B.~D. (2002).

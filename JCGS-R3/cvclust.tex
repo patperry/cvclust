@@ -880,8 +880,8 @@ where~$\varepsilon_i$ has mean zero and covariance matrix $\Sigma$, independent
 of~$G_i$. If we knew $\Sigma$, then we could transform the observations as
 \begin{align*}
   \Sigma^{-1/2} \dataX_i
-    &= \Sigma^{-1/2} \mu(G_i) + \Sigma^{-1/2} \varepsilon_i \\
-    &= \tilde \mu(G_i) + \tilde \varepsilon_i,
+    &= \Sigma^{-1/2} \mu(G_i) + \Sigma^{-1/2} \varepsilon_i 
+    = \tilde \mu(G_i) + \tilde \varepsilon_i,
 \end{align*}
 where $\tilde \mu = \Sigma^{-1/2} \mu$ and
 $\tilde \varepsilon_i = \Sigma^{-1/2} \varepsilon_i$. The transformed data
@@ -1345,9 +1345,26 @@ periods corresponding to the two cell cycles. Cluster~$4$ has increasing
 expression level with time.  Cluster~$5$ is another periodic cluster. 
 
 
-%% TODO: enrichment analysis
+To validate our clusters, in Section~7 of the supplementary appendix we follow
+\citet{tavazoie1999systematic} by performing an enrichment analysis to
+discover which functional gene groups are significantly over-represented in
+each cluster.  We find that Cluster~1 is enriched with genes that somatize
+cell stress, such as oxidative heat-induce proteins.  Cluster~2 contains genes
+that govern mitochondrial translation and mitochondrion organization.
+Cluster~3, the first period cluster, contains cell cycle genes related to
+budding and cell polarity, along with genes that govern RNA processing and
+transcription. Cluster~4 contains genes related to cytoplasmic translation and
+genes encoding ribosomes. Cluster~5, the second periodic cluster, contains
+genes that participate cell-cycle processes, along with DNA replication and
+DNA repair.
 
-%% TODO: mention comparison with Tavazoie clusters
+For the clusters that Tavazoie et al.\ were able to characterize, our analysis
+broadly agrees with the earlier clustering (Section~8 of the supplementary
+appendix contains a more detailed comparison). The major difference between our
+analysis and that of \citet{tavazoie1999systematic} is that we are able to
+identify meaningful groups of genes with a much smaller value of $k$ ($k = 5$
+instead of $k = 30$), and we are able to interpret all of the clusters
+found by our analysis.
 
 
 
